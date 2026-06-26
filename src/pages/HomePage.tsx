@@ -84,32 +84,29 @@ export function HomePage() {
             Milestone 1 menyediakan fondasi Computer Science / Informatics.
           </p>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {courses.map((course) => (
-            <Card
-              key={course.id}
-              className="transition-colors hover:border-[#D0C8B8]"
-            >
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold">
-                  {course.title}
-                </CardTitle>
-                <CardDescription>{course.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    {course.chapters.length} bab •{' '}
-                    {course.estimatedHours ?? '-'} jam estimasi
-                  </span>
-                  <Button asChild>
-                    <Link to={`/courses/${course.slug}`}>Lihat Course</Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {firstCourse && (
+          <Card className="max-w-2xl transition-colors hover:border-[#D0C8B8]">
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold">
+                {firstCourse.title}
+              </CardTitle>
+              <CardDescription className="text-[0.9375rem] leading-relaxed text-muted-foreground">
+                {firstCourse.description}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">
+                  {firstCourse.chapters.length} bab •{' '}
+                  {firstCourse.estimatedHours ?? '-'} jam estimasi
+                </span>
+                <Button asChild>
+                  <Link to={`/courses/${firstCourse.slug}`}>Lihat Course</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </section>
     </div>
   )
