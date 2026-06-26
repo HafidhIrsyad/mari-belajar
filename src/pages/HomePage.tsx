@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Layers, Trophy } from 'lucide-react'
+import { BookOpen, Layers, Trophy } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,22 +17,22 @@ export function HomePage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="relative overflow-hidden border-b bg-gradient-to-br from-primary/5 via-background to-secondary/5 py-16 md:py-24">
-        <div className="container flex max-w-5xl flex-col items-center text-center">
-          <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-6xl">
-            Mari Belajar Ilmu Komputer
+      <section className="px-6 py-20 lg:px-16 lg:py-24">
+        <div className="max-w-[55ch]">
+          <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
+            ✦ Platform pembelajaran Indonesia
+          </span>
+          <h1 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tight text-foreground lg:text-5xl">
+            Belajar ilmu komputer dari dasar, secara bertahap.
           </h1>
-          <p className="mb-8 max-w-2xl text-lg text-muted-foreground md:text-xl">
-            Platform pembelajaran fondasi ilmu komputer dalam Bahasa Indonesia.
-            Dari bit hingga arsitektur sistem, pelajari konsep penting dengan
-            contoh kode JavaScript, TypeScript, dan Go.
+          <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+            Fondasi computer science dalam Bahasa Indonesia. Dari bit hingga
+            arsitektur sistem, dengan contoh kode JavaScript, TypeScript, dan
+            Go.
           </p>
-          <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="mt-8 flex flex-wrap gap-4">
             <Button asChild size="lg">
-              <Link to="/courses">
-                Mulai Belajar
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
+              <Link to="/courses">Mulai Belajar</Link>
             </Button>
             {firstChapter && (
               <Button asChild size="lg" variant="outline">
@@ -46,8 +46,8 @@ export function HomePage() {
       </section>
 
       {/* Value Proposition */}
-      <section className="container py-16 md:py-24">
-        <div className="mb-12 text-center">
+      <section className="px-6 py-16 lg:px-16 lg:py-24">
+        <div className="mb-12 max-w-[55ch]">
           <h2 className="text-3xl font-bold tracking-tight">
             Belajar Secara Bertahap
           </h2>
@@ -75,37 +75,40 @@ export function HomePage() {
       </section>
 
       {/* Course Preview */}
-      <section className="border-t bg-muted/30 py-16 md:py-24">
-        <div className="container">
-          <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold tracking-tight">
-              Course yang Tersedia
-            </h2>
-            <p className="mt-4 text-muted-foreground">
-              Milestone 1 menyediakan fondasi Computer Science / Informatics.
-            </p>
-          </div>
-          <div className="mx-auto grid max-w-3xl gap-6">
-            {courses.map((course) => (
-              <Card key={course.id}>
-                <CardHeader>
-                  <CardTitle>{course.title}</CardTitle>
-                  <CardDescription>{course.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">
-                      {course.chapters.length} bab •{' '}
-                      {course.estimatedHours ?? '-'} jam estimasi
-                    </span>
-                    <Button asChild>
-                      <Link to={`/courses/${course.slug}`}>Lihat Course</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+      <section className="px-6 py-16 lg:px-16 lg:py-24">
+        <div className="mb-12 max-w-[55ch]">
+          <h2 className="text-3xl font-bold tracking-tight">
+            Course yang Tersedia
+          </h2>
+          <p className="mt-4 text-muted-foreground">
+            Milestone 1 menyediakan fondasi Computer Science / Informatics.
+          </p>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {courses.map((course) => (
+            <Card
+              key={course.id}
+              className="transition-colors hover:border-[#D0C8B8]"
+            >
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">
+                  {course.title}
+                </CardTitle>
+                <CardDescription>{course.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    {course.chapters.length} bab •{' '}
+                    {course.estimatedHours ?? '-'} jam estimasi
+                  </span>
+                  <Button asChild>
+                    <Link to={`/courses/${course.slug}`}>Lihat Course</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </section>
     </div>
@@ -122,13 +125,17 @@ function ValueCard({
   description: string
 }) {
   return (
-    <Card className="transition-shadow hover:shadow-md">
+    <Card className="transition-colors hover:border-[#D0C8B8]">
       <CardHeader>
-        <Icon className="mb-2 h-8 w-8 text-primary" />
-        <CardTitle>{title}</CardTitle>
+        <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <Icon className="h-5 w-5" />
+        </div>
+        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <CardDescription className="text-base">{description}</CardDescription>
+        <p className="text-[0.9375rem] leading-relaxed text-muted-foreground">
+          {description}
+        </p>
       </CardContent>
     </Card>
   )
