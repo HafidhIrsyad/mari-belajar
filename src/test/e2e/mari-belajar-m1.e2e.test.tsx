@@ -43,7 +43,7 @@ describe('Mari Belajar Milestone 1 — E2E happy paths', () => {
     render(<TestApp />)
 
     // Homepage renders
-    expect(screen.getByRole('heading', { name: /Mari Belajar Ilmu Komputer/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Belajar ilmu komputer dari dasar/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Mulai Belajar/i })).toBeInTheDocument()
 
     // Navigate to course list
@@ -53,8 +53,14 @@ describe('Mari Belajar Milestone 1 — E2E happy paths', () => {
     })
     expect(screen.getByText(/Computer Science \/ Informatics Fundamentals/i)).toBeInTheDocument()
 
-    // Open chapter 1 from course card
-    await user.click(screen.getByRole('link', { name: /Mulai Belajar/i }))
+    // Open course detail from course card
+    await user.click(screen.getByRole('link', { name: /Lihat Course/i }))
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /Computer Science \/ Informatics Fundamentals/i })).toBeInTheDocument()
+    })
+
+    // Open chapter 1 from course detail
+    await user.click(screen.getByRole('link', { name: /Buka Bab/i }))
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: /Cara Kerja Komputer — Dari Bit sampai Program Berjalan/i })).toBeInTheDocument()
     })
@@ -89,7 +95,7 @@ describe('Mari Belajar Milestone 1 — E2E happy paths', () => {
     expect(screen.getByText(/Bab berikutnya telah terbuka./i)).toBeInTheDocument()
 
     // Go back to course detail and verify chapter 2 is unlocked
-    await user.click(screen.getByRole('link', { name: /Kembali ke Course/i }))
+    await user.click(screen.getByRole('link', { name: /Computer Science \/ Informatics Fundamentals/i }))
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: /Computer Science \/ Informatics Fundamentals/i })).toBeInTheDocument()
     })
@@ -129,7 +135,7 @@ describe('Mari Belajar Milestone 1 — E2E happy paths', () => {
     expect(screen.getByRole('button', { name: /Ulangi Quiz/i })).toBeInTheDocument()
 
     // Navigate back to course detail and verify chapter 2 is still locked
-    await user.click(screen.getByRole('link', { name: /Kembali ke Course/i }))
+    await user.click(screen.getByRole('link', { name: /Computer Science \/ Informatics Fundamentals/i }))
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: /Computer Science \/ Informatics Fundamentals/i })).toBeInTheDocument()
     })
