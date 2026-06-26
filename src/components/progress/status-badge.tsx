@@ -19,7 +19,7 @@ export function StatusBadge({ status }: StatusBadgeProps) {
 
   if (status === 'unlocked') {
     return (
-      <Badge variant="default" className="gap-1">
+      <Badge variant="basic" className="gap-1">
         <PlayCircle className="h-3 w-3" />
         Terbuka
       </Badge>
@@ -27,7 +27,7 @@ export function StatusBadge({ status }: StatusBadgeProps) {
   }
 
   return (
-    <Badge variant="secondary" className="gap-1">
+    <Badge variant="secondary" className="gap-1 bg-muted text-muted-foreground hover:bg-muted/80">
       <Lock className="h-3 w-3" />
       Terkunci
     </Badge>

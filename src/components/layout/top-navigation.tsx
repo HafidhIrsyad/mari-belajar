@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import { BookOpen, Menu, Moon, Sun } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { useTheme } from '@/components/theme-provider'
 
 export function TopNavigation() {
