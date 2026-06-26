@@ -6,12 +6,12 @@ import javascript from 'react-syntax-highlighter/dist/esm/languages/prism/javasc
 import typescript from 'react-syntax-highlighter/dist/esm/languages/prism/typescript'
 import tsx from 'react-syntax-highlighter/dist/esm/languages/prism/tsx'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { cn } from '@/lib/utils'
 
 SyntaxHighlighter.registerLanguage('javascript', javascript)
 SyntaxHighlighter.registerLanguage('typescript', typescript)
 SyntaxHighlighter.registerLanguage('tsx', tsx)
 SyntaxHighlighter.registerLanguage('go', go)
-import { cn } from '@/lib/utils'
 
 interface CodeBlockProps {
   code: string
@@ -56,9 +56,16 @@ export function CodeBlock({
   return (
     <div className="my-6 overflow-hidden rounded-lg bg-[#1E293B] text-[#E2E8F0]">
       <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-          {displayTitle}
-        </span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <span className="h-3 w-3 rounded-full bg-[#FF5F56]" />
+            <span className="h-3 w-3 rounded-full bg-[#FFBD2E]" />
+            <span className="h-3 w-3 rounded-full bg-[#27C93F]" />
+          </div>
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            {displayTitle}
+          </span>
+        </div>
         <button
           type="button"
           onClick={handleCopy}
@@ -86,6 +93,13 @@ export function CodeBlock({
         <SyntaxHighlighter
           language={language}
           style={oneDark}
+          showLineNumbers
+          lineNumberStyle={{
+            minWidth: '2.5em',
+            paddingRight: '1em',
+            color: '#64748B',
+            textAlign: 'right',
+          }}
           customStyle={{
             margin: 0,
             padding: '1.25rem',
