@@ -18,7 +18,7 @@ export function CourseCard({ course }: CourseCardProps) {
     <Card className="flex flex-col transition-colors hover:border-[#D0C8B8] sm:flex-row sm:items-center sm:justify-between">
       <CardHeader className="pb-4 sm:pb-0">
         <CardTitle className="text-xl font-semibold">{course.title}</CardTitle>
-        <CardDescription className="mt-2 text-[0.9375rem] leading-relaxed">
+        <CardDescription className="mt-2 mb-4 text-[0.9375rem] leading-relaxed">
           {course.description}
         </CardDescription>
       </CardHeader>
