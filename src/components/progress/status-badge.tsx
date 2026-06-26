@@ -7,29 +7,29 @@ interface StatusBadgeProps {
   status: Status
 }
 
+const variants: Record<Status, string> = {
+  locked: 'bg-muted text-muted-foreground',
+  unlocked: 'bg-primary/10 text-primary',
+  completed: 'bg-success/10 text-success',
+}
+
+const labels: Record<Status, string> = {
+  locked: 'Terkunci',
+  unlocked: 'Terbuka',
+  completed: 'Selesai',
+}
+
+const icons: Record<Status, React.ReactNode> = {
+  locked: <Lock className="h-3 w-3" />,
+  unlocked: <PlayCircle className="h-3 w-3" />,
+  completed: <CheckCircle className="h-3 w-3" />,
+}
+
 export function StatusBadge({ status }: StatusBadgeProps) {
-  if (status === 'completed') {
-    return (
-      <Badge variant="success" className="gap-1">
-        <CheckCircle className="h-3 w-3" />
-        Selesai
-      </Badge>
-    )
-  }
-
-  if (status === 'unlocked') {
-    return (
-      <Badge variant="basic" className="gap-1">
-        <PlayCircle className="h-3 w-3" />
-        Terbuka
-      </Badge>
-    )
-  }
-
   return (
-    <Badge variant="secondary" className="gap-1 bg-muted text-muted-foreground hover:bg-muted/80">
-      <Lock className="h-3 w-3" />
-      Terkunci
+    <Badge variant="secondary" className={`gap-1 ${variants[status]}`}>
+      {icons[status]}
+      {labels[status]}
     </Badge>
   )
 }

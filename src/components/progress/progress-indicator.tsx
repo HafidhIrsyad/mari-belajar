@@ -1,5 +1,3 @@
-import { Progress } from '@/components/ui/progress'
-
 interface ProgressIndicatorProps {
   value: number
   total: number
@@ -19,7 +17,12 @@ export function ProgressIndicator({
         <span className="text-muted-foreground">{label || 'Progress'}</span>
         <span className="font-medium">{value} / {total} ({percentage}%)</span>
       </div>
-      <Progress value={percentage} />
+      <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+        <div
+          className="h-full rounded-full bg-primary transition-all"
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
     </div>
   )
 }
