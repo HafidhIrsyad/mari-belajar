@@ -35,7 +35,7 @@ export function CourseDetailPage() {
 
   return (
     <div className="px-6 py-12 lg:px-16 lg:py-20">
-      <div className="max-w-5xl">
+      <div className="mx-auto max-w-3xl">
         <h1 className="text-3xl font-bold tracking-tight text-foreground lg:text-4xl">
           {course.title}
         </h1>
