@@ -1,8 +1,5 @@
 import { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 interface CodeBlockProps {
@@ -43,53 +40,39 @@ export function CodeBlock({
   const displayTitle = title || filename || displayLanguage
 
   return (
-    <figure className="my-6 overflow-hidden rounded-lg border border-code-border bg-code-bg">
-      <figcaption className="flex items-center justify-between border-b border-code-border px-4 py-2">
-        <div className="flex items-center gap-2 text-sm text-code-fg/80">
-          <span className="font-mono font-medium">{displayTitle}</span>
-          <span className="text-code-fg/50">({displayLanguage})</span>
-        </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-code-fg/80 hover:bg-code-border hover:text-code-fg"
+    <div className="my-6 overflow-hidden rounded-lg bg-[#1E293B] text-[#E2E8F0]">
+      <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
+        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          {displayTitle}
+        </span>
+        <button
+          type="button"
           onClick={handleCopy}
+          className="flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-slate-200"
           aria-label={copied ? 'Copied' : 'Copy code'}
         >
           {copied ? (
-            <Check className="h-4 w-4" />
+            <>
+              <Check className="h-3.5 w-3.5" />
+              <span>Copied</span>
+            </>
           ) : (
-            <Copy className="h-4 w-4" />
+            <>
+              <Copy className="h-3.5 w-3.5" />
+              <span>Copy</span>
+            </>
           )}
-        </Button>
-      </figcaption>
-      <div className="overflow-x-auto p-4">
-        <SyntaxHighlighter
-          language={language === 'text' ? 'text' : language}
-          style={vscDarkPlus}
-          customStyle={{
-            margin: 0,
-            padding: 0,
-            background: 'transparent',
-            fontSize: '0.8125rem',
-            lineHeight: '1.7',
-          }}
-          codeTagProps={{
-            style: {
-              fontFamily:
-                '"JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace',
-            },
-          }}
-        >
-          {code}
-        </SyntaxHighlighter>
+        </button>
       </div>
+      <pre className="overflow-x-auto p-5 font-mono text-sm leading-relaxed">
+        <code>{code}</code>
+      </pre>
       {explanation && (
-        <figcaption className="border-t border-code-border px-4 py-3 text-sm text-code-fg/70">
+        <div className="border-t border-white/10 px-5 py-3 text-sm text-slate-400">
           {explanation}
-        </figcaption>
+        </div>
       )}
-    </figure>
+    </div>
   )
 }
 

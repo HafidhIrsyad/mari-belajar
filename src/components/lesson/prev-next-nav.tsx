@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Lock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import type { Chapter, Course } from '@/content/types'
@@ -19,49 +19,32 @@ export function PrevNextNav({
 }: PrevNextNavProps) {
   const previousChapter = getPreviousChapter(course, currentChapter.id)
   const nextChapter = getNextChapter(course, currentChapter.id)
-  const nextUnlocked = nextChapter
+  const isNextUnlocked = nextChapter
     ? isChapterUnlocked(course, nextChapter, progress)
     : false
 
+  const prevPath = previousChapter
+    ? `/courses/${course.slug}/${previousChapter.slug}`
+    : `/courses/${course.slug}`
+  const nextPath = nextChapter
+    ? `/courses/${course.slug}/${nextChapter.slug}`
+    : `/courses/${course.slug}`
+
   return (
-    <nav
-      aria-label="Chapter navigation"
-      className="mt-12 flex items-center justify-between border-t pt-8"
-    >
-      {previousChapter ? (
-        <Button variant="outline" asChild>
-          <Link to={`/courses/${course.slug}/${previousChapter.slug}`}>
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Sebelumnya
-          </Link>
-        </Button>
-      ) : (
-        <div />
-      )}
-
+    <div className="mt-12 flex items-center justify-between border-t border-border pt-8">
       <Button variant="outline" asChild>
-        <Link to={`/courses/${course.slug}`}>Kembali ke Course</Link>
+        <Link to={prevPath}>← Bab Sebelumnya</Link>
       </Button>
-
-      {nextChapter ? (
-        <Button asChild disabled={!nextUnlocked}>
-          <Link
-            to={
-              nextUnlocked
-                ? `/courses/${course.slug}/${nextChapter.slug}`
-                : `#`
-            }
-            className={!nextUnlocked ? 'pointer-events-none opacity-50' : ''}
-          >
-            Selanjutnya
-            <ChevronRight className="ml-2 h-4 w-4" />
-          </Link>
+      {isNextUnlocked ? (
+        <Button asChild>
+          <Link to={nextPath}>Bab Selanjutnya →</Link>
         </Button>
       ) : (
-        <Button variant="secondary" asChild>
-          <Link to={`/courses/${course.slug}`}>Selesai</Link>
+        <Button variant="outline" disabled>
+          <Lock className="mr-2 h-4 w-4" />
+          Terkunci
         </Button>
       )}
-    </nav>
+    </div>
   )
 }

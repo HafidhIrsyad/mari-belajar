@@ -36,35 +36,36 @@ export function LessonPage() {
     <div className="flex min-h-[calc(100vh-3.5rem)]">
       <ChapterSidebar course={course} progress={progress} />
 
-      <div className="flex-1">
-        <div className="container max-w-3xl py-8 lg:py-12">
-            <div className="mb-6 flex items-center justify-between lg:hidden">
-              <Button variant="outline" size="sm" asChild>
-                <Link to={`/courses/${course.slug}`}>
-                  <ChevronLeft className="mr-1 h-4 w-4" />
-                  Course
-                </Link>
-              </Button>
-              <MobileChapterMenu course={course} progress={progress} />
-            </div>
+      <main className="flex-1 px-6 py-10 lg:px-16 lg:py-14">
+        <div className="mx-auto max-w-[65ch]">
+          <div className="mb-6 flex items-center justify-between lg:hidden">
+            <Button variant="outline" size="sm" asChild>
+              <Link to={`/courses/${course.slug}`}>
+                <ChevronLeft className="mr-1 h-4 w-4" />
+                Course
+              </Link>
+            </Button>
+            <MobileChapterMenu course={course} progress={progress} />
+          </div>
 
-            <BreadcrumbNav course={course} chapter={chapter} />
-            <LessonHeader chapter={chapter} courseTitle={course.title} />
+          <BreadcrumbNav course={course} chapter={chapter} />
+          <LessonHeader chapter={chapter} courseTitle={course.title} />
 
-            <article className="prose-lesson">
-              {chapter.lesson.sections.map((section) => (
-                <LessonSectionRenderer key={section.id} section={section} />
-              ))}
-            </article>
+          <article className="prose-lesson">
+            {chapter.lesson.sections.map((section) => (
+              <LessonSectionRenderer key={section.id} section={section} />
+            ))}
+          </article>
 
-            <QuizPanel courseId={course.id} chapter={chapter} />
-            <PrevNextNav
-              course={course}
-              currentChapter={chapter}
-              progress={progress}
-            />
+          <QuizPanel courseId={course.id} chapter={chapter} />
+          {/* ReferenceList will be wired here in Task 9 */}
+          <PrevNextNav
+            course={course}
+            currentChapter={chapter}
+            progress={progress}
+          />
         </div>
-      </div>
+      </main>
     </div>
   )
 }

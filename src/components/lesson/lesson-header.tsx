@@ -6,30 +6,17 @@ interface LessonHeaderProps {
   courseTitle: string
 }
 
-export function LessonHeader({ chapter, courseTitle }: LessonHeaderProps) {
+export function LessonHeader({ chapter, courseTitle: _courseTitle }: LessonHeaderProps) {
   return (
-    <header className="mb-8 space-y-4">
-      <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        <span>{courseTitle}</span>
-        <span aria-hidden="true">•</span>
-        <span>Bab {chapter.order}</span>
-        {chapter.estimatedMinutes && (
-          <>
-            <span aria-hidden="true">•</span>
-            <span>{chapter.estimatedMinutes} menit baca</span>
-          </>
-        )}
-      </div>
-      <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+    <header className="mb-8 border-b border-border pb-8">
+      <h1 className="text-3xl font-bold leading-[1.15] tracking-tight text-foreground lg:text-4xl">
         {chapter.title}
       </h1>
-      <p className="text-lg text-muted-foreground">{chapter.summary}</p>
-      <div className="flex flex-wrap gap-2">
-        {chapter.learningObjectives?.map((objective, index) => (
-          <Badge key={index} variant="secondary" className="font-normal">
-            {objective}
-          </Badge>
-        ))}
+      <div className="mt-4 flex flex-wrap items-center gap-3 text-[0.9375rem] text-muted-foreground">
+        <Badge variant="basic">Basic</Badge>
+        <Badge variant="intermediate">Intermediate</Badge>
+        <Badge variant="advanced">Advanced</Badge>
+        <span>• {chapter.estimatedMinutes ?? 14} menit baca</span>
       </div>
     </header>
   )
