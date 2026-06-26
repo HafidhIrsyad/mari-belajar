@@ -28,7 +28,13 @@ export function PrevNextNav({
       className="mt-12 flex items-center justify-between border-t border-border pt-8"
     >
       <Button variant="outline" asChild>
-        <Link to={`/courses/${course.slug}`}>
+        <Link
+          to={
+            previousChapter
+              ? `/courses/${course.slug}/${previousChapter.slug}`
+              : `/courses/${course.slug}`
+          }
+        >
           {previousChapter ? '← Bab Sebelumnya' : '← Kembali ke Course'}
         </Link>
       </Button>
