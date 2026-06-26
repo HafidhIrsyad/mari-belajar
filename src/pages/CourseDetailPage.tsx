@@ -34,35 +34,27 @@ export function CourseDetailPage() {
       ?.completedChapterIds.length ?? 0
 
   return (
-    <div className="container py-12 md:py-16">
-        <div className="mb-8 max-w-3xl">
-          <div className="mb-2 text-sm text-muted-foreground">
-            <Link to="/courses" className="hover:text-foreground">
-              Course
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="text-foreground">{course.title}</span>
+    <div className="px-6 py-12 lg:px-16 lg:py-20">
+      <div className="max-w-3xl">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground lg:text-4xl">
+          {course.title}
+        </h1>
+        <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+          {course.description}
+        </p>
+        <div className="mt-6 space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">
+              {completedCount} dari {course.chapters.length} bab selesai
+            </span>
+            <span className="font-medium">{completion}%</span>
           </div>
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            {course.title}
-          </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            {course.description}
-          </p>
-          <div className="mt-6 space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">
-                {completedCount} dari {course.chapters.length} bab selesai
-              </span>
-              <span className="font-medium">{completion}%</span>
-            </div>
-            <Progress value={completion} />
-          </div>
+          <Progress value={completion} />
         </div>
 
-        <Separator className="mb-8" />
+        <Separator className="my-8" />
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="space-y-4">
           {course.chapters.map((chapter) => (
             <ChapterListItem
               key={chapter.id}
@@ -72,6 +64,7 @@ export function CourseDetailPage() {
             />
           ))}
         </div>
+      </div>
     </div>
   )
 }
@@ -88,8 +81,8 @@ function ChapterListItem({ course, chapter, progress }: ChapterListItemProps) {
 
   return (
     <Card
-      className={`transition-all ${
-        unlocked ? 'hover:shadow-md' : 'opacity-70'
+      className={`transition-colors ${
+        unlocked ? 'hover:border-[#D0C8B8]' : 'opacity-70'
       }`}
     >
       <CardHeader className="pb-3">
