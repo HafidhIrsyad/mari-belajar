@@ -73,17 +73,17 @@ function ChapterSidebarItem({
   isCurrent,
 }: ChapterSidebarItemProps) {
   const baseClasses =
-    'group flex min-h-[44px] items-center gap-3 rounded-md border-l-[3px] px-3 py-2 text-sm transition-colors'
+    'group flex min-h-[44px] items-center gap-3 rounded-lg px-3 py-2.5 text-[0.9375rem] transition-colors'
 
   if (!unlocked) {
     return (
       <div
         className={cn(
           baseClasses,
-          'border-transparent text-muted-foreground',
-          isCurrent && 'bg-muted/50'
+          'font-medium text-muted-foreground opacity-60 hover:bg-muted',
+          isCurrent && 'bg-primary/10 font-semibold text-primary opacity-100'
         )}
-        title="Bab terkunci. Selesaikan bab sebelumnya dengan skor 100%."
+        title="Bab terkunci. Selesaikan bab sebelumnya dengan skore 100%."
       >
         <Lock className="h-[18px] w-[18px] shrink-0" />
         <span className="line-clamp-2">{chapter.order}. {chapter.title}</span>
@@ -97,9 +97,11 @@ function ChapterSidebarItem({
       className={cn(
         baseClasses,
         isCurrent
-          ? 'border-primary bg-primary/5 font-medium text-foreground'
-          : 'border-transparent text-muted-foreground hover:bg-muted hover:text-foreground',
-        completed && !isCurrent && 'text-success'
+          ? 'bg-primary/10 font-semibold text-primary'
+          : completed
+            ? 'font-medium text-foreground'
+            : 'font-medium text-muted-foreground',
+        !isCurrent && 'hover:bg-muted'
       )}
     >
       {completed ? (
