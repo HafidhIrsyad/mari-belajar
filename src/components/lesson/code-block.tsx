@@ -1,5 +1,16 @@
 import { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter'
+import go from 'react-syntax-highlighter/dist/esm/languages/prism/go'
+import javascript from 'react-syntax-highlighter/dist/esm/languages/prism/javascript'
+import typescript from 'react-syntax-highlighter/dist/esm/languages/prism/typescript'
+import tsx from 'react-syntax-highlighter/dist/esm/languages/prism/tsx'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+
+SyntaxHighlighter.registerLanguage('javascript', javascript)
+SyntaxHighlighter.registerLanguage('typescript', typescript)
+SyntaxHighlighter.registerLanguage('tsx', tsx)
+SyntaxHighlighter.registerLanguage('go', go)
 import { cn } from '@/lib/utils'
 
 interface CodeBlockProps {
@@ -16,6 +27,8 @@ const languageLabels: Record<string, string> = {
   go: 'Go',
   text: 'Text',
 }
+
+const plainLanguages = new Set(['text', 'plain'])
 
 export function CodeBlock({
   code,
@@ -38,6 +51,7 @@ export function CodeBlock({
 
   const displayLanguage = languageLabels[language] ?? language
   const displayTitle = title || filename || displayLanguage
+  const isPlain = plainLanguages.has(language.toLowerCase())
 
   return (
     <div className="my-6 overflow-hidden rounded-lg bg-[#1E293B] text-[#E2E8F0]">
@@ -64,9 +78,30 @@ export function CodeBlock({
           )}
         </button>
       </div>
-      <pre className="overflow-x-auto p-5 font-mono text-sm leading-relaxed">
-        <code>{code}</code>
-      </pre>
+      {isPlain ? (
+        <pre className="overflow-x-auto p-5 font-mono text-sm leading-relaxed">
+          <code>{code}</code>
+        </pre>
+      ) : (
+        <SyntaxHighlighter
+          language={language}
+          style={oneDark}
+          customStyle={{
+            margin: 0,
+            padding: '1.25rem',
+            background: 'transparent',
+            fontSize: '0.875rem',
+            lineHeight: '1.7',
+          }}
+          codeTagProps={{
+            style: {
+              fontFamily: 'inherit',
+            },
+          }}
+        >
+          {code}
+        </SyntaxHighlighter>
+      )}
       {explanation && (
         <div className="border-t border-white/10 px-5 py-3 text-sm text-slate-400">
           {explanation}
