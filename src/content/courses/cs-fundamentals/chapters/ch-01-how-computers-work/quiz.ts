@@ -1,0 +1,88 @@
+import type { Quiz } from '@/content/types'
+
+export const ch01Quiz: Quiz = {
+  id: 'quiz-ch-01-how-computers-work',
+  title: 'Quiz: Cara Kerja Komputer',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-01-01',
+      order: 1,
+      prompt: 'Berapa jumlah bit dalam 1 byte?',
+      options: ['4', '8', '16', '32'],
+      correctOptionIndex: 1,
+      explanation: '1 byte terdiri dari 8 bit. Dengan 8 bit, komputer dapat merepresentasikan 2^8 = 256 kemungkinan nilai berbeda.',
+    },
+    {
+      id: 'q-01-02',
+      order: 2,
+      prompt: 'Bilangan biner `1010` sama dengan berapa dalam desimal?',
+      options: ['8', '9', '10', '11'],
+      correctOptionIndex: 2,
+      explanation: '1010 dalam biner = 1×8 + 0×4 + 1×2 + 0×1 = 10 dalam desimal.',
+    },
+    {
+      id: 'q-01-03',
+      order: 3,
+      prompt: "Karakter `'A'` dalam standar ASCII direpresentasikan sebagai angka desimal:",
+      options: ['64', '65', '66', '97'],
+      correctOptionIndex: 1,
+      explanation: "Karakter 'A' dalam ASCII memiliki nilai desimal 65. Nilai 97 adalah kode untuk huruf 'a' kecil.",
+    },
+    {
+      id: 'q-01-04',
+      order: 4,
+      prompt: 'Apa fungsi utama CPU dalam menjalankan program?',
+      options: [
+        'Menyimpan data secara permanen',
+        'Mengeksekusi instruksi melalui siklus fetch-decode-execute',
+        'Mengatur tampilan ke layar',
+        'Menghubungkan komputer ke internet',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'CPU mengeksekusi instruksi program secara berulang melalui siklus fetch-decode-execute.',
+    },
+    {
+      id: 'q-01-05',
+      order: 5,
+      prompt: 'Bilangan desimal 255 direpresentasikan dalam heksadesimal sebagai:',
+      options: ['FF', 'EE', '100', '99'],
+      correctOptionIndex: 0,
+      explanation: '255 dalam desimal sama dengan 11111111 dalam biner dan FF dalam heksadesimal.',
+    },
+    {
+      id: 'q-01-06',
+      order: 6,
+      prompt: 'Proses mengubah kode TypeScript menjadi kode JavaScript disebut:',
+      options: ['Compiling', 'Interpreting', 'Transpiling', 'Linking'],
+      correctOptionIndex: 2,
+      explanation: 'Transpiler menerjemahkan kode dari satu bahasa tingkat tinggi ke bahasa tingkat tinggi lain, seperti TypeScript ke JavaScript.',
+    },
+    {
+      id: 'q-01-07',
+      order: 7,
+      prompt: 'Pada big-endian, byte paling signifikan disimpan di:',
+      options: [
+        'Alamat memori terendah',
+        'Alamat memori tertinggi',
+        'Bagian tengah memori',
+        'Posisi acak',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Big-endian menyimpan byte paling signifikan (most significant byte) di alamat memori terendah.',
+    },
+    {
+      id: 'q-01-08',
+      order: 8,
+      prompt: 'Pointer pada dasarnya menyimpan:',
+      options: [
+        'Nilai langsung dari sebuah variabel',
+        'Alamat memori tempat data berada',
+        'Tipe data dari sebuah variabel',
+        'Panjang string',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Pointer adalah variabel yang menyimpan alamat memori dari data lain, bukan nilai data itu sendiri.',
+    },
+  ],
+}
