@@ -1,6 +1,7 @@
 import type { Chapter } from '@/content/types'
 import { ch01Lesson } from './lesson'
 import { ch01Quiz } from './quiz'
+import { ch01References } from './references'
 
 export const ch01HowComputersWork: Chapter = {
   id: 'ch-01-how-computers-work',
@@ -27,6 +28,7 @@ export const ch01HowComputersWork: Chapter = {
     'Memori program dibagi menjadi code segment, data segment, stack, dan heap.',
     'Pointer menyimpan alamat memori, bukan nilai langsung.',
   ],
+  references: ch01References,
   lesson: ch01Lesson,
   quiz: ch01Quiz,
 }

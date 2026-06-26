@@ -9,6 +9,7 @@ import { MarkdownContent } from '@/components/lesson/markdown-content'
 import { CodeBlock } from '@/components/lesson/code-block'
 import { PrevNextNav } from '@/components/lesson/prev-next-nav'
 import { QuizPanel } from '@/components/quiz/quiz-panel'
+import { ReferenceList } from '@/components/lesson/reference-list'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { getChapterBySlug, getCourseBySlug } from '@/content'
@@ -58,7 +59,7 @@ export function LessonPage() {
           </article>
 
           <QuizPanel courseId={course.id} chapter={chapter} />
-          {/* ReferenceList will be wired here in Task 9 */}
+          <ReferenceList references={chapter.references ?? []} />
           <PrevNextNav
             course={course}
             currentChapter={chapter}

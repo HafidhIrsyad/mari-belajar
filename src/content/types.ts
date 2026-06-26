@@ -11,6 +11,16 @@
 export type SectionLevel = 'basic' | 'intermediate' | 'advanced'
 export type CodeLanguage = 'javascript' | 'typescript' | 'go' | 'text'
 
+export type ReferenceType = 'article' | 'video' | 'book' | 'documentation' | 'interactive'
+
+export interface Reference {
+  id: string
+  title: string
+  url: string
+  description: string
+  type: ReferenceType
+}
+
 export interface CodeExample {
   id: string
   filename?: string
@@ -76,6 +86,7 @@ export interface Chapter {
   estimatedMinutes?: number
   learningObjectives?: string[]
   summaryPoints?: string[]
+  references?: Reference[]
   lesson: Lesson
   quiz: Quiz
 }
