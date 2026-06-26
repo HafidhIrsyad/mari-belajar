@@ -65,7 +65,7 @@ const flags = 0b00001101; // 13
 const mask = 0b00000100;  // bit ke-2
 
 const isBitSet = (flags & mask) !== 0;
-console.log(isBitSet); // false
+console.log(isBitSet); // true
 
 // Menyalakan bit ke-1 (nilai 2)
 const newFlags = flags | 0b00000010;

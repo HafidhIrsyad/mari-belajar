@@ -3,7 +3,7 @@ import type { Quiz } from '@/content/types'
 export const ch02Quiz: Quiz = {
   id: 'quiz-ch-02-number-systems-and-bits',
   title: 'Quiz: Sistem Bilangan dan Operasi Bit',
-  passingScore: 6,
+  passingScore: 8,
   questions: [
     {
       id: 'q-02-01',
