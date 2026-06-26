@@ -159,4 +159,15 @@ describe('Mari Belajar Milestone 1 — E2E happy paths', () => {
     expect(screen.getByText(/Go: Bit Manipulation dan Representasi Data/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Periksa Jawaban/i })).toBeInTheDocument()
   })
+
+  it('shows further reading references on the sample chapter', async () => {
+    render(<TestApp initialEntries={['/courses/cs-fundamentals/ch-01-how-computers-work']} />)
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /Cara Kerja Komputer — Dari Bit sampai Program Berjalan/i })).toBeInTheDocument()
+    })
+
+    expect(screen.getByRole('heading', { name: /Referensi Belajar Lebih Lanjut/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /How Boolean Logic Works/i })).toBeInTheDocument()
+  })
 })
