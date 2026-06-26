@@ -20,7 +20,7 @@ export function HomePage() {
       <section className="px-6 py-20 lg:px-16 lg:py-24">
         <div className="max-w-[55ch]">
           <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
-            ✦ Platform pembelajaran Indonesia
+            ✦ Belajar software engineering dari nol
           </span>
           <h1 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tight text-foreground lg:text-5xl">
             Belajar ilmu komputer dari dasar, secara bertahap.
