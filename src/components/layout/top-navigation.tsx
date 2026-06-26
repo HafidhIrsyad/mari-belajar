@@ -1,8 +1,16 @@
-import { Link } from 'react-router-dom'
-import { BookOpen, Menu, Moon, Sun } from 'lucide-react'
+import { Link, useLocation } from 'react-router-dom'
+import { BookOpen, Home, Menu, Moon, Sun } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useTheme } from '@/components/theme-provider'
 
+const navItems = [
+  { label: 'Beranda', href: '/', icon: Home },
+  { label: 'Course', href: '/courses', icon: BookOpen },
+]
+
 export function TopNavigation() {
+  const location = useLocation()
   const { theme, setTheme } = useTheme()
 
   return (
@@ -29,9 +37,50 @@ export function TopNavigation() {
           </button>
         </nav>
 
-        <button className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground md:hidden">
-          <Menu className="h-4 w-4" />
-        </button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="md:hidden"
+              aria-label="Buka menu navigasi"
+            >
+              <Menu className="h-4 w-4" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right">
+            <nav className="grid gap-6 text-lg font-medium">
+              <Link to="/" className="flex items-center gap-2 text-foreground">
+                <BookOpen className="h-5 w-5 text-primary" />
+                Mari Belajar
+              </Link>
+              {navItems.map((item) => {
+                const Icon = item.icon
+                return (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className={`flex items-center gap-2 ${
+                      location.pathname === item.href
+                        ? 'text-foreground'
+                        : 'text-muted-foreground'
+                    }`}
+                  >
+                    <Icon className="h-5 w-5" />
+                    {item.label}
+                  </Link>
+                )
+              })}
+              <button
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="flex items-center gap-2 text-left text-muted-foreground"
+              >
+                {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                Ganti tema
+              </button>
+            </nav>
+          </SheetContent>
+        </Sheet>
       </div>
     </header>
   )

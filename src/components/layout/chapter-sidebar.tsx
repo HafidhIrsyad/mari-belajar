@@ -83,7 +83,7 @@ function ChapterSidebarItem({
           'font-medium text-muted-foreground opacity-60 hover:bg-muted',
           isCurrent && 'bg-primary/10 font-semibold text-primary opacity-100'
         )}
-        title="Bab terkunci. Selesaikan bab sebelumnya dengan skore 100%."
+        title="Bab terkunci. Selesaikan bab sebelumnya dengan skor 100%."
       >
         <Lock className="h-[18px] w-[18px] shrink-0" />
         <span className="line-clamp-2">{chapter.order}. {chapter.title}</span>
