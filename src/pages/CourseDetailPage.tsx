@@ -35,14 +35,14 @@ export function CourseDetailPage() {
 
   return (
     <div className="px-6 py-12 lg:px-16 lg:py-20">
-      <div className="mx-auto max-w-3xl">
+      <div className="max-w-7xl">
         <h1 className="text-3xl font-bold tracking-tight text-foreground lg:text-4xl">
           {course.title}
         </h1>
-        <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+        <p className="mt-4 max-w-3xl text-lg leading-relaxed text-muted-foreground">
           {course.description}
         </p>
-        <div className="mt-6 space-y-2">
+        <div className="mt-6 max-w-3xl space-y-2">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">
               {completedCount} dari {course.chapters.length} bab selesai
@@ -54,7 +54,7 @@ export function CourseDetailPage() {
 
         <Separator className="my-8" />
 
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {course.chapters.map((chapter) => (
             <ChapterListItem
               key={chapter.id}
