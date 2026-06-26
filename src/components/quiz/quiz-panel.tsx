@@ -53,7 +53,7 @@ export function QuizPanel({ courseId, chapter }: QuizPanelProps) {
         <CardTitle>{chapter.quiz.title || 'Quiz'}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-8">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-[0.9375rem] leading-relaxed text-muted-foreground">
           Jawab semua soal dengan benar untuk membuka bab berikutnya. Skor minimum:{' '}
           {chapter.quiz.passingScore} dari {chapter.quiz.questions.length}.
         </p>
@@ -63,10 +63,10 @@ export function QuizPanel({ courseId, chapter }: QuizPanelProps) {
 
           return (
             <fieldset key={question.id} className="space-y-4">
-              <legend className="mb-2 text-base font-medium leading-7">
+              <legend className="mb-2 text-[0.9375rem] font-medium leading-relaxed text-foreground">
                 {questionIndex + 1}. {question.prompt}
               </legend>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {question.options.map((option, optionIndex) => (
                   <QuizOption
                     key={`${question.id}-${optionIndex}`}
@@ -82,7 +82,7 @@ export function QuizPanel({ courseId, chapter }: QuizPanelProps) {
                 ))}
               </div>
               {isSubmitted && (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-[0.9375rem] leading-relaxed text-muted-foreground">
                   <span className="font-medium">Penjelasan:</span>{' '}
                   {question.explanation}
                 </p>
@@ -95,7 +95,10 @@ export function QuizPanel({ courseId, chapter }: QuizPanelProps) {
         })}
 
         {result && (
-          <Alert variant={result.passed ? 'success' : 'destructive'}>
+          <Alert
+            variant={result.passed ? 'success' : 'destructive'}
+            className={result.passed ? 'bg-success/10' : 'bg-destructive/10'}
+          >
             {result.passed ? (
               <Trophy className="h-4 w-4" />
             ) : (

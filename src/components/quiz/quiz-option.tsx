@@ -1,4 +1,3 @@
-import { Check, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface QuizOptionProps {
@@ -14,60 +13,43 @@ interface QuizOptionProps {
 
 export function QuizOption({
   option,
-  index,
+  index: _index,
   name,
-  selected,
+  selected: isSelected,
   disabled,
   showResult,
   isCorrect,
   onSelect,
 }: QuizOptionProps) {
-  const optionLetter = String.fromCharCode(65 + index)
-
-  const stateClasses = () => {
-    if (showResult) {
-      if (isCorrect) {
-        return 'border-success bg-success/10 text-success'
-      }
-      if (selected && !isCorrect) {
-        return 'border-destructive bg-destructive/10 text-destructive'
-      }
-      return 'border-border opacity-60'
-    }
-
-    if (selected) {
-      return 'border-primary bg-primary/10 text-foreground'
-    }
-
-    return 'border-border bg-transparent hover:border-primary hover:ring-1 hover:ring-primary'
-  }
-
   return (
     <label
       className={cn(
-        'relative flex cursor-pointer items-start gap-3 rounded-lg border p-4 transition-all focus-within:ring-2 focus-within:ring-ring',
-        disabled && !showResult && 'cursor-not-allowed opacity-60',
-        stateClasses()
+        'flex cursor-pointer items-start gap-3 rounded-lg border p-4 transition-colors',
+        isSelected
+          ? 'border-primary bg-primary/5'
+          : 'border-border bg-card/65 hover:border-primary/50 hover:bg-primary/[0.03]',
+        showResult && isCorrect && 'border-success bg-success/10',
+        showResult && isSelected && !isCorrect && 'border-destructive bg-destructive/10',
+        disabled && !showResult && 'cursor-not-allowed opacity-60'
       )}
     >
       <input
         type="radio"
         name={`question-option-${name}`}
         className="sr-only"
-        checked={selected}
+        checked={isSelected}
         onChange={onSelect}
         disabled={disabled}
       />
-      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-medium">
-        {optionLetter}
-      </span>
-      <span className="flex-1 text-sm leading-6">{option}</span>
-      {showResult && isCorrect && (
-        <Check className="h-5 w-5 shrink-0 text-success" />
-      )}
-      {showResult && selected && !isCorrect && (
-        <X className="h-5 w-5 shrink-0 text-destructive" />
-      )}
+      <span
+        className={cn(
+          'mt-0.5 h-5 w-5 flex-shrink-0 rounded-full border-2',
+          isSelected
+            ? 'border-primary bg-primary shadow-[inset_0_0_0_4px_var(--background)]'
+            : 'border-border'
+        )}
+      />
+      <span className="text-[0.9375rem] leading-relaxed text-foreground">{option}</span>
     </label>
   )
 }
