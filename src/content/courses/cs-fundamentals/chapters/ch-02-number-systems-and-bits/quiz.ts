@@ -1,0 +1,88 @@
+import type { Quiz } from '@/content/types'
+
+export const ch02Quiz: Quiz = {
+  id: 'quiz-ch-02-number-systems-and-bits',
+  title: 'Quiz: Sistem Bilangan dan Operasi Bit',
+  passingScore: 6,
+  questions: [
+    {
+      id: 'q-02-01',
+      order: 1,
+      prompt: 'Berapa nilai desimal dari heksadesimal `0x1A`?',
+      options: ['16', '26', '32', '42'],
+      correctOptionIndex: 1,
+      explanation: '0x1A = 1×16 + 10 = 26 dalam desimal.',
+    },
+    {
+      id: 'q-02-02',
+      order: 2,
+      prompt: 'Berapa nilai biner dari desimal `13`?',
+      options: ['1100', '1101', '1110', '1011'],
+      correctOptionIndex: 1,
+      explanation: '13 = 8 + 4 + 0 + 1 = 1101 dalam biner.',
+    },
+    {
+      id: 'q-02-03',
+      order: 3,
+      prompt: 'Operasi bitwise OR antara `1010` dan `0101` menghasilkan:',
+      options: ['0000', '1111', '1001', '0110'],
+      correctOptionIndex: 1,
+      explanation: 'OR menghasilkan 1 jika salah satu bit bernilai 1, sehingga 1010 | 0101 = 1111.',
+    },
+    {
+      id: 'q-02-04',
+      order: 4,
+      prompt: 'Mengapa programmer sering menggunakan heksadesimal?',
+      options: [
+        'Karena komputer lebih cepat membaca heksadesimal',
+        'Karena lebih ringkas daripada biner dan setiap digit mewakili 4 bit',
+        'Karena heksadesimal adalah basis default semua bahasa pemrograman',
+        'Karena heksadesimal tidak perlu konversi ke desimal',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Heksadesimal lebih ringkas dari biner; satu digit heksadesimal sama dengan 4 bit, sehingga 1 byte hanya perlu 2 digit.',
+    },
+    {
+      id: 'q-02-05',
+      order: 5,
+      prompt: 'Hasil dari operasi `13 << 1` adalah:',
+      options: ['6', '7', '26', '14'],
+      correctOptionIndex: 2,
+      explanation: 'Left shift satu posisi sama dengan mengalikan dengan 2, jadi 13 << 1 = 26.',
+    },
+    {
+      id: 'q-02-06',
+      order: 6,
+      prompt: 'Teknik apa yang umum digunakan komputer untuk menyimpan bilangan negatif?',
+      options: [
+        'One\'s complement',
+        'Two\'s complement',
+        'Sign-magnitude tanpa modifikasi',
+        'BCD (Binary-Coded Decimal)',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Two\'s complement adalah representasi paling umum karena memungkinkan penjumlahan positif dan negatif dengan sirkuit yang sama.',
+    },
+    {
+      id: 'q-02-07',
+      order: 7,
+      prompt: 'Dalam standar IEEE 754 untuk float64, berapa total bit yang digunakan?',
+      options: ['16', '32', '64', '128'],
+      correctOptionIndex: 2,
+      explanation: 'float64 atau double-precision menggunakan 64 bit: 1 bit tanda, 11 bit eksponen, dan 52 bit mantissa.',
+    },
+    {
+      id: 'q-02-08',
+      order: 8,
+      prompt: 'Apa yang terjadi pada bilangan unsigned 8 bit ketika `255 + 1` dihitung?',
+      options: [
+        'Menjadi 256',
+        'Menjadi 0 karena overflow',
+        'Menjadi -1 karena underflow',
+        'Menyebabkan error runtime',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Unsigned 8 bit hanya bisa menyimpan 0 sampai 255. 255 + 1 overflow dan kembali ke 0.',
+    },
+  ],
+}
