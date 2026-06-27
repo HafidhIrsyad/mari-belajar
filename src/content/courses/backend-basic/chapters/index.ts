@@ -1,0 +1,8 @@
+export { ch01HttpFundamentals } from './ch-01-http-fundamentals'
+export { ch02RestApiDesign } from './ch-02-rest-api-design'
+export { ch03RoutingControllers } from './ch-03-routing-controllers'
+export { ch04RequestValidation } from './ch-04-request-validation'
+export { ch05ResponseErrorHandling } from './ch-05-response-error-handling'
+export { ch06MiddlewareCrossCutting } from './ch-06-middleware-cross-cutting'
+export { ch07DocumentationTestingApi } from './ch-07-documentation-testing-api'
+export { ch08DeploymentEnvironmentBasics } from './ch-08-deployment-environment-basics'
