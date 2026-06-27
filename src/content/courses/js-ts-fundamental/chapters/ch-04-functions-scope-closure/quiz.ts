@@ -1,0 +1,103 @@
+import type { Quiz } from '@/content/types'
+
+export const ch04Quiz: Quiz = {
+  id: 'quiz-ch-04-functions-scope-closure',
+  title: 'Quiz: Fungsi, Scope, dan Closure',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-04-01',
+      order: 1,
+      prompt: 'Manakah pernyataan yang benar tentang function declaration dan function expression?',
+      options: [
+        'Function declaration dihoisting secara utuh, function expression tidak.',
+        'Function expression dihoisting secara utuh, function declaration tidak.',
+        'Keduanya dihoisting dengan cara yang sama.',
+        'Tidak ada yang dihoisting di JavaScript.',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Function declaration dihoisting secara utuh sehingga bisa dipanggil sebelum deklarasinya, sedangkan function expression hanya deklarasi variabelnya yang diangkat dengan nilai undefined.',
+    },
+    {
+      id: 'q-04-02',
+      order: 2,
+      prompt: 'Apa output dari kode berikut?\n`const multiply = (a, b) => a * b; console.log(multiply(4, 5));`',
+      options: ['9', '20', '45', 'undefined'],
+      correctOptionIndex: 1,
+      explanation: 'Arrow function (a, b) => a * b mengembalikan hasil perkalian a dan b, sehingga multiply(4, 5) menghasilkan 20.',
+    },
+    {
+      id: 'q-04-03',
+      order: 3,
+      prompt: 'Apa hasil dari `greet()` pada kode berikut?\n`function greet(name = "Teman") { return "Halo, " + name + "!"; }`',
+      options: ['"Halo, undefined!"', '"Halo, Teman!"', '"Halo, !"', 'Error'],
+      correctOptionIndex: 1,
+      explanation: 'Default parameter memberi nilai "Teman" jika argumen tidak disediakan, sehingga greet() mengembalikan "Halo, Teman!".',
+    },
+    {
+      id: 'q-04-04',
+      order: 4,
+      prompt: 'Di mana variabel yang dideklarasikan dengan `const` di dalam block `if (true) { ... }` bisa diakses?',
+      options: [
+        'Di seluruh file.',
+        'Hanya di dalam block if tersebut.',
+        'Di dalam fungsi tempat block tersebut berada.',
+        'Di global scope.',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'const memiliki block scope, sehingga variabel hanya bisa diakses di dalam kurung kurawal tempat ia dideklarasikan.',
+    },
+    {
+      id: 'q-04-05',
+      order: 5,
+      prompt: 'Apa yang dimaksud dengan hoisting pada variabel yang dideklarasikan dengan `var`?',
+      options: [
+        'Nilai variabel langsung tersedia di seluruh program.',
+        'Deklarasi variabel diangkat ke atas scope, tetapi nilainya undefined sampai assignment.',
+        'Variabel tidak bisa diubah nilainya.',
+        'Variabel hanya bisa diakses di dalam block.',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Hoisting pada var mengangkat deklarasi ke atas scope, tetapi nilai variabel tetap undefined hingga baris assignment dieksekusi.',
+    },
+    {
+      id: 'q-04-06',
+      order: 6,
+      prompt: 'Kapan closure terbentuk dalam JavaScript?',
+      options: [
+        'Ketika fungsi dalam mengakses variabel dari fungsi luarnya dan fungsi dalam masih bisa dieksekusi.',
+        'Ketika dua fungsi memiliki nama yang sama.',
+        'Ketika variabel dideklarasikan dengan var.',
+        'Ketika fungsi dipanggil sebelum deklarasi.',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Closure terbentuk ketika fungsi dalam mengingat scope fungsi luarnya, sehingga variabel luar tetap bisa diakses meskipun fungsi luar sudah selesai dieksekusi.',
+    },
+    {
+      id: 'q-04-07',
+      order: 7,
+      prompt: 'Apa ciri utama dari higher-order function?',
+      options: [
+        'Fungsi yang selalu mengembalikan angka.',
+        'Fungsi yang menerima fungsi lain sebagai argumen atau mengembalikan fungsi.',
+        'Fungsi yang hanya bisa dipanggil satu kali.',
+        'Fungsi yang dideklarasikan di global scope.',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Higher-order function adalah fungsi yang menerima fungsi sebagai argumen atau mengembalikan fungsi, seperti map, filter, dan reduce.',
+    },
+    {
+      id: 'q-04-08',
+      order: 8,
+      prompt: 'Apa kegunaan utama IIFE (Immediately Invoked Function Expression)?',
+      options: [
+        'Membuat variabel private dan menghindari polusi global scope.',
+        'Meningkatkan kecepatan eksekusi fungsi.',
+        'Mengubah function expression menjadi arrow function.',
+        'Menghapus semua variabel dari memory.',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'IIFE langsung dipanggil setelah didefinisikan dan sering dipakai untuk membuat private scope sehingga variabel tidak mencemari global scope.',
+    },
+  ],
+}

@@ -36,7 +36,9 @@ function TestApp({ initialEntries = ['/'] }: { initialEntries?: string[] }) {
   )
 }
 
-const csFundamentals = courseMetas[0]
+const csFundamentals = courseMetas.find((c) => c.slug === 'cs-fundamentals')
+const jsTsFundamental = courseMetas.find((c) => c.slug === 'js-ts-fundamental')
+
 const phaseOneChapters = csFundamentals
   ? [
       'ch-01-how-computers-work',
@@ -47,6 +49,19 @@ const phaseOneChapters = csFundamentals
       'ch-06-networking-and-internet-protocols',
       'ch-07-databases-and-sql-basics',
       'ch-08-security-fundamentals',
+    ]
+  : []
+
+const jsTsChapters = jsTsFundamental
+  ? [
+      'ch-01-introduction-to-javascript',
+      'ch-02-variables-types-operators',
+      'ch-03-control-flow',
+      'ch-04-functions-scope-closure',
+      'ch-05-arrays-and-objects',
+      'ch-06-asynchronous-javascript',
+      'ch-07-typescript-type-system',
+      'ch-08-modules-tooling-best-practices',
     ]
   : []
 
@@ -75,7 +90,7 @@ describe('Mari Belajar Milestone 1 — E2E happy paths', () => {
     expect(screen.getByText(/Computer Science \/ Informatics Fundamentals/i)).toBeInTheDocument()
 
     // Open course detail from course card
-    await user.click(screen.getByRole('link', { name: /Lihat Course/i }))
+    await user.click(screen.getAllByRole('link', { name: /Lihat Course/i })[0])
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: /Computer Science \/ Informatics Fundamentals/i })).toBeInTheDocument()
     })
@@ -197,6 +212,34 @@ describe('Mari Belajar Milestone 1 — E2E happy paths', () => {
       'renders lesson and quiz for %s via direct navigation',
       async (chapterSlug) => {
         render(<TestApp initialEntries={[`/courses/cs-fundamentals/${chapterSlug}`]} />)
+
+        await waitFor(() => {
+          expect(screen.getByRole('button', { name: /Periksa Jawaban/i })).toBeInTheDocument()
+        })
+
+        expect(screen.getAllByRole('group')).toHaveLength(8)
+      }
+    )
+  })
+
+  describe('JS/TS Fundamental chapter smoke tests', () => {
+    it('shows both courses on the course list page', async () => {
+      const user = userEvent.setup()
+      render(<TestApp />)
+
+      await user.click(screen.getByRole('link', { name: /Mulai Belajar/i }))
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: /Daftar Course/i })).toBeInTheDocument()
+      })
+
+      expect(screen.getByText(/Computer Science \/ Informatics Fundamentals/i)).toBeInTheDocument()
+      expect(screen.getByText(/JavaScript \/ TypeScript Fundamental/i)).toBeInTheDocument()
+    })
+
+    it.each(jsTsChapters)(
+      'renders lesson and quiz for %s via direct navigation',
+      async (chapterSlug) => {
+        render(<TestApp initialEntries={[`/courses/js-ts-fundamental/${chapterSlug}`]} />)
 
         await waitFor(() => {
           expect(screen.getByRole('button', { name: /Periksa Jawaban/i })).toBeInTheDocument()

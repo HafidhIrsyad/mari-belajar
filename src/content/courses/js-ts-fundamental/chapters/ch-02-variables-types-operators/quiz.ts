@@ -1,0 +1,83 @@
+import type { Quiz } from '@/content/types'
+
+export const ch02VariablesTypesOperatorsQuiz: Quiz = {
+  id: 'quiz-ch-02-variables-types-operators',
+  title: 'Quiz: Variabel, Tipe Data, dan Operator',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-02-01',
+      order: 1,
+      prompt: 'Manakah deklarasi variabel yang disarankan untuk nilai yang tidak akan diubah?',
+      options: ['const', 'let', 'var', 'static'],
+      correctOptionIndex: 0,
+      explanation: 'const digunakan untuk variabel yang nilainya tidak boleh diubah setelah dideklarasikan, sehingga menjadi pilihan default yang direkomendasikan.',
+    },
+    {
+      id: 'q-02-02',
+      order: 2,
+      prompt: 'Tipe data manakah yang merepresentasikan nilai "tidak ada" secara sengaja?',
+      options: ['undefined', 'null', 'NaN', 'void'],
+      correctOptionIndex: 1,
+      explanation: 'null menyatakan nilai yang sengaja dikosongkan, sedangkan undefined berarti variabel belum diinisialisasi.',
+    },
+    {
+      id: 'q-02-03',
+      order: 3,
+      prompt: 'Apa output dari console.log("10" - 5)?',
+      options: ['"105"', '5', '15', 'NaN'],
+      correctOptionIndex: 1,
+      explanation: 'Operator - memaksa konversi string "10" menjadi number, sehingga hasilnya 5.',
+    },
+    {
+      id: 'q-02-04',
+      order: 4,
+      prompt: 'Manakah nilai yang dianggap falsy di JavaScript?',
+      options: ['"0"', '[]', '0', '{}'],
+      correctOptionIndex: 2,
+      explanation: 'Angka 0 termasuk nilai falsy. String "0", array kosong, dan object kosong dianggap truthy.',
+    },
+    {
+      id: 'q-02-05',
+      order: 5,
+      prompt: 'Operator perbandingan mana yang paling aman untuk menghindari type coercion?',
+      options: ['==', '===', '!=', '<'],
+      correctOptionIndex: 1,
+      explanation: 'Operator ketat === membandingkan nilai dan tipe tanpa melakukan type coercion.',
+    },
+    {
+      id: 'q-02-06',
+      order: 6,
+      prompt: 'Apa fungsi dari backtick dalam template literal?',
+      options: [
+        'Menandai komentar',
+        'Membuat string dengan interpolasi dan multiline',
+        'Mengakhiri statement',
+        'Mendeklarasikan regex',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Backtick digunakan untuk template literal yang mendukung interpolasi ${...} dan string multiline.',
+    },
+    {
+      id: 'q-02-07',
+      order: 7,
+      prompt: 'Di TypeScript, apa yang terjadi jika variabel let age = 30 lalu age = "tiga puluh"?',
+      options: [
+        'Tidak terjadi apa-apa',
+        'Terjadi error saat runtime',
+        'Terjadi error saat compile time',
+        'Nilai age menjadi NaN',
+      ],
+      correctOptionIndex: 2,
+      explanation: 'TypeScript menyimpulkan age sebagai number saat inisialisasi, sehingga menetapkan string menimbulkan kesalahan saat compile time.',
+    },
+    {
+      id: 'q-02-08',
+      order: 8,
+      prompt: 'Dalam Go, cara singkat mendeklarasikan variabel di dalam fungsi adalah:',
+      options: ['var x = 10', 'x := 10', 'let x = 10', 'const x = 10'],
+      correctOptionIndex: 1,
+      explanation: 'Go menggunakan := untuk deklarasi singkat variabel di dalam fungsi, tanpa perlu menulis var.',
+    },
+  ],
+}

@@ -1,0 +1,8 @@
+export { ch01IntroductionToJavascript } from './ch-01-introduction-to-javascript'
+export { ch02VariablesTypesOperators } from './ch-02-variables-types-operators'
+export { ch03ControlFlow } from './ch-03-control-flow'
+export { ch04FunctionsScopeClosure } from './ch-04-functions-scope-closure'
+export { ch05ArraysAndObjects } from './ch-05-arrays-and-objects'
+export { ch06AsynchronousJavascript } from './ch-06-asynchronous-javascript'
+export { ch07TypescriptTypeSystem } from './ch-07-typescript-type-system'
+export { ch08ModulesToolingBestPractices } from './ch-08-modules-tooling-best-practices'

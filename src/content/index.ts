@@ -1,10 +1,11 @@
 import type { Chapter, Course, CourseMeta } from './types'
 import { csFundamentalsMeta } from './courses/cs-fundamentals/meta'
+import { jsTsFundamentalMeta } from './courses/js-ts-fundamental/meta'
 
 export type { Chapter, Course, CourseMeta }
 export * from './types'
 
-export const courseMetas: CourseMeta[] = [csFundamentalsMeta]
+export const courseMetas: CourseMeta[] = [csFundamentalsMeta, jsTsFundamentalMeta]
 
 export function getCourseMetaBySlug(slug: string): CourseMeta | undefined {
   return courseMetas.find((course) => course.slug === slug)
@@ -14,15 +15,19 @@ export function getCourseMetaById(id: string): CourseMeta | undefined {
   return courseMetas.find((course) => course.id === id)
 }
 
-const courseLoaders: Record<string, () => Promise<{ csFundamentals: Course }>> = {
+const courseLoaders: Record<
+  string,
+  () => Promise<{ csFundamentals: Course } | { jsTsFundamental: Course }>
+> = {
   'cs-fundamentals': () => import('./courses/cs-fundamentals'),
+  'js-ts-fundamental': () => import('./courses/js-ts-fundamental'),
 }
 
 export async function loadCourseBySlug(slug: string): Promise<Course | undefined> {
   const loader = courseLoaders[slug]
   if (!loader) return undefined
   const module = await loader()
-  return module.csFundamentals
+  return 'csFundamentals' in module ? module.csFundamentals : module.jsTsFundamental
 }
 
 export async function loadCourseById(id: string): Promise<Course | undefined> {

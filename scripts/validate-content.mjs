@@ -16,17 +16,30 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const chaptersDir = path.resolve(__dirname, '../src/content/courses/cs-fundamentals/chapters')
+const coursesDir = path.resolve(__dirname, '../src/content/courses')
 
 const EXPECTED_QUESTION_COUNT = 8
 const EXPECTED_REFERENCE_COUNT = 5
 const EXPECTED_OPTION_COUNT = 4
 
 function walkChapterDirectories() {
-  const entries = fs.readdirSync(chaptersDir, { withFileTypes: true })
-  return entries
-    .filter((entry) => entry.isDirectory() && entry.name.startsWith('ch-'))
-    .map((entry) => path.join(chaptersDir, entry.name))
+  const courseEntries = fs.readdirSync(coursesDir, { withFileTypes: true })
+  const chapterDirs = []
+
+  for (const courseEntry of courseEntries) {
+    if (!courseEntry.isDirectory()) continue
+    const chaptersDir = path.join(coursesDir, courseEntry.name, 'chapters')
+    if (!fs.existsSync(chaptersDir)) continue
+
+    const entries = fs.readdirSync(chaptersDir, { withFileTypes: true })
+    for (const entry of entries) {
+      if (entry.isDirectory() && entry.name.startsWith('ch-')) {
+        chapterDirs.push(path.join(chaptersDir, entry.name))
+      }
+    }
+  }
+
+  return chapterDirs
 }
 
 function checkRequiredFiles(chapterDir) {
@@ -48,16 +61,53 @@ function parseQuiz(source) {
   const passingScoreMatch = source.match(/passingScore:\s*(\d+)/)
   const passingScore = passingScoreMatch ? Number(passingScoreMatch[1]) : null
 
-  // Count options arrays and their items
-  const optionArrayRegex = /options:\s*\[([\s\S]*?)\]/g
-  let optionArrayMatch
+  // Extract each options array by finding matching bracket while respecting strings
   const optionCounts = []
-  while ((optionArrayMatch = optionArrayRegex.exec(source)) !== null) {
-    const items = optionArrayMatch[1]
-      .split(',')
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0 && s.startsWith("'"))
-    optionCounts.push(items.length)
+  let searchFrom = 0
+  while (true) {
+    const optionsIndex = source.indexOf('options:', searchFrom)
+    if (optionsIndex === -1) break
+
+    const bracketIndex = source.indexOf('[', optionsIndex)
+    if (bracketIndex === -1) break
+
+    let depth = 0
+    let inString = false
+    let stringChar = ''
+    let escaped = false
+    let i = bracketIndex
+
+    while (i < source.length) {
+      const char = source[i]
+
+      if (inString) {
+        if (escaped) {
+          escaped = false
+        } else if (char === '\\') {
+          escaped = true
+        } else if (char === stringChar) {
+          inString = false
+        }
+      } else {
+        if (char === '"' || char === "'") {
+          inString = true
+          stringChar = char
+        } else if (char === '[') {
+          depth++
+        } else if (char === ']') {
+          depth--
+          if (depth === 0) {
+            const arraySource = source.slice(bracketIndex, i + 1)
+            const itemMatches = arraySource.match(/'(?:[^'\\]|\\.)*'/g)
+            optionCounts.push(itemMatches ? itemMatches.length : 0)
+            break
+          }
+        }
+      }
+      i++
+    }
+
+    searchFrom = bracketIndex + 1
   }
 
   return { questionCount, passingScore, optionCounts }

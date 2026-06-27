@@ -1,0 +1,83 @@
+import type { Quiz } from '@/content/types'
+
+export const ch05Quiz: Quiz = {
+  id: 'quiz-ch-05-arrays-and-objects',
+  title: 'Quiz: Array dan Object',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-05-01',
+      order: 1,
+      prompt: 'Method array mana yang digunakan untuk menambah elemen di akhir array?',
+      options: ['push', 'pop', 'shift', 'unshift'],
+      correctOptionIndex: 0,
+      explanation: 'Method push menambah satu atau lebih elemen di akhir array dan mengembalikan panjang array yang baru.',
+    },
+    {
+      id: 'q-05-02',
+      order: 2,
+      prompt: 'Notasi mana yang benar untuk mengakses property email pada object user?',
+      options: ['user.email', 'user->email', 'user[email]', 'user::email'],
+      correctOptionIndex: 0,
+      explanation: 'Dot notation (user.email) adalah cara paling umum mengakses property object. Bracket notation memerlukan string, seperti user["email"].',
+    },
+    {
+      id: 'q-05-03',
+      order: 3,
+      prompt: 'Method array mana yang menghasilkan array baru tanpa mengubah array asli?',
+      options: ['push', 'map', 'pop', 'shift'],
+      correctOptionIndex: 1,
+      explanation: 'Method map mengembalikan array baru hasil transformasi setiap elemen, sedangkan push, pop, dan shift memodifikasi array asli.',
+    },
+    {
+      id: 'q-05-04',
+      order: 4,
+      prompt: 'Apa fungsi utama method filter pada array?',
+      options: [
+        'Mengubah setiap elemen menjadi nilai baru',
+        'Memilih elemen yang lolos uji dan menghasilkan array baru',
+        'Menggabungkan seluruh elemen menjadi satu nilai',
+        'Mencari indeks elemen pertama yang cocok',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'filter membuat array baru yang hanya berisi elemen yang memenuhi kondisi yang diberikan pada fungsi callback.',
+    },
+    {
+      id: 'q-05-05',
+      order: 5,
+      prompt: 'Ekspresi const { x, y } = point merupakan contoh penggunaan...',
+      options: ['spread operator', 'object destructuring', 'rest operator', 'type assertion'],
+      correctOptionIndex: 1,
+      explanation: 'Sintaks tersebut adalah object destructuring, yaitu mengekstrak property x dan y dari object point ke variabel terpisah.',
+    },
+    {
+      id: 'q-05-06',
+      order: 6,
+      prompt: 'Jika arr = [1, 2, 3], apa hasil dari [...arr, 4]?',
+      options: ['[1, 2, 3]', '[4, 1, 2, 3]', '[1, 2, 3, 4]', '[1, 2]'],
+      correctOptionIndex: 2,
+      explanation: 'Spread operator menyebarkan elemen arr, lalu 4 ditambahkan di akhir sehingga hasilnya [1, 2, 3, 4].',
+    },
+    {
+      id: 'q-05-07',
+      order: 7,
+      prompt: 'Perbedaan utama deep copy dan shallow copy adalah...',
+      options: [
+        'Deep copy lebih lambat pada array kecil',
+        'Deep copy menyalin seluruh struktur object secara rekursif',
+        'Shallow copy tidak menyalin data apa pun',
+        'Deep copy hanya menyalin referensi object bersarang',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Deep copy menyalin seluruh struktur data termasuk object bersarang, sehingga perubahan pada salinan tidak memengaruhi data asli.',
+    },
+    {
+      id: 'q-05-08',
+      order: 8,
+      prompt: 'Di Go, tipe data apa yang paling mirip dengan array dinamis di JavaScript?',
+      options: ['Array fixed-size', 'Slice', 'Struct', 'Map'],
+      correctOptionIndex: 1,
+      explanation: 'Slice di Go adalah tipe dinamis yang bisa tumbuh dengan append, mirip dengan array dinamis di JavaScript.',
+    },
+  ],
+}
