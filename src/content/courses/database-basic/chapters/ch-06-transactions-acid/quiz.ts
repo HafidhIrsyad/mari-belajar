@@ -1,0 +1,103 @@
+import type { Quiz } from '@/content/types'
+
+export const ch06Quiz: Quiz = {
+  id: 'quiz-ch-06-transactions-acid',
+  title: 'Quiz: Transactions & ACID',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-06-01',
+      order: 1,
+      prompt: 'Sifat ACID mana yang menjamin semua operasi transaksi berhasil atau gagal bersama?',
+      options: ['Consistency', 'Atomicity', 'Isolation', 'Durability'],
+      correctOptionIndex: 1,
+      explanation: 'Atomicity memastikan transaksi dianggap sebagai satu unit: commit all atau rollback all.',
+    },
+    {
+      id: 'q-06-02',
+      order: 2,
+      prompt: 'Dirty read terjadi pada tingkat isolasi?',
+      options: ['READ UNCOMMITTED', 'READ COMMITTED', 'REPEATABLE READ', 'SERIALIZABLE'],
+      correctOptionIndex: 0,
+      explanation: 'READ UNCOMMITTED memungkinkan membaca perubahan yang belum di-commit.',
+    },
+    {
+      id: 'q-06-03',
+      order: 3,
+      prompt: 'Apa perbedaan utama pessimistic dan optimistic locking?',
+      options: [
+        'Pessimistic lebih cepat selalu',
+        'Pessimistic mengunci data saat dibaca; optimistic memeriksa konflik saat commit',
+        'Optimistic tidak memerlukan transaksi',
+        'Pessimistic hanya untuk NoSQL',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Pessimistic locking mencegah konflik dengan lock; optimistic locking mendeteksi konflik melalui versi saat commit.',
+    },
+    {
+      id: 'q-06-04',
+      order: 4,
+      prompt: 'Phantom read adalah?',
+      options: [
+        'Membaca data yang belum commit',
+        'Membaca nilai berbeda untuk row yang sama dalam satu transaksi',
+        'Query yang sama dalam satu transaksi menghasilkan set row berbeda karena insert/delete transaksi lain',
+        'Database crash saat membaca',
+      ],
+      correctOptionIndex: 2,
+      explanation: 'Phantom read terjadi ketika query berulang menemukan row baru atau kehilangan row akibat transaksi lain.',
+    },
+    {
+      id: 'q-06-05',
+      order: 5,
+      prompt: 'Tujuan utama MVCC adalah?',
+      options: [
+        'Meningkatkan kecepatan insert',
+        'Memungkinkan reader dan writer berjalan dengan minim blocking melalui versi data',
+        'Menghilangkan kebutuhan primary key',
+        'Menggantikan WAL',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'MVCC membuat snapshot data sehingga reader dapat membaca tanpa menunggu writer selesai.',
+    },
+    {
+      id: 'q-06-06',
+      order: 6,
+      prompt: 'Deadlock terjadi ketika?',
+      options: [
+        'Satu transaksi terlalu lama',
+        'Dua transaksi saling menunggu lock yang dipegang satu sama lain',
+        'Database kehabisan ruang disk',
+        'Query tidak menggunakan index',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Deadlock adalah siklus menunggu lock antar transaksi; database biasanya membatalkan salah satunya.',
+    },
+    {
+      id: 'q-06-07',
+      order: 7,
+      prompt: 'Write skew dapat terjadi pada?',
+      options: [
+        'READ UNCOMMITTED saja',
+        'Snapshot isolation meskipun masing-masing transaksi valid',
+        'Hanya pada single-row update',
+        'Tidak mungkin terjadi di database relasional',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Snapshot isolation membaca snapshot konsisten, tetapi dua transaksi dapat bersama-sama menulis hasil yang melanggar constraint global.',
+    },
+    {
+      id: 'q-06-08',
+      order: 8,
+      prompt: 'Durability menjamin?',
+      options: [
+        'Semua transaksi berjalan paralel',
+        'Data yang sudah commit tidak hilang meski server crash',
+        'Tidak ada deadlock',
+        'Query selalu menggunakan index',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Durability memastikan perubahan yang sudah commit tetap ada setelah crash melalui WAL dan fsync.',
+    },
+  ],
+}

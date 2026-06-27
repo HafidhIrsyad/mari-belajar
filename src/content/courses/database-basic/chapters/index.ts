@@ -1,0 +1,8 @@
+export { ch01RelationalModelErDiagram } from './ch-01-relational-model-er-diagram'
+export { ch02SqlCrudDdl } from './ch-02-sql-crud-ddl'
+export { ch03JoinsAggregationsSubqueries } from './ch-03-joins-aggregations-subqueries'
+export { ch04Normalisasi } from './ch-04-normalisasi'
+export { ch05BtreesStorageEnginesIndexInternals } from './ch-05-btrees-storage-engines-index-internals'
+export { ch06TransactionsAcid } from './ch-06-transactions-acid'
+export { ch07ViewsFunctionsTriggers } from './ch-07-views-functions-triggers'
+export { ch08DatabaseDesignProject } from './ch-08-database-design-project'

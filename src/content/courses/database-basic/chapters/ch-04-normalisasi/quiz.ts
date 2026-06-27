@@ -1,0 +1,103 @@
+import type { Quiz } from '@/content/types'
+
+export const ch04Quiz: Quiz = {
+  id: 'quiz-ch-04-normalisasi',
+  title: 'Quiz: Normalisasi',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-04-01',
+      order: 1,
+      prompt: 'Tujuan utama normalisasi adalah?',
+      options: [
+        'Mempercepat semua query',
+        'Mengurangi redundansi dan mencegah anomali',
+        'Menambah jumlah table',
+        'Menghilangkan semua index',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Normalisasi mengorganisasi data agar tidak tersimpan berulang dan terhindar dari anomali.',
+    },
+    {
+      id: 'q-04-02',
+      order: 2,
+      prompt: 'Syarat utama 1NF adalah?',
+      options: [
+        'Tidak ada transitive dependency',
+        'Setiap cell berisi nilai atomic dan tidak ada grup berulang',
+        'Setiap atribut bergantung pada seluruh PK',
+        'Determinant harus superkey',
+      ],
+      correctOptionIndex: 1,
+      explanation: '1NF menuntut atomicity: satu nilai per cell, tanpa grup kolom berulang.',
+    },
+    {
+      id: 'q-04-03',
+      order: 3,
+      prompt: 'Partial dependency relevan ketika?',
+      options: [
+        'Primary key adalah single column',
+        'Primary key adalah composite key dan atribut bergantung hanya pada sebagian PK',
+        'Table memiliki foreign key',
+        'Table hanya memiliki dua kolom',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Partial dependency terjadi ketika atribut non-key bergantung hanya pada sebagian composite key, melanggar 2NF.',
+    },
+    {
+      id: 'q-04-04',
+      order: 4,
+      prompt: 'Transitive dependency melanggar bentuk normal apa?',
+      options: ['1NF', '2NF', '3NF', 'BCNF'],
+      correctOptionIndex: 2,
+      explanation: '3NF mengharuskan atribut non-key tidak bergantung pada atribut non-key lain.',
+    },
+    {
+      id: 'q-04-05',
+      order: 5,
+      prompt: 'Dalam BCNF, setiap determinant harus?',
+      options: [
+        'Merupakan atribut non-key',
+        'Merupakan superkey',
+        'Berupa foreign key',
+        'Memiliki nilai NULL',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'BCNF mensyaratkan setiap determinant dalam functional dependency adalah superkey.',
+    },
+    {
+      id: 'q-04-06',
+      order: 6,
+      prompt: 'Denormalisasi biasanya dilakukan untuk?',
+      options: [
+        'Menghindari semua anomali',
+        'Mengurangi jumlah table',
+        'Meningkatkan performa query baca tertentu',
+        'Menghapus semua foreign key',
+      ],
+      correctOptionIndex: 2,
+      explanation: 'Denormalisasi sengaja menambah redundansi untuk mempercepat query baca pada workload tertentu.',
+    },
+    {
+      id: 'q-04-07',
+      order: 7,
+      prompt: 'Multi-valued dependency ditangani oleh bentuk normal?',
+      options: ['2NF', '3NF', 'BCNF', '4NF'],
+      correctOptionIndex: 3,
+      explanation: '4NF menghilangkan multi-valued dependency yang tidak saling bergantung.',
+    },
+    {
+      id: 'q-04-08',
+      order: 8,
+      prompt: 'Anomali update terjadi ketika?',
+      options: [
+        'Data yang sama harus diubah di banyak tempat karena redundansi',
+        'Query berjalan terlalu lambat',
+        'Primary key duplikat',
+        'Foreign key tidak terdefinisi',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Redundansi menyebabkan data yang sama tersimpan di beberapa row; jika tidak semua di-update, terjadi inkonsistensi.',
+    },
+  ],
+}

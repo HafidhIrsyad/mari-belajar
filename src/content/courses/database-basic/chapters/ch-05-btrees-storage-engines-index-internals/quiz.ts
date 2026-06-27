@@ -1,0 +1,103 @@
+import type { Quiz } from '@/content/types'
+
+export const ch05Quiz: Quiz = {
+  id: 'quiz-ch-05-btrees-storage-engines-index-internals',
+  title: 'Quiz: B-Trees, Storage Engines & Index Internals',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-05-01',
+      order: 1,
+      prompt: 'Di B+ tree, di mana data aktual atau pointer ke row disimpan?',
+      options: ['Hanya di root', 'Di internal node', 'Di leaf node', 'Di buffer pool saja'],
+      correctOptionIndex: 2,
+      explanation: 'Leaf node B+ tree menyimpan key dan data atau pointer ke row; internal node hanya navigasi.',
+    },
+    {
+      id: 'q-05-02',
+      order: 2,
+      prompt: 'Apa keuntungan utama clustered index?',
+      options: [
+        'Bisa ada banyak per table',
+        'Range scan pada key utama sangat cepat karena row tersimpan berurutan',
+        'Tidak memerlukan primary key',
+        'Selalu lebih kecil dari non-clustered index',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Clustered index menentukan urutan fisik row, sehingga range scan pada PK efisien.',
+    },
+    {
+      id: 'q-05-03',
+      order: 3,
+      prompt: 'Composite index (a, b, c) dapat digunakan optimal untuk query dengan predicate?',
+      options: ['WHERE c = 1', 'WHERE b = 1 AND c = 2', 'WHERE a = 1 AND c = 2', 'WHERE a = 1 AND b = 2 AND c = 3'],
+      correctOptionIndex: 3,
+      explanation: 'Composite index menggunakan prefix kiri; predicate harus mencakup a, lalu b, baru c secara berurutan.',
+    },
+    {
+      id: 'q-05-04',
+      order: 4,
+      prompt: 'Apa itu covering index?',
+      options: [
+        'Index yang menutupi semua row table',
+        'Index yang mencakup semua kolom yang dibutuhkan query sehingga tidak perlu akses heap',
+        'Index yang memiliki semua tipe data',
+        'Index dengan ukuran page terbesar',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Covering index memungkinkan index-only scan karena semua kolom select ada di index.',
+    },
+    {
+      id: 'q-05-05',
+      order: 5,
+      prompt: 'Tujuan utama WAL adalah?',
+      options: [
+        'Mempercepat query baca',
+        'Menjamin durability dengan menulis log sebelum memodifikasi page data',
+        'Menggantikan index B-tree',
+        'Mengompresi data di disk',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'WAL menulis perubahan ke log sequensial terlebih dahulu agar dapat di-recovery jika crash.',
+    },
+    {
+      id: 'q-05-06',
+      order: 6,
+      prompt: 'Page split terjadi ketika?',
+      options: [
+        'Buffer pool penuh',
+        'Leaf node atau internal node penuh saat insert',
+        'Query melakukan full table scan',
+        'Index di-drop',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Ketika node B-tree penuh dan ada insert, node dipecah dan key tengah naik ke parent.',
+    },
+    {
+      id: 'q-05-07',
+      order: 7,
+      prompt: 'Mengapa secondary index di InnoDB menyimpan primary key value?',
+      options: [
+        'Untuk menghemat ruang',
+        'Karena row data disimpan di clustered index; secondary index membutuhkan PK untuk lookup row',
+        'Karena tidak diperbolehkan menyimpan row ID',
+        'Untuk menghindari WAL',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Di InnoDB, clustered index adalah tempat row data disimpan; secondary index mereferensinya melalui PK.',
+    },
+    {
+      id: 'q-05-08',
+      order: 8,
+      prompt: 'Mengapa index pada kolom dengan selectivity rendah sering diabaikan optimizer?',
+      options: [
+        'Karena index selalu salah',
+        'Karena sequential scan bisa lebih murah daripada banyak random lookup',
+        'Karena kolom tersebut tidak boleh di-index',
+        'Karena B-tree tidak mendukung nilai duplikat',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Jika sebagian besar row cocok, sequential scan lebih efisien daripada berkali-kali mengakses index dan heap.',
+    },
+  ],
+}

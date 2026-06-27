@@ -1,0 +1,98 @@
+import type { Quiz } from '@/content/types'
+
+export const ch03Quiz: Quiz = {
+  id: 'quiz-ch-03-joins-aggregations-subqueries',
+  title: 'Quiz: Joins, Aggregations & Subqueries',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-03-01',
+      order: 1,
+      prompt: 'JOIN mana yang mengembalikan semua row dari table kiri meskipun tidak cocok di kanan?',
+      options: ['INNER JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'FULL JOIN'],
+      correctOptionIndex: 1,
+      explanation: 'LEFT JOIN (LEFT OUTER JOIN) mempertahankan semua row dari table di sebelah kiri.',
+    },
+    {
+      id: 'q-03-02',
+      order: 2,
+      prompt: 'Fungsi mana yang menghitung jumlah row dalam grup?',
+      options: ['SUM', 'AVG', 'COUNT', 'MAX'],
+      correctOptionIndex: 2,
+      explanation: 'COUNT(*) menghitung jumlah row, sedangkan SUM menjumlahkan nilai numerik.',
+    },
+    {
+      id: 'q-03-03',
+      order: 3,
+      prompt: 'Clause apa yang memfilter hasil setelah aggregasi?',
+      options: ['WHERE', 'GROUP BY', 'HAVING', 'ORDER BY'],
+      correctOptionIndex: 2,
+      explanation: 'HAVING diterapkan setelah GROUP BY untuk memfilter hasil aggregasi.',
+    },
+    {
+      id: 'q-03-04',
+      order: 4,
+      prompt: 'Apa keunggulan EXISTS dibanding IN untuk subquery besar?',
+      options: [
+        'Selalu menghasilkan hasil yang berbeda',
+        'Lebih cepat karena bisa berhenti begitu menemukan kecocokan',
+        'Hanya bisa digunakan di MySQL',
+        'Tidak memerlukan kondisi',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'EXISTS menggunakan short-circuit: begitu satu row cocok, subquery berhenti.',
+    },
+    {
+      id: 'q-03-05',
+      order: 5,
+      prompt: 'Window function RANK() berbeda dengan ROW_NUMBER() karena?',
+      options: [
+        'RANK selalu lebih lambat',
+        'RANK memberi nilai sama untuk row dengan nilai urutan sama dan meninggalkan celah',
+        'ROW_NUMBER tidak bisa dipartisi',
+        'RANK hanya berfungsi di PostgreSQL',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'RANK memberi peringkat sama untuk nilai identik dan meloncat ke peringkat berikutnya.',
+    },
+    {
+      id: 'q-03-06',
+      order: 6,
+      prompt: 'LAG(column, 1) dalam window function digunakan untuk?',
+      options: [
+        'Menghitung rata-rata column',
+        'Mengakses nilai column dari row sebelumnya dalam window',
+        'Mengelompokkan row',
+        'Menyaring NULL',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'LAG mengambil nilai dari row sebelumnya sesuai urutan window.',
+    },
+    {
+      id: 'q-03-07',
+      order: 7,
+      prompt: 'Apa risiko utama correlated subquery?',
+      options: [
+        'Selalu menghasilkan hasil salah',
+        'Dapat dieksekusi sekali per row luar sehingga berpotensi lambat',
+        'Tidak bisa menggunakan WHERE',
+        'Hanya bekerja dengan INNER JOIN',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Correlated subquery dieksekusi berulang untuk setiap row query luar, sehingga perlu hati-hati pada dataset besar.',
+    },
+    {
+      id: 'q-03-08',
+      order: 8,
+      prompt: 'Mengapa UNION ALL lebih cepat dari UNION?',
+      options: [
+        'Karena menghilangkan duplikat',
+        'Karena tidak menghilangkan duplikat sehingga tidak perlu sorting/hashing',
+        'Karena hanya menerima satu query',
+        'Karena otomatis menambah LIMIT',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'UNION harus menghilangkan duplikat yang memerlukan operasi tambahan. UNION ALL mempertahankan semua row.',
+    },
+  ],
+}

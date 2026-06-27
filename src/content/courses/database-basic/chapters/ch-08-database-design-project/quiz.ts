@@ -1,0 +1,103 @@
+import type { Quiz } from '@/content/types'
+
+export const ch08Quiz: Quiz = {
+  id: 'quiz-ch-08-database-design-project',
+  title: 'Quiz: Database Design Project',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-08-01',
+      order: 1,
+      prompt: 'Langkah pertama dalam desain database adalah?',
+      options: [
+        'Menulis DDL',
+        'Mengumpulkan kebutuhan bisnis dan mengidentifikasi entitas',
+        'Membuat index',
+        'Mengisi seed data',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Desain database yang baik dimulai dari pemahaman kebutuhan bisnis, bukan langsung kode.',
+    },
+    {
+      id: 'q-08-02',
+      order: 2,
+      prompt: 'Dalam LMS, relasi antara User dan Course melalui Enrollment adalah?',
+      options: ['One-to-one', 'One-to-many', 'Many-to-many', 'Tidak ada relasi'],
+      correctOptionIndex: 2,
+      explanation: 'Satu siswa bisa mengikuti banyak kursus, dan satu kursus bisa memiliki banyak siswa.',
+    },
+    {
+      id: 'q-08-03',
+      order: 3,
+      prompt: 'Mengapa lessons(course_id, order_index) perlu unique constraint?',
+      options: [
+        'Agar tidak ada lesson dengan nomor urut duplikat dalam satu kursus',
+        'Agar query lebih lambat',
+        'Agar tidak bisa menghapus course',
+        'Agar lesson_id unik secara global',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Unique constraint pada (course_id, order_index) mencegah dua lesson memiliki nomor urut sama dalam kursus yang sama.',
+    },
+    {
+      id: 'q-08-04',
+      order: 4,
+      prompt: 'Apa tujuan membuat index pada foreign key?',
+      options: [
+        'Agar FK tidak perlu diisi',
+        'Mempercepat JOIN dan pengecekan integritas referensial',
+        'Menggantikan primary key',
+        'Menambah validasi CHECK',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Index pada FK mempercepat JOIN ke table induk dan operasi ON DELETE/UPDATE.',
+    },
+    {
+      id: 'q-08-05',
+      order: 5,
+      prompt: 'Strategi migrasi backward-compatible artinya?',
+      options: [
+        'Migrasi yang selalu menghapus data lama',
+        'Perubahan skema yang tidak merusak aplikasi versi sebelumnya',
+        'Migrasi yang hanya boleh dijalankan sekali',
+        'Migrasi tanpa script rollback',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Backward-compatible migration memungkinkan deploy bertahap tanpa memaksa aplikasi lama berhenti.',
+    },
+    {
+      id: 'q-08-06',
+      order: 6,
+      prompt: 'Tool apa yang digunakan untuk memverifikasi execution plan di PostgreSQL?',
+      options: ['SHOW TABLES', 'EXPLAIN ANALYZE', 'DESCRIBE', 'CHECK INDEX'],
+      correctOptionIndex: 1,
+      explanation: 'EXPLAIN ANALYZE menampilkan rencana eksekusi dan waktu aktual query.',
+    },
+    {
+      id: 'q-08-07',
+      order: 7,
+      prompt: 'Mengapa seed data penting dalam proyek desain database?',
+      options: [
+        'Menggantikan backup production',
+        'Membantu menguji constraint, query, dan performa sebelum aplikasi dihubungkan',
+        'Menghapus semua index',
+        'Mempercepat migrasi otomatis',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Seed data memungkinkan pengujian skema dan query dengan data representatif sejak awal.',
+    },
+    {
+      id: 'q-08-08',
+      order: 8,
+      prompt: 'Bagaimana cara aman menangani seed data yang terdiri dari banyak insert?',
+      options: [
+        'Menjalankan insert satu per satu tanpa transaksi',
+        'Membungkus semua insert dalam satu transaksi agar konsisten',
+        'Menonaktifkan foreign key',
+        'Menghapus table sebelum seed',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Transaksi memastikan seluruh seed data berhasil atau gagal bersama, menghindari state setengah lengkap.',
+    },
+  ],
+}

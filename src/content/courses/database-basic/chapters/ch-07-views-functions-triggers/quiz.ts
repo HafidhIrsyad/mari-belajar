@@ -1,0 +1,108 @@
+import type { Quiz } from '@/content/types'
+
+export const ch07Quiz: Quiz = {
+  id: 'quiz-ch-07-views-functions-triggers',
+  title: 'Quiz: Views, Functions & Triggers',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-07-01',
+      order: 1,
+      prompt: 'Apa perbedaan utama view dan materialized view?',
+      options: [
+        'View lebih cepat selalu',
+        'Materialized view menyimpan hasil query secara fisik dan perlu di-refresh',
+        'View tidak bisa di-query',
+        'Materialized view tidak mendukung index',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Materialized view menyimpan snapshot hasil query di disk sehingga query cepat tetapi datanya bisa usang.',
+    },
+    {
+      id: 'q-07-02',
+      order: 2,
+      prompt: 'Stored function paling cocok untuk?',
+      options: [
+        'Batch operation tanpa hasil',
+        'Komputasi yang mengembalikan nilai dalam query',
+        'Menggantikan semua logika aplikasi',
+        'Menghapus table',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Stored function mengembalikan nilai dan dapat dipanggil di dalam SELECT atau expression.',
+    },
+    {
+      id: 'q-07-03',
+      order: 3,
+      prompt: 'Trigger dieksekusi kapan?',
+      options: [
+        'Hanya saat backup database',
+        'Secara otomatis saat event INSERT, UPDATE, atau DELETE terjadi pada table',
+        'Manual oleh DBA setiap pagi',
+        'Hanya saat query SELECT',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Trigger bereaksi terhadap perubahan data pada table sesuai event yang didefinisikan.',
+    },
+    {
+      id: 'q-07-04',
+      order: 4,
+      prompt: 'Risiko utama penggunaan trigger adalah?',
+      options: [
+        'Tidak bisa digunakan untuk audit',
+        'Logika tersembunyi yang sulit di-debug dan di-test',
+        'Selalu memperlambat query SELECT',
+        'Tidak mendukung transaksi',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Trigger membuat perilaku table tidak transparan dan dapat memicu efek berantai yang sulit dilacak.',
+    },
+    {
+      id: 'q-07-05',
+      order: 5,
+      prompt: 'Stored procedure biasanya dipanggil dengan perintah?',
+      options: ['SELECT', 'CALL', 'EXECUTE FUNCTION', 'RUN'],
+      correctOptionIndex: 1,
+      explanation: 'Di SQL standar, stored procedure dipanggil dengan CALL.',
+    },
+    {
+      id: 'q-07-06',
+      order: 6,
+      prompt: 'Audit trail yang baik sebaiknya mencatat?',
+      options: [
+        'Hanya new value',
+        'Old value, new value, siapa yang mengubah, dan kapan',
+        'Hanya timestamp',
+        'Hanya primary key',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Audit yang berguna harus bisa merekonstruksi perubahan, termasuk siapa dan kapan perubahan terjadi.',
+    },
+    {
+      id: 'q-07-07',
+      order: 7,
+      prompt: 'View dapat digunakan untuk?',
+      options: [
+        'Menyimpan data fisik baru',
+        'Menyembunyikan kompleksitas query dan membatasi kolom yang terlihat',
+        'Menggantikan primary key',
+        'Menghapus constraint',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'View adalah virtual table dari query tersimpan, berguna untuk abstraksi dan keamanan kolom.',
+    },
+    {
+      id: 'q-07-08',
+      order: 8,
+      prompt: 'Kapan sebaiknya menghindari logika bisnis rumit di database?',
+      options: [
+        'Selalu, karena database tidak bisa menjalankan function',
+        'Ketika logika sulit di-test, di-version, dan di-deploy dengan CI/CD',
+        'Tidak pernah, semua logika harus di database',
+        'Hanya pada database NoSQL',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Banyak logika di database dapat mengurangi maintainability; seimbangkan dengan kebutuhan konsistensi dan performa.',
+    },
+  ],
+}
