@@ -42,6 +42,9 @@ export default defineConfig({
           if (id.includes('/src/content/courses/go-fundamental/')) {
             return 'course-go-fundamental'
           }
+          if (id.includes('/src/content/courses/go-intermediate/')) {
+            return 'course-go-intermediate'
+          }
           if (id.includes('/src/content/courses/js-ts-fundamental/')) {
             return 'course-js-ts-fundamental'
           }
