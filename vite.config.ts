@@ -42,6 +42,9 @@ export default defineConfig({
           if (id.includes('/src/content/courses/frontend-basic/')) {
             return 'course-frontend-basic'
           }
+          if (id.includes('/src/content/courses/frontend-intermediate/')) {
+            return 'course-frontend-intermediate'
+          }
           if (id.includes('/src/content/courses/go-advanced/')) {
             return 'course-go-advanced'
           }
