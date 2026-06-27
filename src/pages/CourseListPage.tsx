@@ -1,6 +1,6 @@
 import { BookOpen } from 'lucide-react'
 import { CourseList } from '@/components/course/course-list'
-import { courses } from '@/content'
+import { courseMetas } from '@/content'
 
 export function CourseListPage() {
   return (
@@ -16,7 +16,7 @@ export function CourseListPage() {
         </p>
       </div>
       <div className="mt-10 max-w-3xl">
-        <CourseList courses={courses} />
+        <CourseList courses={courseMetas} />
       </div>
     </div>
   )

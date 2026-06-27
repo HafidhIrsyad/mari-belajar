@@ -11,9 +11,10 @@ import { useProgressStore } from '@/stores/progressStore'
 interface QuizPanelProps {
   courseId: string
   chapter: Chapter
+  hasNextChapter: boolean
 }
 
-export function QuizPanel({ courseId, chapter }: QuizPanelProps) {
+export function QuizPanel({ courseId, chapter, hasNextChapter }: QuizPanelProps) {
   const { startQuiz, selectAnswer, submitQuiz, resetQuiz, activeQuiz } =
     useProgressStore()
 
@@ -25,9 +26,9 @@ export function QuizPanel({ courseId, chapter }: QuizPanelProps) {
 
   useEffect(() => {
     if (!activeQuiz || activeQuiz.chapterId !== chapter.id) {
-      startQuiz(courseId, chapter.id)
+      startQuiz(courseId, chapter.id, chapter.quiz.questions.length)
     }
-  }, [chapter.id, courseId, activeQuiz, startQuiz])
+  }, [chapter.id, chapter.quiz.questions.length, courseId, activeQuiz, startQuiz])
 
   if (!activeQuiz || activeQuiz.chapterId !== chapter.id) {
     return <div className="py-8 text-center text-muted-foreground">Memuat quiz...</div>
@@ -37,13 +38,13 @@ export function QuizPanel({ courseId, chapter }: QuizPanelProps) {
   const isSubmitted = activeQuiz.status === 'submitted'
 
   const handleSubmit = () => {
-    const quizResult = submitQuiz()
+    const quizResult = submitQuiz(chapter.quiz, hasNextChapter)
     setResult(quizResult)
   }
 
   const handleRetry = () => {
     resetQuiz()
-    startQuiz(courseId, chapter.id)
+    startQuiz(courseId, chapter.id, chapter.quiz.questions.length)
     setResult(null)
   }
 
@@ -118,12 +119,12 @@ export function QuizPanel({ courseId, chapter }: QuizPanelProps) {
 
         <div className="flex items-center justify-end gap-4">
           {isSubmitted ? (
-            <Button onClick={handleRetry} variant="outline">
-              <RotateCcw className="mr-2 h-4 w-4" />
+            <Button onClick={handleRetry} variant="outline" aria-label="Ulangi quiz">
+              <RotateCcw className="mr-2 h-4 w-4" aria-hidden="true" />
               Ulangi Quiz
             </Button>
           ) : (
-            <Button onClick={handleSubmit} disabled={!allAnswered}>
+            <Button onClick={handleSubmit} disabled={!allAnswered} aria-label="Periksa jawaban quiz">
               Periksa Jawaban
             </Button>
           )}

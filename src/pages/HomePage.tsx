@@ -8,11 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { courses } from '@/content'
+import { courseMetas } from '@/content'
 
 export function HomePage() {
-  const firstCourse = courses[0]
-  const firstChapter = firstCourse?.chapters[0]
+  const firstCourse = courseMetas[0]
 
   return (
     <div className="flex flex-col">
@@ -34,9 +33,9 @@ export function HomePage() {
             <Button asChild size="lg">
               <Link to="/courses">Mulai Belajar</Link>
             </Button>
-            {firstChapter && (
+            {firstCourse && (
               <Button asChild size="lg" variant="outline">
-                <Link to={`/courses/${firstCourse.slug}/${firstChapter.slug}`}>
+                <Link to={`/courses/${firstCourse.slug}/${firstCourse.firstChapterSlug}`}>
                   Langsung ke Bab 1
                 </Link>
               </Button>
@@ -97,7 +96,7 @@ export function HomePage() {
             <CardContent>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">
-                  {firstCourse.chapters.length} bab •{' '}
+                  {firstCourse.chaptersCount} bab •{' '}
                   {firstCourse.estimatedHours ?? '-'} jam estimasi
                 </span>
                 <Button asChild>

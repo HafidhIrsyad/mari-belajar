@@ -10,12 +10,19 @@ import { CourseListPage } from '@/pages/CourseListPage'
 import { CourseDetailPage } from '@/pages/CourseDetailPage'
 import { LessonPage } from '@/pages/LessonPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { courseMetas } from '@/content'
 import { useProgressStore, initialProgress } from '@/stores/progressStore'
 
 function TestApp({ initialEntries = ['/'] }: { initialEntries?: string[] }) {
   return (
     <ThemeProvider defaultTheme="system" storageKey="mari-belajar-theme">
-      <MemoryRouter initialEntries={initialEntries}>
+      <MemoryRouter
+        initialEntries={initialEntries}
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <Routes>
           <Route path="/" element={<AppShell><HomePage /></AppShell>} />
           <Route path="/courses" element={<AppShell><CourseListPage /></AppShell>} />
@@ -28,6 +35,20 @@ function TestApp({ initialEntries = ['/'] }: { initialEntries?: string[] }) {
     </ThemeProvider>
   )
 }
+
+const csFundamentals = courseMetas[0]
+const phaseOneChapters = csFundamentals
+  ? [
+      'ch-01-how-computers-work',
+      'ch-02-number-systems-and-bits',
+      'ch-03-algorithms-and-complexity',
+      'ch-04-fundamental-data-structures',
+      'ch-05-os-and-process-management',
+      'ch-06-networking-and-internet-protocols',
+      'ch-07-databases-and-sql-basics',
+      'ch-08-security-fundamentals',
+    ]
+  : []
 
 describe('Mari Belajar Milestone 1 — E2E happy paths', () => {
   beforeEach(() => {
@@ -169,5 +190,20 @@ describe('Mari Belajar Milestone 1 — E2E happy paths', () => {
 
     expect(screen.getByRole('heading', { name: /Referensi Belajar Lebih Lanjut/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /How Boolean Logic Works/i })).toBeInTheDocument()
+  })
+
+  describe('Phase 1 chapter smoke tests', () => {
+    it.each(phaseOneChapters)(
+      'renders lesson and quiz for %s via direct navigation',
+      async (chapterSlug) => {
+        render(<TestApp initialEntries={[`/courses/cs-fundamentals/${chapterSlug}`]} />)
+
+        await waitFor(() => {
+          expect(screen.getByRole('button', { name: /Periksa Jawaban/i })).toBeInTheDocument()
+        })
+
+        expect(screen.getAllByRole('group')).toHaveLength(8)
+      }
+    )
   })
 })

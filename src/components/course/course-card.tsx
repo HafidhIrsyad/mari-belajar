@@ -7,10 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import type { Course } from '@/content/types'
+import type { CourseMeta } from '@/content/types'
 
 interface CourseCardProps {
-  course: Course
+  course: CourseMeta
 }
 
 export function CourseCard({ course }: CourseCardProps) {

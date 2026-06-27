@@ -84,6 +84,7 @@ function ChapterSidebarItem({
           isCurrent && 'bg-primary/10 font-semibold text-primary opacity-100'
         )}
         title="Bab terkunci. Selesaikan bab sebelumnya dengan skor 100%."
+        aria-current={isCurrent ? 'page' : undefined}
       >
         <Lock className="h-[18px] w-[18px] shrink-0" />
         <span className="line-clamp-2">{chapter.order}. {chapter.title}</span>
@@ -103,6 +104,7 @@ function ChapterSidebarItem({
             : 'font-medium text-muted-foreground',
         !isCurrent && 'hover:bg-muted'
       )}
+      aria-current={isCurrent ? 'page' : undefined}
     >
       {completed ? (
         <CircleCheck className="h-[18px] w-[18px] shrink-0 text-success" />

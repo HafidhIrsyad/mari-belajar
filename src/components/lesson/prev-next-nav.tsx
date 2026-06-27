@@ -2,13 +2,24 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import type { Chapter, Course } from '@/content/types'
 import type { UserProgress } from '@/content/types'
-import { getNextChapter, getPreviousChapter } from '@/content'
 import { isChapterUnlocked } from '@/lib/progress'
 
 interface PrevNextNavProps {
   course: Course
   currentChapter: Chapter
   progress: UserProgress
+}
+
+function getNextChapter(course: Course, currentChapterId: string): Chapter | undefined {
+  const current = course.chapters.find((c) => c.id === currentChapterId)
+  if (!current) return undefined
+  return course.chapters.find((c) => c.order === current.order + 1)
+}
+
+function getPreviousChapter(course: Course, currentChapterId: string): Chapter | undefined {
+  const current = course.chapters.find((c) => c.id === currentChapterId)
+  if (!current) return undefined
+  return course.chapters.find((c) => c.order === current.order - 1)
 }
 
 export function PrevNextNav({

@@ -1,6 +1,6 @@
-import type { Course } from '@/content/types'
+import type { CourseMeta } from '@/content/types'
 
-export const csFundamentalsMeta: Omit<Course, 'chapters'> = {
+export const csFundamentalsMeta: CourseMeta = {
   id: 'cs-fundamentals',
   slug: 'cs-fundamentals',
   title: 'Computer Science / Informatics Fundamentals',
@@ -9,4 +9,6 @@ export const csFundamentalsMeta: Omit<Course, 'chapters'> = {
   estimatedHours: 24,
   tags: ['computer-science', 'fundamentals', 'indonesian'],
   createdAt: '2026-06-26T00:00:00.000Z',
+  chaptersCount: 8,
+  firstChapterSlug: 'ch-01-how-computers-work',
 }

@@ -1,8 +1,8 @@
 import { CourseCard } from './course-card'
-import type { Course } from '@/content/types'
+import type { CourseMeta } from '@/content/types'
 
 interface CourseListProps {
-  courses: Course[]
+  courses: CourseMeta[]
 }
 
 export function CourseList({ courses }: CourseListProps) {

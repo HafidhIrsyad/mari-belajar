@@ -102,6 +102,11 @@ export interface Course {
   createdAt?: string
 }
 
+export type CourseMeta = Omit<Course, 'chapters'> & {
+  chaptersCount: number
+  firstChapterSlug: string
+}
+
 export interface QuizAttempt {
   chapterId: string
   submittedAt: string

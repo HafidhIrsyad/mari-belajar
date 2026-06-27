@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, Navigate } from 'react-router-dom'
 import { ChevronLeft } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -12,8 +12,8 @@ import { QuizPanel } from '@/components/quiz/quiz-panel'
 import { ReferenceList } from '@/components/lesson/reference-list'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { getChapterBySlug, getCourseBySlug } from '@/content'
-import type { LessonSection } from '@/content/types'
+import { loadChapterBySlug, loadCourseBySlug } from '@/content'
+import type { Chapter, Course, LessonSection } from '@/content/types'
 import { useProgressStore } from '@/stores/progressStore'
 
 export function LessonPage() {
@@ -22,16 +22,50 @@ export function LessonPage() {
     chapterId: string
   }>()
   const progress = useProgressStore((state) => state.progress)
+  const [course, setCourse] = useState<Course | null>(null)
+  const [chapter, setChapter] = useState<Chapter | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const course = useMemo(() => getCourseBySlug(courseId ?? ''), [courseId])
-  const chapter = useMemo(
-    () => (course ? getChapterBySlug(course.slug, chapterId ?? '') : undefined),
-    [course, chapterId]
-  )
+  useEffect(() => {
+    let cancelled = false
+    setLoading(true)
+    setCourse(null)
+    setChapter(null)
+
+    async function load() {
+      const loadedCourse = await loadCourseBySlug(courseId ?? '')
+      const loadedChapter = loadedCourse
+        ? await loadChapterBySlug(loadedCourse.slug, chapterId ?? '')
+        : undefined
+      if (!cancelled) {
+        setCourse(loadedCourse ?? null)
+        setChapter(loadedChapter ?? null)
+        setLoading(false)
+      }
+    }
+
+    load().catch(() => {
+      if (!cancelled) {
+        setCourse(null)
+        setChapter(null)
+        setLoading(false)
+      }
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [courseId, chapterId])
+
+  if (loading) {
+    return <LessonSkeleton />
+  }
 
   if (!course || !chapter) {
     return <Navigate to="/not-found" replace />
   }
+
+  const hasNextChapter = course.chapters.some((c) => c.order === chapter.order + 1)
 
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)]">
@@ -58,13 +92,46 @@ export function LessonPage() {
             ))}
           </article>
 
-          <QuizPanel courseId={course.id} chapter={chapter} />
+          <QuizPanel courseId={course.id} chapter={chapter} hasNextChapter={hasNextChapter} />
           <ReferenceList references={chapter.references ?? []} />
           <PrevNextNav
             course={course}
             currentChapter={chapter}
             progress={progress}
           />
+        </div>
+      </main>
+    </div>
+  )
+}
+
+function LessonSkeleton() {
+  return (
+    <div className="flex min-h-[calc(100vh-3.5rem)] animate-pulse">
+      <aside className="hidden w-72 border-r bg-card p-6 lg:block">
+        <div className="h-6 w-3/4 rounded bg-muted" />
+        <div className="mt-6 space-y-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-4 w-full rounded bg-muted" />
+          ))}
+        </div>
+      </aside>
+
+      <main className="flex-1 px-6 py-10 lg:px-16 lg:py-14">
+        <div className="mx-auto max-w-[65ch]">
+          <div className="mb-6 h-4 w-32 rounded bg-muted" />
+          <div className="mb-8 h-10 w-3/4 rounded bg-muted" />
+
+          <div className="space-y-4">
+            <div className="h-4 w-full rounded bg-muted" />
+            <div className="h-4 w-full rounded bg-muted" />
+            <div className="h-4 w-5/6 rounded bg-muted" />
+            <div className="h-4 w-4/6 rounded bg-muted" />
+          </div>
+
+          <div className="mt-10 h-48 w-full rounded bg-muted" />
+
+          <div className="mt-12 h-64 w-full rounded bg-muted" />
         </div>
       </main>
     </div>
@@ -125,6 +192,8 @@ function LessonSectionRenderer({ section }: { section: LessonSection }) {
 
   return null
 }
+
+export default LessonPage
 
 function MobileChapterMenu({
   course,

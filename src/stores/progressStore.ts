@@ -1,8 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { produce } from 'immer'
-import type { UserProgress } from '@/content/types'
-import { getChapterById, getCourseById, getNextChapter } from '@/content'
+import type { Quiz, UserProgress } from '@/content/types'
 import { evaluateQuiz } from '@/lib/progress'
 
 export interface ActiveQuiz {
@@ -30,9 +29,9 @@ interface ProgressState {
   progress: UserProgress
   activeQuiz: ActiveQuiz | null
   hydrate: () => void
-  startQuiz: (courseId: string, chapterId: string) => void
+  startQuiz: (courseId: string, chapterId: string, questionCount: number) => void
   selectAnswer: (questionIndex: number, optionIndex: number) => void
-  submitQuiz: () => SubmitQuizResult
+  submitQuiz: (quiz: Quiz, hasNextChapter: boolean) => SubmitQuizResult
   resetQuiz: () => void
   markChapterCompleted: (courseId: string, chapterId: string) => void
 }
@@ -48,15 +47,14 @@ export const useProgressStore = create<ProgressState>()(
         // This action is exposed for explicit rehydration in tests or future tooling.
       },
 
-      startQuiz: (courseId: string, chapterId: string) => {
-        const chapter = getChapterById(courseId, chapterId)
-        if (!chapter) return
+      startQuiz: (courseId: string, chapterId: string, questionCount: number) => {
+        if (questionCount <= 0) return
 
         set({
           activeQuiz: {
             courseId,
             chapterId,
-            answers: Array.from({ length: chapter.quiz.questions.length }, () => null),
+            answers: Array.from({ length: questionCount }, () => null),
             status: 'in-progress',
             submittedAt: null,
           },
@@ -73,20 +71,15 @@ export const useProgressStore = create<ProgressState>()(
         set({ activeQuiz: { ...activeQuiz, answers: nextAnswers } })
       },
 
-      submitQuiz: () => {
+      submitQuiz: (quiz: Quiz, hasNextChapter: boolean) => {
         const { activeQuiz, progress } = get()
         if (!activeQuiz || activeQuiz.status !== 'in-progress') {
           return { score: 0, totalQuestions: 0, passed: false, nextChapterUnlocked: false }
         }
 
-        const chapter = getChapterById(activeQuiz.courseId, activeQuiz.chapterId)
-        if (!chapter) {
-          return { score: 0, totalQuestions: 0, passed: false, nextChapterUnlocked: false }
-        }
-
         const answers = activeQuiz.answers.map((a) => a ?? -1)
-        const { score, passed } = evaluateQuiz(chapter.quiz, answers)
-        const totalQuestions = chapter.quiz.questions.length
+        const { score, passed } = evaluateQuiz(quiz, answers)
+        const totalQuestions = quiz.questions.length
 
         const nextProgress = produce(progress, (draft) => {
           let courseRecord = draft.courseProgress.find(
@@ -120,9 +113,7 @@ export const useProgressStore = create<ProgressState>()(
           draft.lastUpdatedAt = new Date().toISOString()
         })
 
-        const course = getCourseById(activeQuiz.courseId)
-        const nextChapter = course ? getNextChapter(course, activeQuiz.chapterId) : undefined
-        const nextChapterUnlocked = passed && !!nextChapter
+        const nextChapterUnlocked = passed && hasNextChapter
 
         set({
           progress: nextProgress,

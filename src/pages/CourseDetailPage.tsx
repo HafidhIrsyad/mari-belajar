@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import {
   ChevronRight,
@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
-import { getCourseBySlug } from '@/content'
+import { loadCourseBySlug } from '@/content'
 import type { Chapter, Course, UserProgress } from '@/content/types'
 import {
   courseCompletionPercentage,
@@ -22,7 +22,33 @@ import { useProgressStore } from '@/stores/progressStore'
 export function CourseDetailPage() {
   const { courseId } = useParams<{ courseId: string }>()
   const progress = useProgressStore((state) => state.progress)
-  const course = useMemo(() => getCourseBySlug(courseId ?? ''), [courseId])
+  const [course, setCourse] = useState<Course | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+    setLoading(true)
+    loadCourseBySlug(courseId ?? '')
+      .then((loaded) => {
+        if (!cancelled) {
+          setCourse(loaded ?? null)
+          setLoading(false)
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setCourse(null)
+          setLoading(false)
+        }
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [courseId])
+
+  if (loading) {
+    return <CourseDetailSkeleton />
+  }
 
   if (!course) {
     return <Navigate to="/not-found" replace />
@@ -74,6 +100,48 @@ interface ChapterListItemProps {
   chapter: Chapter
   progress: UserProgress
 }
+
+function CourseDetailSkeleton() {
+  return (
+    <div className="px-6 py-12 lg:px-16 lg:py-20">
+      <div className="mx-auto max-w-7xl animate-pulse">
+        <div className="h-10 w-2/3 rounded bg-muted lg:h-12" />
+        <div className="mt-4 h-6 w-full max-w-3xl rounded bg-muted" />
+        <div className="mt-2 h-6 w-5/6 max-w-3xl rounded bg-muted" />
+        <div className="mt-6 max-w-3xl space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="h-4 w-32 rounded bg-muted" />
+            <span className="h-4 w-8 rounded bg-muted" />
+          </div>
+          <div className="h-2 rounded bg-muted" />
+        </div>
+
+        <Separator className="my-8" />
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Card key={i} className="opacity-70">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <span className="h-3 w-16 rounded bg-muted" />
+                  <span className="h-5 w-5 rounded-full bg-muted" />
+                </div>
+                <div className="mt-2 h-5 w-3/4 rounded bg-muted" />
+              </CardHeader>
+              <CardContent>
+                <div className="mb-4 h-4 w-full rounded bg-muted" />
+                <div className="h-4 w-5/6 rounded bg-muted" />
+                <div className="mt-4 h-10 w-full rounded bg-muted" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default CourseDetailPage
 
 function ChapterListItem({ course, chapter, progress }: ChapterListItemProps) {
   const unlocked = isChapterUnlocked(course, chapter, progress)
