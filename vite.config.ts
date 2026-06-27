@@ -36,6 +36,9 @@ export default defineConfig({
             return 'vendor-ui'
           }
           // Course content chunks
+          if (id.includes('/src/content/courses/backend-advanced/')) {
+            return 'course-backend-advanced'
+          }
           if (id.includes('/src/content/courses/backend-basic/')) {
             return 'course-backend-basic'
           }

@@ -1,4 +1,5 @@
 import type { Chapter, Course, CourseMeta } from './types'
+import { backendAdvancedMeta } from './courses/backend-advanced/meta'
 import { backendBasicMeta } from './courses/backend-basic/meta'
 import { backendIntermediateMeta } from './courses/backend-intermediate/meta'
 import { csFundamentalsMeta } from './courses/cs-fundamentals/meta'
@@ -26,6 +27,7 @@ export const courseMetas: CourseMeta[] = [
   jsTsFundamentalMeta,
   jsTsIntermediateMeta,
   jsTsAdvancedMeta,
+  backendAdvancedMeta,
   backendBasicMeta,
   backendIntermediateMeta,
 ]
@@ -43,6 +45,7 @@ function slugToExportKey(slug: string): string {
 }
 
 const courseLoaders: Record<string, () => Promise<Record<string, Course>>> = {
+  'backend-advanced': () => import('./courses/backend-advanced'),
   'backend-basic': () => import('./courses/backend-basic'),
   'backend-intermediate': () => import('./courses/backend-intermediate'),
   'cs-fundamentals': () => import('./courses/cs-fundamentals'),
