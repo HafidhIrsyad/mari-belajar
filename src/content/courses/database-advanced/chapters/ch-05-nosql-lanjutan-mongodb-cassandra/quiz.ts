@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch05Quiz: Quiz = {
+  id: 'quiz-ch-05-nosql-lanjutan-mongodb-cassandra',
+  title: 'Quiz: NoSQL Lanjutan: MongoDB & Cassandra',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-05-01',
+      order: 1,
+      prompt: 'Format penyimpanan data utama MongoDB adalah?',
+      options: [
+        'XML',
+        'BSON',
+        'CSV',
+        'YAML',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'MongoDB menyimpan dokumen dalam format BSON (Binary JSON).',
+    },
+    {
+      id: 'q-05-02',
+      order: 2,
+      prompt: 'Dalam Cassandra, kolom mana yang menentukan node tempat data disimpan?',
+      options: [
+        'Clustering column',
+        'Partition key',
+        'Secondary index',
+        'Counter column',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Partition key menentukan distribusi data ke node dan partition di Cassandra.',
+    },
+    {
+      id: 'q-05-03',
+      order: 3,
+      prompt: 'Mengapa Cassandra tidak mendukung join seperti SQL?',
+      options: [
+        'Karena Cassandra tidak bisa menyimpan relasi',
+        'Karena Cassandra didesain untuk query-first dan denormalisasi, bukan join antar tabel',
+        'Karena CQL tidak memiliki sintaks SQL',
+        'Karena join terlalu cepat',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Cassandra dioptimalkan untuk write dan query berbasis partition key; data biasanya didenormalisasi sesuai query pattern.',
+    },
+    {
+      id: 'q-05-04',
+      order: 4,
+      prompt: 'Stage MongoDB aggregation mana yang digunakan untuk mengelompokkan dokumen?',
+      options: [
+        '$match',
+        '$group',
+        '$project',
+        '$limit',
+      ],
+      correctOptionIndex: 1,
+      explanation: '$group mengelompokkan dokumen berdasarkan kriteria tertentu dan menghitung aggregate seperti sum atau count.',
+    },
+    {
+      id: 'q-05-05',
+      order: 5,
+      prompt: 'Apa itu covered query di MongoDB?',
+      options: [
+        'Query yang membaca semua dokumen',
+        'Query yang seluruhnya terpenuhi oleh index tanpa membaca dokumen',
+        'Query yang selalu melakukan full collection scan',
+        'Query yang menggunakan $lookup',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Covered query memenuhi semua kebutuhan field dari index, sehingga sangat efisien.',
+    },
+    {
+      id: 'q-05-06',
+      order: 6,
+      prompt: 'Apa yang dimaksud write concern w: majority di MongoDB?',
+      options: [
+        'Write hanya ke primary',
+        'Write diakui oleh majority node sebelum dikembalikan ke client',
+        'Write ke semua node termasuk arbiter',
+        'Write tanpa acknowledgment',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'w: majority memastikan write telah diakui oleh majority anggota replica set sebelum dianggap sukses.',
+    },
+    {
+      id: 'q-05-07',
+      order: 7,
+      prompt: 'Untuk strong consistency di Cassandra dengan replication factor 3, kombinasi mana yang valid?',
+      options: [
+        'W=1, R=1',
+        'W=2, R=2',
+        'W=1, R=3',
+        'W=0, R=1',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'W + R > RF, maka W=2 dan R=2 menghasilkan 4 > 3, memastikan read-after-write consistency.',
+    },
+    {
+      id: 'q-05-08',
+      order: 8,
+      prompt: 'Struktur data Cassandra yang mengoptimalkan write throughput disebut?',
+      options: [
+        'B-Tree',
+        'LSM-Tree',
+        'Hash Table',
+        'Linked List',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Cassandra menggunakan LSM-Tree (Log-Structured Merge-Tree) untuk write append-only yang sangat cepat.',
+    },
+  ],
+}

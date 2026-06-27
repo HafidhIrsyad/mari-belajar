@@ -48,6 +48,9 @@ export default defineConfig({
           if (id.includes('/src/content/courses/cs-fundamentals/')) {
             return 'course-cs-fundamentals'
           }
+          if (id.includes('/src/content/courses/database-advanced/')) {
+            return 'course-database-advanced'
+          }
           if (id.includes('/src/content/courses/database-basic/')) {
             return 'course-database-basic'
           }

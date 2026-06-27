@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch02Quiz: Quiz = {
+  id: 'quiz-ch-02-sharding-partitioning',
+  title: 'Quiz: Sharding & Partitioning',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-02-01',
+      order: 1,
+      prompt: 'Apa perbedaan utama partitioning dan sharding?',
+      options: [
+        'Partitioning membagi data ke banyak node, sharding membagi table di satu node',
+        'Partitioning membagi table di satu node, sharding membagi data ke banyak node',
+        'Keduanya sama-sama membagi data ke banyak node',
+        'Partitioning hanya untuk NoSQL',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Partitioning adalah pembagian table di dalam satu node, sedangkan sharding mendistribusikan data ke beberapa node independen.',
+    },
+    {
+      id: 'q-02-02',
+      order: 2,
+      prompt: 'Sharding key yang baik sebaiknya memiliki karakteristik apa?',
+      options: [
+        'Nilai yang sama untuk semua row',
+        'High cardinality dan distribusi merata',
+        'Selalu bertipe tanggal',
+        'Hanya satu nilai unik',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'High cardinality dan distribusi merata menghindari hot shard dan memastikan beban tersebar rata.',
+    },
+    {
+      id: 'q-02-03',
+      order: 3,
+      prompt: 'Range partitioning paling cocok untuk skenario apa?',
+      options: [
+        'Data dengan distribusi nilai acak',
+        'Data time-series yang sering diquery berdasarkan rentang waktu',
+        'Data yang selalu diquery dengan equality saja',
+        'Data kecil yang tidak tumbuh',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Range partitioning memudahkan partition pruning untuk query rentang waktu dan maintenance data lama.',
+    },
+    {
+      id: 'q-02-04',
+      order: 4,
+      prompt: 'Apa kelemahan cross-shard join?',
+      options: [
+        'Tidak memerlukan coordinator',
+        'Lebih mahal karena memerlukan scatter-gather ke banyak shard',
+        'Selalu lebih cepat dari join lokal',
+        'Hanya bisa dilakukan di satu database',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Cross-shard join harus mengirim query ke banyak shard dan menggabungkan hasilnya, sehingga meningkatkan latency dan kompleksitas.',
+    },
+    {
+      id: 'q-02-05',
+      order: 5,
+      prompt: 'Mengapa consistent hashing populer dalam sharding?',
+      options: [
+        'Karena selalu menghasilkan distribusi sempurna',
+        'Karena meminimalkan jumlah key yang dipindahkan saat jumlah shard berubah',
+        'Karena tidak memerlukan hash function',
+        'Karena hanya bekerja untuk range partitioning',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Consistent hashing memastikan penambahan atau penghapusan node hanya memindahkan sebagian kecil key, tidak seluruh data.',
+    },
+    {
+      id: 'q-02-06',
+      order: 6,
+      prompt: 'Apa yang dimaksud hot shard?',
+      options: [
+        'Shard yang baru ditambahkan',
+        'Shard yang menerima beban jauh lebih tinggi dari shard lain',
+        'Shard yang tidak menyimpan data',
+        'Shard yang selalu gagal',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Hot shard terjadi ketika satu shard menjadi bottleneck karena menerima proporsi akses yang jauh lebih besar.',
+    },
+    {
+      id: 'q-02-07',
+      order: 7,
+      prompt: 'Tools mana yang merupakan extension sharding untuk PostgreSQL?',
+      options: [
+        'Vitess',
+        'Citus',
+        'Galera',
+        'Redis Cluster',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Citus adalah extension PostgreSQL yang menyediakan distributed tables dan query coordinator.',
+    },
+    {
+      id: 'q-02-08',
+      order: 8,
+      prompt: 'Global tables dalam sharded architecture digunakan untuk?',
+      options: [
+        'Menyimpan semua data transaksional',
+        'Menyimpan data referensi kecil yang dibutuhkan semua shard untuk menghindari cross-shard join',
+        'Menggantikan primary shard',
+        'Menyimpan log replication',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Global tables mereplikasi data referensi ke semua shard sehingga lookup tidak memerlukan cross-shard query.',
+    },
+  ],
+}

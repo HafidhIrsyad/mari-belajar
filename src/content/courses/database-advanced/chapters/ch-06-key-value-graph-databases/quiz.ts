@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch06Quiz: Quiz = {
+  id: 'quiz-ch-06-key-value-graph-databases',
+  title: 'Quiz: Key-Value & Graph Databases',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-06-01',
+      order: 1,
+      prompt: 'Struktur data Redis mana yang cocok untuk leaderboard berdasarkan skor?',
+      options: [
+        'List',
+        'Sorted Set',
+        'Set',
+        'Hash',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Sorted Set menyimpan anggota dengan score dan mengurutkannya secara otomatis, ideal untuk leaderboard.',
+    },
+    {
+      id: 'q-06-02',
+      order: 2,
+      prompt: 'Apa keunggulan utama graph database dibanding RDBMS untuk data sangat terhubung?',
+      options: [
+        'Lebih murah',
+        'Relasi adalah first-class citizen dan traversal lebih efisien',
+        'Tidak memerlukan query language',
+        'Hanya menyimpan node tanpa relasi',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Graph database menganggap relasi sebagai first-class citizen dan menggunakan index-free adjacency untuk traversal efisien.',
+    },
+    {
+      id: 'q-06-03',
+      order: 3,
+      prompt: 'Mode persistence Redis mana yang mencatat setiap write operation?',
+      options: [
+        'RDB',
+        'AOF',
+        'Snapshot',
+        'LRU',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Append-Only File (AOF) mencatat setiap operasi write, memberikan durability yang lebih kuat daripada RDB snapshot.',
+    },
+    {
+      id: 'q-06-04',
+      order: 4,
+      prompt: 'Dalam cache-aside pattern, apa yang terjadi saat cache miss?',
+      options: [
+        'Langsung mengembalikan error',
+        'Aplikasi membaca dari database lalu menulis ke cache',
+        'Database otomatis mengisi cache',
+        'Cache dihapus',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Cache-aside meminta aplikasi mengelola cache: baca dari database saat miss, lalu simpan ke cache.',
+    },
+    {
+      id: 'q-06-05',
+      order: 5,
+      prompt: 'Apa itu cache stampede?',
+      options: [
+        'Cache yang terlalu penuh',
+        'Banyak request bersamaan menemukan cache miss dan mengakses database secara bersamaan',
+        'Cache yang tidak pernah expired',
+        'Penghapusan cache yang terlalu sering',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Cache stampede terjadi ketika banyak request simultan mengakses database karena cache tidak tersedia.',
+    },
+    {
+      id: 'q-06-06',
+      order: 6,
+      prompt: 'Berapa jumlah hash slots dalam Redis Cluster?',
+      options: [
+        '1024',
+        '4096',
+        '16384',
+        '65536',
+      ],
+      correctOptionIndex: 2,
+      explanation: 'Redis Cluster menggunakan 16.384 hash slots untuk mendistribusikan key ke node-node cluster.',
+    },
+    {
+      id: 'q-06-07',
+      order: 7,
+      prompt: 'Query language Neo4j disebut?',
+      options: [
+        'SQL',
+        'CQL',
+        'Cypher',
+        'Gremlin',
+      ],
+      correctOptionIndex: 2,
+      explanation: 'Cypher adalah query language deklaratif Neo4j berbasis pattern matching.',
+    },
+    {
+      id: 'q-06-08',
+      order: 8,
+      prompt: 'Algoritma graph mana yang digunakan untuk menemukan node paling berpengaruh?',
+      options: [
+        'Shortest path',
+        'PageRank',
+        'Minimum spanning tree',
+        'Binary search',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'PageRank adalah algoritma centrality yang mengukur pengaruh node dalam graph berdasarkan koneksinya.',
+    },
+  ],
+}

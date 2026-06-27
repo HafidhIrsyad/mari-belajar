@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch04Quiz: Quiz = {
+  id: 'quiz-ch-04-distributed-transactions',
+  title: 'Quiz: Distributed Transactions',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-04-01',
+      order: 1,
+      prompt: 'Apa fase pertama dalam Two-Phase Commit (2PC)?',
+      options: [
+        'Commit phase',
+        'Prepare phase',
+        'Compensation phase',
+        'Rollback phase',
+      ],
+      correctOptionIndex: 1,
+      explanation: '2PC dimulai dengan prepare phase, di mana coordinator menanyakan kesiapan semua participant.',
+    },
+    {
+      id: 'q-04-02',
+      order: 2,
+      prompt: 'Apa kelemahan utama 2PC?',
+      options: [
+        'Tidak mendukung commit',
+        'Rentan blocking jika coordinator gagal setelah prepare',
+        'Terlalu cepat sehingga tidak aman',
+        'Hanya bekerja untuk satu database',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Jika coordinator gagal setelah participant menyiapkan commit, participant harus menunggu coordinator pulih untuk mengetahui hasil akhir.',
+    },
+    {
+      id: 'q-04-03',
+      order: 3,
+      prompt: 'Apa tujuan compensating transaction dalam saga?',
+      options: [
+        'Melanjutkan transaksi yang gagal',
+        'Mengembalikan efek langkah sebelumnya saat terjadi kegagalan',
+        'Mengunci resource sampai saga selesai',
+        'Menggantikan database transaction',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Compensating transaction mengurungkan efek langkah yang sudah berhasil agar sistem kembali konsisten.',
+    },
+    {
+      id: 'q-04-04',
+      order: 4,
+      prompt: 'Dalam choreography, bagaimana service mengetahui langkah berikutnya?',
+      options: [
+        'Dari orchestrator pusat',
+        'Dengan subscribe event yang dipublish oleh service lain',
+        'Dari database utama',
+        'Dari file konfigurasi statis',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Choreography bergantung pada event-driven communication antar service tanpa pengelola pusat.',
+    },
+    {
+      id: 'q-04-05',
+      order: 5,
+      prompt: 'Masalah apa yang diselesaikan outbox pattern?',
+      options: [
+        'Meningkatkan kecepatan query',
+        'Menjamin atomicity antara database write dan event publication',
+        'Menggantikan message broker',
+        'Menghilangkan kebutuhan transaction',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Outbox pattern menyimpan event dalam transaction yang sama dengan business write, lalu relay mengirimkannya ke broker.',
+    },
+    {
+      id: 'q-04-06',
+      order: 6,
+      prompt: 'Apa fungsi idempotency key?',
+      options: [
+        'Mengenkripsi request',
+        'Mencegah efek ganda saat request dikirim ulang',
+        'Menentukan urutan saga',
+        'Mengunci row dalam database',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Idempotency key memastikan operasi yang sama tidak dieksekusi lebih dari sekali meskipun request diulang.',
+    },
+    {
+      id: 'q-04-07',
+      order: 7,
+      prompt: 'Workflow engine seperti Temporal berguna untuk saga karena?',
+      options: [
+        'Menggantikan database',
+        'Menyimpan state saga secara durable dan mendukung retry/compensation otomatis',
+        'Menghilangkan kebutuhan compensating transaction',
+        'Hanya bekerja untuk transaksi tunggal',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Workflow engine menyimpan state persisten, sehingga saga dapat dilanjutkan setelah worker crash dan kompensasi dijalankan sesuai definisi.',
+    },
+    {
+      id: 'q-04-08',
+      order: 8,
+      prompt: 'Kapan sebaiknya menggunakan orchestration daripada choreography?',
+      options: [
+        'Saat ingin loose coupling maksimal dan tidak perlu monitoring',
+        'Saat alur transaksi kompleks dan memerlukan visibilitas serta kontrol terpusat',
+        'Saat tidak ada kegagalan yang mungkin terjadi',
+        'Saat hanya ada satu service',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Orchestration lebih baik untuk alur kompleks karena orchestrator memiliki visibilitas penuh dan mengontrol urutan serta kompensasi.',
+    },
+  ],
+}

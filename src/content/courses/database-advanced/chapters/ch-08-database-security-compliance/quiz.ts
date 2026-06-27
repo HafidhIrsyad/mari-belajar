@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch08Quiz: Quiz = {
+  id: 'quiz-ch-08-database-security-compliance',
+  title: 'Quiz: Database Security & Compliance',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-08-01',
+      order: 1,
+      prompt: 'Apa prinsip least privilege dalam keamanan database?',
+      options: [
+        'Memberikan semua izin kepada admin',
+        'User hanya memiliki izin minimum yang diperlukan',
+        'Semua user memiliki izin sama',
+        'Tidak ada batasan akses',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Least privilege membatasi akses user hanya pada operasi dan data yang benar-benar dibutuhkan.',
+    },
+    {
+      id: 'q-08-02',
+      order: 2,
+      prompt: 'Apa tujuan encryption in transit?',
+      options: [
+        'Melindungi data saat disimpan di disk',
+        'Melindungi data saat bergerak di jaringan',
+        'Mengenkripsi backup',
+        'Menyembunyikan data di query log',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Encryption in transit melindungi data dari interception saat dikirim antara client dan server menggunakan TLS/SSL.',
+    },
+    {
+      id: 'q-08-03',
+      order: 3,
+      prompt: 'Apa fungsi Row-Level Security (RLS)?',
+      options: [
+        'Mengenkripsi seluruh tabel',
+        'Membatasi row yang dapat diakses user berdasarkan policy',
+        'Membatasi jumlah kolom dalam tabel',
+        'Mengaudit semua query',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'RLS secara transparan memfilter row berdasarkan policy yang didefinisikan, sehingga user hanya melihat data yang diizinkan.',
+    },
+    {
+      id: 'q-08-04',
+      order: 4,
+      prompt: 'Manakah yang merupakan contoh data masking?',
+      options: [
+        'Menghapus data sensitif secara permanen',
+        'Menampilkan nomor kartu kredit sebagai ****-****-****-1234',
+        'Mengenkripsi data di disk',
+        'Mengubah data menjadi token acak',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Data masking menyembunyikan sebagian data sensitif sehingga tetap dapat dibaca sebagian tanpa mengekspos nilai asli.',
+    },
+    {
+      id: 'q-08-05',
+      order: 5,
+      prompt: 'Apa perbedaan anonymization dan pseudonymization?',
+      options: [
+        'Tidak ada perbedaan',
+        'Anonymization tidak dapat di-reverse, pseudonymization masih dapat di-relink dengan key',
+        'Pseudonymization lebih kuat dari anonymization',
+        'Anonymization menggunakan token',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Anonymized data tidak dapat diidentifikasi kembali ke individu, sementara pseudonymized data masih dapat dihubungkan ulang dengan key terpisah.',
+    },
+    {
+      id: 'q-08-06',
+      order: 6,
+      prompt: 'Hak GDPR mana yang memungkinkan individu meminta penghapusan data pribadi?',
+      options: [
+        'Right to access',
+        'Right to be forgotten',
+        'Right to portability',
+        'Right to object',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Right to erasure atau right to be forgotten memungkinkan individu meminta penghapusan data pribadi mereka dalam kondisi tertentu.',
+    },
+    {
+      id: 'q-08-07',
+      order: 7,
+      prompt: 'Mengapa parameterized query direkomendasikan?',
+      options: [
+        'Untuk meningkatkan kecepatan query',
+        'Untuk mencegah SQL injection',
+        'Untuk mengurangi jumlah index',
+        'Untuk menghapus audit log',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Parameterized query memisahkan query structure dari data input, mencegah attacker menyuntikkan perintah SQL berbahaya.',
+    },
+    {
+      id: 'q-08-08',
+      order: 8,
+      prompt: 'Apa yang dimaksud envelope encryption?',
+      options: [
+        'Mengenkripsi seluruh database dengan satu key',
+        'Data key dienkripsi dengan master key, dan data dienkripsi dengan data key',
+        'Tidak menggunakan enkripsi sama sekali',
+        'Mengenkripsi hanya backup',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Envelope encryption menggunakan data key untuk mengenkripsi data, lalu data key itu sendiri dienkripsi dengan master key untuk manajemen key yang lebih aman.',
+    },
+  ],
+}

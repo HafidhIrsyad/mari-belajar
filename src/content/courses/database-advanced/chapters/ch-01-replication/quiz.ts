@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch01Quiz: Quiz = {
+  id: 'quiz-ch-01-replication',
+  title: 'Quiz: Replication',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-01-01',
+      order: 1,
+      prompt: 'Apa perbedaan utama streaming replication dan WAL shipping?',
+      options: [
+        'WAL shipping lebih cepat karena mengirim per row',
+        'Streaming replication mengirim WAL records secara real-time melalui koneksi TCP',
+        'Streaming replication hanya bekerja di MySQL',
+        'WAL shipping tidak memerlukan WAL sama sekali',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Streaming replication mengirimkan WAL records secara real-time ke standby, sedangkan WAL shipping mengirim file WAL secara berkala.',
+    },
+    {
+      id: 'q-01-02',
+      order: 2,
+      prompt: 'Mengapa synchronous replication umumnya memiliki latency commit lebih tinggi?',
+      options: [
+        'Karena standby harus menunggu primary',
+        'Karena primary menunggu acknowledgment dari standby sebelum commit',
+        'Karena synchronous replication selalu mereplikasi seluruh database',
+        'Karena tidak menggunakan WAL',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Primary harus menunggu konfirmasi dari standby agar transaksi dianggap commit, sehingga menambah round-trip latency.',
+    },
+    {
+      id: 'q-01-03',
+      order: 3,
+      prompt: 'Apa risiko utama asynchronous replication saat failover?',
+      options: [
+        'Primary akan selalu lebih lambat dari standby',
+        'Transaksi yang sudah commit di primary belum tentu tersedia di standby',
+        'Semua write akan otomatis gagal',
+        'Tidak ada risiko karena async selalu aman',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Karena primary tidak menunggu standby, transaksi terakhir mungkin belum diterapkan di standby saat failover terjadi.',
+    },
+    {
+      id: 'q-01-04',
+      order: 4,
+      prompt: 'Apa keunggulan logical replication dibanding physical replication?',
+      options: [
+        'Lebih cepat karena menyalin byte-level WAL',
+        'Memungkinkan partial replication dan cross-version replication',
+        'Selalu synchronous',
+        'Tidak memerlukan primary',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Logical replication beroperasi di level row, sehingga lebih fleksibel untuk partial replication dan target yang berbeda versi.',
+    },
+    {
+      id: 'q-01-05',
+      order: 5,
+      prompt: 'Apa fungsi replication slot?',
+      options: [
+        'Mempercepat query read di replica',
+        'Mencegah primary menghapus WAL sebelum standby mengonsumsinya',
+        'Menggantikan primary secara otomatis',
+        'Menghapus konflik pada multi-master',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Replication slot menjaga agar WAL tetap tersedia sampai consumer mengakui telah memprosesnya.',
+    },
+    {
+      id: 'q-01-06',
+      order: 6,
+      prompt: 'Strategi conflict resolution mana yang paling sederhana tetapi bisa kehilangan data?',
+      options: [
+        'Application-level merge',
+        'Last-write-wins (LWW)',
+        'Operational transform',
+        'Consensus protocol',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'LWW memilih perubahan terakhir berdasarkan timestamp, yang bisa menimpa perubahan lain tanpa pengetahuan aplikasi.',
+    },
+    {
+      id: 'q-01-07',
+      order: 7,
+      prompt: 'Tools mana yang umum digunakan untuk automatic failover di PostgreSQL?',
+      options: [
+        'MongoDB Compass',
+        'Patroni',
+        'Redis CLI',
+        'Citus',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Patroni adalah tools populer untuk mengelola high availability PostgreSQL dengan automatic failover.',
+    },
+    {
+      id: 'q-01-08',
+      order: 8,
+      prompt: 'Mengapa hot standby query panjang dapat menyebabkan replication lag?',
+      options: [
+        'Karena standby tidak menerima WAL',
+        'Karena replay WAL harus menunggu lock yang dipegang oleh query standby',
+        'Karena query panjang selalu menulis data',
+        'Karena primary tidak mengirim data ke standby',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Standby menerapkan WAL secara berurutan. Jika query standby memegang lock lama, replay tertahan hingga lock dilepaskan.',
+    },
+  ],
+}

@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch03Quiz: Quiz = {
+  id: 'quiz-ch-03-cap-theorem-distributed-databases',
+  title: 'Quiz: CAP Theorem & Distributed Databases',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-03-01',
+      order: 1,
+      prompt: 'Menurut CAP theorem, sifat mana yang harus selalu dipilih dalam sistem terdistribusi nyata?',
+      options: [
+        'Consistency',
+        'Availability',
+        'Partition Tolerance',
+        'Durability',
+      ],
+      correctOptionIndex: 2,
+      explanation: 'Network partition tidak dapat dihindari, sehingga sistem terdistribusi nyata harus toleran terhadap partition.',
+    },
+    {
+      id: 'q-03-02',
+      order: 2,
+      prompt: 'Apa yang dilakukan sistem CP saat terjadi partition?',
+      options: [
+        'Terus melayani semua request dengan data yang mungkin usang',
+        'Menolak write/read untuk menjaga konsistensi',
+        'Secara otomatis menambah node baru',
+        'Menggandakan data ke semua node',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Sistem CP memilih consistency, sehingga menolak operasi yang tidak dapat diverifikasi konsisten saat partition.',
+    },
+    {
+      id: 'q-03-03',
+      order: 3,
+      prompt: 'PACELC memperluas CAP dengan trade-off tambahan apa?',
+      options: [
+        'Latency vs Throughput',
+        'Latency vs Consistency saat tidak ada partition',
+        'Security vs Availability',
+        'Cost vs Performance',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'PACELC menyatakan bahwa tanpa partition, sistem harus memilih antara latency rendah atau consistency kuat.',
+    },
+    {
+      id: 'q-03-04',
+      order: 4,
+      prompt: 'Dalam sistem dengan 5 node, berapa majority quorum?',
+      options: [
+        '2',
+        '3',
+        '4',
+        '5',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Majority quorum adalah floor(N/2) + 1 = floor(5/2) + 1 = 3.',
+    },
+    {
+      id: 'q-03-05',
+      order: 5,
+      prompt: 'Kondisi apa yang menjamin read-after-write consistency pada quorum?',
+      options: [
+        'W + R <= N',
+        'W + R > N',
+        'W = R = 1',
+        'W = N dan R = 1',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Jika write quorum dan read quorum saling tumpang tindih (W+R>N), read pasti membaca hasil write terbaru.',
+    },
+    {
+      id: 'q-03-06',
+      order: 6,
+      prompt: 'Apa keunggulan Raft dibanding Paxos menurut desainnya?',
+      options: [
+        'Lebih cepat dalam throughput',
+        'Lebih mudah dipahami dan diimplementasikan',
+        'Tidak memerlukan leader',
+        'Hanya bekerja pada 2 node',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Raft dirancang untuk menjadi lebih mudah dipahami dan dipelajari daripada Paxos, sambil tetap memberikan safety yang sama.',
+    },
+    {
+      id: 'q-03-07',
+      order: 7,
+      prompt: 'Database mana yang menggunakan multi-raft untuk distributed SQL?',
+      options: [
+        'MongoDB',
+        'CockroachDB',
+        'Redis',
+        'SQLite',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'CockroachDB membagi data menjadi ranges dan setiap range dikelola oleh raft group sendiri (multi-raft).',
+    },
+    {
+      id: 'q-03-08',
+      order: 8,
+      prompt: 'Apa itu linearizability?',
+      options: [
+        'Kemampuan menjalankan query secara paralel',
+        'Guarantee consistency terkuat di mana setiap operasi tampak atomik pada satu titik waktu',
+        'Replikasi data ke semua region',
+        'Pemisahan read dan write ke node berbeda',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Linearizability memastikan setiap operasi tampak terjadi secara atomik dan semua node melihat urutan yang konsisten.',
+    },
+  ],
+}

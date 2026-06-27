@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch07Quiz: Quiz = {
+  id: 'quiz-ch-07-data-warehouse-olap',
+  title: 'Quiz: Data Warehouse & OLAP',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-07-01',
+      order: 1,
+      prompt: 'Apa karakteristik utama OLAP dibanding OLTP?',
+      options: [
+        'Banyak transaksi kecil dan cepat',
+        'Query kompleks pada data historis dengan banyak aggregasi',
+        'Hanya menyimpan data terbaru',
+        'Tidak mendukung GROUP BY',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'OLAP dioptimalkan untuk analytical query kompleks, aggregasi, dan data historis.',
+    },
+    {
+      id: 'q-07-02',
+      order: 2,
+      prompt: 'Dalam star schema, table apa yang berada di pusat?',
+      options: [
+        'Dimension table',
+        'Fact table',
+        'Staging table',
+        'Lookup table',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Fact table berada di pusat star schema dan berisi metrik serta foreign keys ke dimension tables.',
+    },
+    {
+      id: 'q-07-03',
+      order: 3,
+      prompt: 'Apa perbedaan utama ETL dan ELT?',
+      options: [
+        'ETL lebih cepat selalu',
+        'ETL transformasi sebelum loading, ELT transformasi di dalam warehouse',
+        'ELT tidak melakukan transformasi',
+        'ETL hanya untuk data tidak terstruktur',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'ETL mentransformasi data di staging sebelum loading, sedangkan ELT memuat data mentah lalu mentransformasinya di warehouse.',
+    },
+    {
+      id: 'q-07-04',
+      order: 4,
+      prompt: 'Mengapa columnar storage lebih cepat untuk query analytical?',
+      options: [
+        'Karena menyimpan data per baris',
+        'Karena hanya membaca kolom yang dibutuhkan dan kompresi lebih baik',
+        'Karena tidak mendukung indexing',
+        'Karena selalu menggunakan SSD',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Columnar storage membaca hanya kolom relevan dan kompresinya lebih efisien karena nilai dalam kolom serupa.',
+    },
+    {
+      id: 'q-07-05',
+      order: 5,
+      prompt: 'Teknik SCD mana yang menyimpan riwayat penuh perubahan dimensi?',
+      options: [
+        'SCD Type 1',
+        'SCD Type 2',
+        'SCD Type 3',
+        'SCD Type 0',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'SCD Type 2 menyimpan riwayat dengan menambahkan effective date, expiration date, dan flag current.',
+    },
+    {
+      id: 'q-07-06',
+      order: 6,
+      prompt: 'Apa itu data lake?',
+      options: [
+        'Data warehouse yang terstruktur penuh',
+        'Repositori data mentah dalam berbagai format dan struktur',
+        'Database untuk transaksi harian',
+        'Cache untuk query cepat',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Data lake menyimpan data mentah dalam format aslinya, baik terstruktur, semi-terstruktur, maupun tidak terstruktur.',
+    },
+    {
+      id: 'q-07-07',
+      order: 7,
+      prompt: 'Konsep data mesh menekankan hal apa?',
+      options: [
+        'Memusatkan semua data di satu tim data engineering',
+        'Domain-oriented ownership dan data as a product',
+        'Menghapus governance',
+        'Hanya menggunakan satu teknologi warehouse',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Data mesh mendistribusikan ownership data ke tim domain dan memperlakukan data sebagai produk dengan federated governance.',
+    },
+    {
+      id: 'q-07-08',
+      order: 8,
+      prompt: 'Cloud data warehouse mana yang sepenuhnya serverless dan berasal dari Google?',
+      options: [
+        'Snowflake',
+        'Amazon Redshift',
+        'BigQuery',
+        'Azure SQL Data Warehouse',
+      ],
+      correctOptionIndex: 2,
+      explanation: 'BigQuery adalah data warehouse serverless dari Google Cloud berbasis columnar storage.',
+    },
+  ],
+}

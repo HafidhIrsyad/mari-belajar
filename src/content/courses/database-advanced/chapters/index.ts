@@ -1,0 +1,8 @@
+export { ch01Replication } from './ch-01-replication'
+export { ch02ShardingPartitioning } from './ch-02-sharding-partitioning'
+export { ch03CapTheoremDistributedDatabases } from './ch-03-cap-theorem-distributed-databases'
+export { ch04DistributedTransactions } from './ch-04-distributed-transactions'
+export { ch05NosqlLanjutanMongodbCassandra } from './ch-05-nosql-lanjutan-mongodb-cassandra'
+export { ch06KeyValueGraphDatabases } from './ch-06-key-value-graph-databases'
+export { ch07DataWarehouseOlap } from './ch-07-data-warehouse-olap'
+export { ch08DatabaseSecurityCompliance } from './ch-08-database-security-compliance'
