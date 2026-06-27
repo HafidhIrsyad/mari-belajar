@@ -1,0 +1,8 @@
+export { ch01KenalanDenganGo } from './ch-01-kenalan-dengan-go'
+export { ch02VariabelTipeDataOperator } from './ch-02-variabel-tipe-data-operator'
+export { ch03ControlFlow } from './ch-03-control-flow'
+export { ch04FunctionsAndMethods } from './ch-04-functions-and-methods'
+export { ch05StructInterfaceEmbedding } from './ch-05-struct-interface-embedding'
+export { ch06SliceMapRange } from './ch-06-slice-map-range'
+export { ch07ErrorHandlingAndModules } from './ch-07-error-handling-and-modules'
+export { ch08TestingAndToolingDasar } from './ch-08-testing-and-tooling-dasar'
