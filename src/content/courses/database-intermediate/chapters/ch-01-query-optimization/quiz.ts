@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch01Quiz: Quiz = {
+  id: 'quiz-ch-01-query-optimization',
+  title: 'Quiz: Query Optimization',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-01-01',
+      order: 1,
+      prompt: 'Apa keunggulan utama cost-based optimizer dibanding rule-based optimizer?',
+      options: ['Selalu memilih index untuk setiap query','Memilih plan berdasarkan estimasi biaya I/O, CPU, dan memori','Tidak memerlukan statistik','Hanya bekerja pada database NoSQL'],
+      correctOptionIndex: 1,
+      explanation: 'Cost-based optimizer membandingkan biaya tiap candidate plan secara kuantitatif, bukan hanya mengikuti aturan tetap.',
+    },
+    {
+      id: 'q-01-02',
+      order: 2,
+      prompt: 'Selectivity 0.0001 pada table 10 juta row menghasilkan cardinality sekitar?',
+      options: ['1.000 row','100 row','10.000 row','1 row'],
+      correctOptionIndex: 1,
+      explanation: 'Cardinality = selectivity × total rows = 0.0001 × 10.000.000 = 1.000 row.',
+    },
+    {
+      id: 'q-01-03',
+      order: 3,
+      prompt: 'Mengapa `WHERE YEAR(created_at) = 2026` umumnya tidak sargable?',
+      options: ['Karena fungsi YEAR tidak ada di database','Karena fungsi diterapkan pada kolom, sehingga index pada created_at tidak dapat digunakan','Karena predicate menggunakan operator =','Karena tahun 2026 belum tersedia'],
+      correctOptionIndex: 1,
+      explanation: 'Fungsi pada kolom memaksa database menghitung ekspresi untuk setiap row, menghalangi penggunaan index.',
+    },
+    {
+      id: 'q-01-04',
+      order: 4,
+      prompt: 'Apa tujuan predicate pushdown?',
+      options: ['Meningkatkan jumlah row yang diproses','Memindahkan filter sedekat mungkin dengan sumber data','Menghapus predicate dari query','Mengubah query menjadi NoSQL'],
+      correctOptionIndex: 1,
+      explanation: 'Pushdown mengurangi data yang diangkut antar node plan dengan menerapkan filter sedini mungkin.',
+    },
+    {
+      id: 'q-01-05',
+      order: 5,
+      prompt: 'Most Common Values (MCV) digunakan optimizer untuk?',
+      options: ['Menyimpan semua row table','Mengestimasi frekuensi nilai yang sering muncul','Mengompresi data','Menggantikan primary key'],
+      correctOptionIndex: 1,
+      explanation: 'MCV membantu optimizer mengestimasi selectivity untuk nilai-nilai yang dominan dalam distribusi data.',
+    },
+    {
+      id: 'q-01-06',
+      order: 6,
+      prompt: 'Kapan PostgreSQL menggunakan Genetic Query Optimizer (GEQO)?',
+      options: ['Saat semua query dieksekusi','Ketika jumlah join melebihi threshold tertentu','Hanya untuk query dengan satu table','Saat index tidak tersedia'],
+      correctOptionIndex: 1,
+      explanation: 'GEQO digunakan ketika ruang pencarian plan sangat besar, yaitu saat banyak join melebihi geqo_threshold.',
+    },
+    {
+      id: 'q-01-07',
+      order: 7,
+      prompt: 'Parallel query di PostgreSQL dapat mempercepat operasi berikut, kecuali?',
+      options: ['Sequential scan','Hash join','Serialisasi transaksi yang kuat','Parallel index scan'],
+      correctOptionIndex: 2,
+      explanation: 'Parallel query mempercepat scan dan join, tetapi tidak menggantikan serialisasi transaksi.',
+    },
+    {
+      id: 'q-01-08',
+      order: 8,
+      prompt: 'Teknik apa yang mengurangi jumlah partisi yang dipindai pada table partitioned?',
+      options: ['Partition pruning','Index rebuild','Full vacuum','Connection pooling'],
+      correctOptionIndex: 0,
+      explanation: 'Partition pruning membuang partisi yang tidak memenuhi predicate pada key partisi.',
+    },
+  ],
+}

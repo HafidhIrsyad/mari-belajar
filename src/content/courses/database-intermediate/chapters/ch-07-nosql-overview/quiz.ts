@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch07Quiz: Quiz = {
+  id: 'quiz-ch-07-nosql-overview',
+  title: 'Quiz: NoSQL Overview',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-07-01',
+      order: 1,
+      prompt: 'Database manakah yang termasuk wide-column store?',
+      options: ['MongoDB','Redis','Cassandra','Neo4j'],
+      correctOptionIndex: 2,
+      explanation: 'Cassandra adalah wide-column store yang dioptimalkan untuk write-heavy dan distributed.',
+    },
+    {
+      id: 'q-07-02',
+      order: 2,
+      prompt: 'Menurut CAP theorem, sistem terdistribusi umumnya harus memilih antara?',
+      options: ['ACID atau BASE','CP atau AP','SQL atau NoSQL','Read atau Write'],
+      correctOptionIndex: 1,
+      explanation: 'Karena partition tolerance tidak dapat dihindari, pilih konsistensi atau ketersediaan.',
+    },
+    {
+      id: 'q-07-03',
+      order: 3,
+      prompt: 'Apa artinya eventual consistency?',
+      options: ['Data tidak pernah konsisten','Jika tidak ada update baru, data akhirnya konsisten di semua node','Setiap read langsung melihat write terbaru','Hanya satu node yang menyimpan data'],
+      correctOptionIndex: 1,
+      explanation: 'Eventual consistency menjamin konsistensi setelah replication selesai, bukan secara instan.',
+    },
+    {
+      id: 'q-07-04',
+      order: 4,
+      prompt: 'LSM-tree mengoptimalkan?',
+      options: ['Read latency rendah untuk semua query','Write throughput melalui sequential writes','Join kompleks antar table','Transaksi multi-row kuat'],
+      correctOptionIndex: 1,
+      explanation: 'LSM-tree menulis sequential ke WAL dan memtable, lalu mem-flush ke immutable SSTable.',
+    },
+    {
+      id: 'q-07-05',
+      order: 5,
+      prompt: 'Graph database paling cocok untuk?',
+      options: ['Caching session','Traversal relasi dan graph queries','Time-series data','Dokumen tidak terstruktur'],
+      correctOptionIndex: 1,
+      explanation: 'Graph database dioptimalkan untuk relasi dan traversal seperti shortest path.',
+    },
+    {
+      id: 'q-07-06',
+      order: 6,
+      prompt: 'Apa tujuan compaction pada LSM-tree?',
+      options: ['Meningkatkan write amplification','Menggabungkan SSTable dan membersihkan data usang','Menghapus WAL','Mengunci database'],
+      correctOptionIndex: 1,
+      explanation: 'Compaction menggabungkan SSTable untuk mengurangi read amplification dan ruang.',
+    },
+    {
+      id: 'q-07-07',
+      order: 7,
+      prompt: 'Partition key pada Cassandra menentukan?',
+      options: ['Urutan kolom dalam row','Node mana yang menyimpan data','Tipe data setiap kolom','Jumlah replica'],
+      correctOptionIndex: 1,
+      explanation: 'Partition key mendistribusikan data ke node Cassandra.',
+    },
+    {
+      id: 'q-07-08',
+      order: 8,
+      prompt: 'CRDT digunakan untuk?',
+      options: ['Mengompresi data','Merge konflik antar replica tanpa koordinasi pusat','Membuat index B-tree','Menjamin ACID'],
+      correctOptionIndex: 1,
+      explanation: 'CRDT adalah struktur data yang dapat digabungkan secara konsisten di banyak node.',
+    },
+  ],
+}

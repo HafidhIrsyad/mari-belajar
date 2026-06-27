@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch05Quiz: Quiz = {
+  id: 'quiz-ch-05-schema-migrations',
+  title: 'Quiz: Schema Migrations',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-05-01',
+      order: 1,
+      prompt: 'Apa tujuan utama schema migration?',
+      options: ['Meningkatkan kecepatan query','Melacak dan menerapkan perubahan struktur database secara konsisten','Menghapus semua data lama','Menggantikan backup'],
+      correctOptionIndex: 1,
+      explanation: 'Migrasi memastikan perubahan skema dapat diterapkan dan di-rollback secara terkontrol.',
+    },
+    {
+      id: 'q-05-02',
+      order: 2,
+      prompt: 'Prinsip idempoten dalam migrasi berarti?',
+      options: ['Migrasi hanya boleh dijalankan sekali','Migrasi dapat dijalankan ulang tanpa efek samping','Migrasi tidak memerlukan transaksi','Migrasi selalu menghapus table'],
+      correctOptionIndex: 1,
+      explanation: 'Idempoten memungkinkan migrasi dijalankan ulang dengan aman, misalnya dengan IF NOT EXISTS.',
+    },
+    {
+      id: 'q-05-03',
+      order: 3,
+      prompt: 'Di PostgreSQL, cara membuat index tanpa lock table adalah?',
+      options: ['CREATE INDEX','CREATE INDEX CONCURRENTLY','CREATE UNIQUE INDEX','DROP INDEX'],
+      correctOptionIndex: 1,
+      explanation: 'CREATE INDEX CONCURRENTLY membangun index di latar belakang tanpa mengunci table.',
+    },
+    {
+      id: 'q-05-04',
+      order: 4,
+      prompt: 'Expand-contract pattern digunakan untuk?',
+      options: ['Menambah kapasitas disk','Zero-downtime schema change','Meningkatkan cache hit','Menghapus database lama'],
+      correctOptionIndex: 1,
+      explanation: 'Expand-contract memisahkan perubahan skema dari perubahan aplikasi sehingga deploy tidak mengganggu.',
+    },
+    {
+      id: 'q-05-05',
+      order: 5,
+      prompt: 'Tools online schema change untuk MySQL adalah?',
+      options: ['golang-migrate','gh-ost atau pt-online-schema-change','PgBouncer','Redis'],
+      correctOptionIndex: 1,
+      explanation: 'gh-ost dan pt-online-schema-change memungkinkan perubahan skema table besar tanpa downtime.',
+    },
+    {
+      id: 'q-05-06',
+      order: 6,
+      prompt: 'Mengapa dual-write penting saat backfill kolom baru?',
+      options: ['Untuk menulis ke dua database yang berbeda','Agar data baru tetap konsisten di kolom lama dan baru selama transisi','Untuk menggandakan performa','Untuk menghindari index'],
+      correctOptionIndex: 1,
+      explanation: 'Dual-write memastikan data baru tersedia di kedua versi kolom selama masa transisi.',
+    },
+    {
+      id: 'q-05-07',
+      order: 7,
+      prompt: 'Apa risiko utama DDL pada table besar tanpa tool online schema change?',
+      options: ['Query menjadi lebih cepat','Lock lama yang dapat memblokir aplikasi','Data otomatis terhapus','Index menjadi lebih kecil'],
+      correctOptionIndex: 1,
+      explanation: 'DDL seperti ALTER TABLE pada table besar sering mengakibatkan lock eksklusif yang lama.',
+    },
+    {
+      id: 'q-05-08',
+      order: 8,
+      prompt: 'Rollback strategy yang paling aman untuk migrasi besar adalah?',
+      options: ['Menjalankan down tanpa backup','Backup sebelum migrasi dan uji skrip down','Menghapus semua migrasi','Menonaktifkan monitoring'],
+      correctOptionIndex: 1,
+      explanation: 'Backup dan pengujian down script mengurangi risiko kehilangan data saat rollback.',
+    },
+  ],
+}

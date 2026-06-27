@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch03Quiz: Quiz = {
+  id: 'quiz-ch-03-indexing-lanjutan',
+  title: 'Quiz: Indexing Lanjutan',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-03-01',
+      order: 1,
+      prompt: 'Partial index paling menguntungkan ketika?',
+      options: ['Query memfilter subset kecil data secara konsisten','Seluruh table sering di-scan','Tidak ada predicate','Semua kolom diperlukan dalam SELECT'],
+      correctOptionIndex: 0,
+      explanation: 'Partial index mengindeks subset, sehingga paling berguna jika predicate berulang pada subset data.',
+    },
+    {
+      id: 'q-03-02',
+      order: 2,
+      prompt: 'Expression index digunakan untuk?',
+      options: ['Mengurangi ukuran table','Mempercepat query dengan fungsi atau ekspresi pada kolom','Menggantikan primary key','Menyimpan data JSON'],
+      correctOptionIndex: 1,
+      explanation: 'Expression index mengindeks hasil ekspresi sehingga predicate yang sama dapat menggunakan index.',
+    },
+    {
+      id: 'q-03-03',
+      order: 3,
+      prompt: 'Index-only scan memerlukan mekanisme apa di PostgreSQL untuk menghindari heap lookup?',
+      options: ['WAL','Visibility map','Buffer pool','TOAST'],
+      correctOptionIndex: 1,
+      explanation: 'Visibility map menandai page heap yang visible untuk semua transaksi, memungkinkan index-only scan.',
+    },
+    {
+      id: 'q-03-04',
+      order: 4,
+      prompt: 'GIN paling cocok untuk skenario berikut, kecuali?',
+      options: ['Full-text search','Array containment','Nearest-neighbor geografis','JSONB containment'],
+      correctOptionIndex: 2,
+      explanation: 'Nearest-neighbor geografis lebih cocok dengan GiST karena mendukung operator jarak.',
+    },
+    {
+      id: 'q-03-05',
+      order: 5,
+      prompt: 'BRIN (Block Range Index) efisien karena?',
+      options: ['Menyimpan seluruh nilai setiap row','Menyimpan ringkasan min/max per block range untuk data yang berkorelasi fisik','Menggunakan tree balancing','Hanya untuk data acak'],
+      correctOptionIndex: 1,
+      explanation: 'BRIN ringan karena hanya menyimpan ringkasan per range block.',
+    },
+    {
+      id: 'q-03-06',
+      order: 6,
+      prompt: 'HOT (Heap-Only Tuple) updates mengurangi?',
+      options: ['Jumlah index scan','Write amplification pada index saat update tidak mengubah kolom indexed','Ukuran table','Jumlah connection'],
+      correctOptionIndex: 1,
+      explanation: 'HOT update memungkinkan tuple baru di heap tanpa memperbarui semua index.',
+    },
+    {
+      id: 'q-03-07',
+      order: 7,
+      prompt: 'Perintah apa yang digunakan untuk membangun ulang index tanpa lock table di PostgreSQL?',
+      options: ['REINDEX','VACUUM','REINDEX CONCURRENTLY','ANALYZE'],
+      correctOptionIndex: 2,
+      explanation: 'REINDEX CONCURRENTLY membangun ulang index tanpa mengunci table secara eksklusif.',
+    },
+    {
+      id: 'q-03-08',
+      order: 8,
+      prompt: 'Covering index dengan INCLUDE membantu?',
+      options: ['Mengurangi ukuran table','Memungkinkan index-only scan dengan menambahkan kolom non-key ke index','Mengindeks ekspresi','Mempercepat semua jenis join'],
+      correctOptionIndex: 1,
+      explanation: 'INCLUDE menambahkan kolom ke leaf index tanpa ikut serta dalam ordering, mendukung index-only scan.',
+    },
+  ],
+}

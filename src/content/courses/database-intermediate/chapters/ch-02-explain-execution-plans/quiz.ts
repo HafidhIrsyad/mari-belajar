@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch02Quiz: Quiz = {
+  id: 'quiz-ch-02-explain-execution-plans',
+  title: 'Quiz: EXPLAIN & Execution Plans',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-02-01',
+      order: 1,
+      prompt: 'Apa perbedaan utama EXPLAIN dan EXPLAIN ANALYZE?',
+      options: ['EXPLAIN lebih cepat karena tidak mengeksekusi query','EXPLAIN ANALYZE mengeksekusi query dan menampilkan waktu aktual','EXPLAIN hanya tersedia di MySQL','EXPLAIN ANALYZE tidak menampilkan plan'],
+      correctOptionIndex: 1,
+      explanation: 'EXPLAIN ANALYZE menjalankan query serta mengumpulkan metrik waktu nyata dan buffer.',
+    },
+    {
+      id: 'q-02-02',
+      order: 2,
+      prompt: 'Dalam output `cost=0.00..35.50`, angka kedua menunjukkan?',
+      options: ['Jumlah row','Startup cost','Total cost estimasi','Waktu eksekusi dalam milidetik'],
+      correctOptionIndex: 2,
+      explanation: 'Format cost adalah `startup_cost..total_cost`; angka kedua adalah total cost.',
+    },
+    {
+      id: 'q-02-03',
+      order: 3,
+      prompt: 'Node manakah yang menjawab query hanya dari index tanpa mengakses heap?',
+      options: ['Index Scan','Seq Scan','Index Only Scan','Bitmap Heap Scan'],
+      correctOptionIndex: 2,
+      explanation: 'Index Only Scan dapat mengembalikan data jika semua kolom yang dibutuhkan ada di index.',
+    },
+    {
+      id: 'q-02-04',
+      order: 4,
+      prompt: 'Hash Join paling efisien ketika?',
+      options: ['Kedua sisi sudah terurut','Satu sisi relatif kecil dan dapat dijadikan hash table','Hanya ada satu row di setiap sisi','Index tersedia di kedua sisi'],
+      correctOptionIndex: 1,
+      explanation: 'Hash Join membangun hash table dari sisi build yang lebih kecil, lalu scan sisi probe.',
+    },
+    {
+      id: 'q-02-05',
+      order: 5,
+      prompt: 'Buffer `shared read` tinggi mengindikasikan?',
+      options: ['Data banyak berasal dari cache','Banyak pembacaan dari disk','Tidak ada I/O','Query menggunakan temporary file'],
+      correctOptionIndex: 1,
+      explanation: '`shared read` berarti buffer tidak ditemukan di shared buffer sehingga dibaca dari disk.',
+    },
+    {
+      id: 'q-02-06',
+      order: 6,
+      prompt: 'Nilai `random_page_cost` umumnya diset lebih rendah untuk SSD karena?',
+      options: ['SSD lebih lambat dari HDD','Random read di SSD jauh lebih cepat','SSD tidak mendukung random read','PostgreSQL tidak menggunakan parameter ini'],
+      correctOptionIndex: 1,
+      explanation: 'Karena latency random access SSD rendah, biaya random page dapat dianggap mendekati sequential.',
+    },
+    {
+      id: 'q-02-07',
+      order: 7,
+      prompt: 'Actual rows jauh lebih besar dari Plan Rows biasanya disebabkan oleh?',
+      options: ['Terlalu banyak index','Statistik tidak akurat atau usang','Query menggunakan LIMIT','Buffer pool terlalu besar'],
+      correctOptionIndex: 1,
+      explanation: 'Perbedaan besar antara actual dan estimated rows menandakan estimator tidak memiliki statistik yang representatif.',
+    },
+    {
+      id: 'q-02-08',
+      order: 8,
+      prompt: 'Manfaat format JSON untuk EXPLAIN adalah?',
+      options: ['Mengurangi waktu eksekusi query','Memudahkan parsing otomatis oleh program','Hanya untuk query sederhana','Menghilangkan informasi cost'],
+      correctOptionIndex: 1,
+      explanation: 'Format JSON memungkinkan tools dan script mem-parsing struktur plan secara terstruktur.',
+    },
+  ],
+}

@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch06Quiz: Quiz = {
+  id: 'quiz-ch-06-orm-vs-raw-sql-vs-query-builder',
+  title: 'Quiz: ORM vs Raw SQL vs Query Builder',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-06-01',
+      order: 1,
+      prompt: 'Kelebihan utama ORM adalah?',
+      options: ['Kontrol penuh atas SQL','Produktivitas tinggi dan pemetaan model otomatis','Tidak memerlukan database','Selalu menghasilkan query optimal'],
+      correctOptionIndex: 1,
+      explanation: 'ORM mengabstraksi pemetaan object-relational sehingga developer lebih produktif.',
+    },
+    {
+      id: 'q-06-02',
+      order: 2,
+      prompt: 'Masalah N+1 terjadi ketika?',
+      options: ['Satu query mengembalikan N kolom','Iterasi N object memicu satu query tambahan masing-masing','Query memiliki N join','Database memiliki N koneksi'],
+      correctOptionIndex: 1,
+      explanation: 'N+1 = 1 query untuk list object + N query untuk relasi setiap object.',
+    },
+    {
+      id: 'q-06-03',
+      order: 3,
+      prompt: 'Cara menghindari N+1 dengan ORM adalah?',
+      options: ['Menggunakan lazy loading tanpa batasan','Eager loading atau batch loading relasi','Menghapus semua relasi','Menggunakan raw SQL selalu'],
+      correctOptionIndex: 1,
+      explanation: 'Eager loading memuat relasi dalam satu atau beberapa query terbatik.',
+    },
+    {
+      id: 'q-06-04',
+      order: 4,
+      prompt: 'Query builder memberikan keuntungan dibanding raw SQL dalam hal?',
+      options: ['Kecepatan eksekusi query di database','Kompilasi dan komposisi query dengan parameterized safety','Tidak membutuhkan SQL knowledge','Otomatis mengoptimalkan index'],
+      correctOptionIndex: 1,
+      explanation: 'Query builder memudahkan komposisi query dinamis sambil menjaga parameterization.',
+    },
+    {
+      id: 'q-06-05',
+      order: 5,
+      prompt: 'Unit of Work pada ORM berfungsi untuk?',
+      options: ['Menjalankan query secara paralel','Melacak perubahan object dan mengirim update secara terbatch','Mengelola koneksi ke database','Membuat index otomatis'],
+      correctOptionIndex: 1,
+      explanation: 'Unit of Work menunda dan mengelompokkan perubahan hingga commit.',
+    },
+    {
+      id: 'q-06-06',
+      order: 6,
+      prompt: 'Identity Map mencegah?',
+      options: ['SQL injection','Duplikasi object untuk baris database yang sama dalam satu session','N+1 query','DDL locking'],
+      correctOptionIndex: 1,
+      explanation: 'Identity Map memastikan satu baris hanya dipetakan ke satu object.',
+    },
+    {
+      id: 'q-06-07',
+      order: 7,
+      prompt: 'Kapan sebaiknya menggunakan raw SQL?',
+      options: ['Untuk semua query sederhana','Ketika query kompleks membutuhkan kontrol penuh dan optimasi manual','Ketika tidak ada ORM','Selalu lebih aman dari query builder'],
+      correctOptionIndex: 1,
+      explanation: 'Raw SQL berguna untuk query kompleks, window functions, CTE, atau bulk operation.',
+    },
+    {
+      id: 'q-06-08',
+      order: 8,
+      prompt: 'Perbedaan Active Record dan Data Mapper adalah?',
+      options: ['Active Record lebih cepat secara performa','Active Record menyatukan logika domain dan persistence; Data Mapper memisahkannya','Data Mapper tidak mendukung relasi','Tidak ada perbedaan'],
+      correctOptionIndex: 1,
+      explanation: 'Active Record: model tahu cara persist; Data Mapper: repository menangani persistence.',
+    },
+  ],
+}

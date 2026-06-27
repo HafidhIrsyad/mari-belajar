@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch04Quiz: Quiz = {
+  id: 'quiz-ch-04-connection-pooling-resource-management',
+  title: 'Quiz: Connection Pooling & Resource Management',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-04-01',
+      order: 1,
+      prompt: 'Manfaat utama client-side connection pool adalah?',
+      options: ['Mengurangi jumlah koneksi backend ke database','Menghindari overhead membuka/menutup koneksi berulang kali','Meningkatkan jumlah transaksi paralel tanpa batas','Menggantikan kebutuhan autentikasi'],
+      correctOptionIndex: 1,
+      explanation: 'Client-side pool menyimpan koneksi yang sudah dibuka agar dapat digunakan kembali.',
+    },
+    {
+      id: 'q-04-02',
+      order: 2,
+      prompt: 'Mode PgBouncer mana yang paling efisien untuk aplikasi dengan banyak koneksi idle?',
+      options: ['Session pooling','Transaction pooling','Statement pooling','No pooling'],
+      correctOptionIndex: 1,
+      explanation: 'Transaction pooling meminjamkan backend hanya selama transaksi, memaksimalkan reuse.',
+    },
+    {
+      id: 'q-04-03',
+      order: 3,
+      prompt: 'Little\'s Law untuk pool sizing dinyatakan sebagai?',
+      options: ['L = λ / W','L = λ × W','L = W / λ','L = λ + W'],
+      correctOptionIndex: 1,
+      explanation: 'L adalah jumlah koneksi concurrent, λ arrival rate, W waktu rata-rata query.',
+    },
+    {
+      id: 'q-04-04',
+      order: 4,
+      prompt: 'Mengapa prepared statements perlu diperhatikan di transaction pooling?',
+      options: ['Mereka otomatis menyebabkan deadlock','Backend dapat berpindah antar transaksi sehingga prepared statement tidak bertahan','Mereka selalu lebih lambat','Tidak ada dampak'],
+      correctOptionIndex: 1,
+      explanation: 'Dalam transaction pooling, backend dipinjamkan per transaksi; prepared statement terikat pada backend tertentu.',
+    },
+    {
+      id: 'q-04-05',
+      order: 5,
+      prompt: 'Parameter PostgreSQL mana yang membatasi memori untuk sort/hash per operation?',
+      options: ['shared_buffers','max_connections','work_mem','effective_cache_size'],
+      correctOptionIndex: 2,
+      explanation: 'work_mem membatasi memori yang dapat digunakan untuk sort, hash, dan merge join per operation.',
+    },
+    {
+      id: 'q-04-06',
+      order: 6,
+      prompt: 'idle_in_transaction_session_timeout berguna untuk?',
+      options: ['Mempercepat query','Menghentikan transaksi yang menganggur untuk mencegah resource leak','Meningkatkan cache hit','Membuka koneksi baru'],
+      correctOptionIndex: 1,
+      explanation: 'Timeout ini memaksa koneksi idle dalam transaksi untuk ditutup.',
+    },
+    {
+      id: 'q-04-07',
+      order: 7,
+      prompt: 'Mengapa max_connections PostgreSQL tidak boleh terlalu tinggi?',
+      options: ['Karena setiap koneksi membutuhkan proses backend dan resource','Karena tidak ada batas','Karena akan mempercepat backup','Karena mengurangi ukuran database'],
+      correctOptionIndex: 0,
+      explanation: 'Model one-process-per-connection membuat resource per koneksi signifikan.',
+    },
+    {
+      id: 'q-04-08',
+      order: 8,
+      prompt: 'Strategi yang tepat ketika pool habis dan request terus datang adalah?',
+      options: ['Membuka koneksi tanpa batas','Antrekan dengan timeout atau kembalikan backpressure error','Menonaktifkan semua index','Menaikkan work_mem tanpa batas'],
+      correctOptionIndex: 1,
+      explanation: 'Backpressure melindungi database dari overload dan menjaga latensi tetap terkendali.',
+    },
+  ],
+}

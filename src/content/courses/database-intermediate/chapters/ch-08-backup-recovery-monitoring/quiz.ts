@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch08Quiz: Quiz = {
+  id: 'quiz-ch-08-backup-recovery-monitoring',
+  title: 'Quiz: Backup, Recovery & Monitoring',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-08-01',
+      order: 1,
+      prompt: 'Apa keunggulan physical backup dibanding logical backup?',
+      options: ['Lebih portabel antar versi','Restore lebih cepat dan mendukung PITR','Ukuran file lebih kecil','Hanya menyimpan data tertentu'],
+      correctOptionIndex: 1,
+      explanation: 'Physical backup menyalin file data binary, memungkinkan restore cepat dan point-in-time recovery.',
+    },
+    {
+      id: 'q-08-02',
+      order: 2,
+      prompt: 'Komponen apa yang memungkinkan Point-in-Time Recovery di PostgreSQL?',
+      options: ['Logical replication','WAL archiving','Connection pool','Partition pruning'],
+      correctOptionIndex: 1,
+      explanation: 'WAL archive merekam semua perubahan sehingga dapat diputar ulang hingga target waktu.',
+    },
+    {
+      id: 'q-08-03',
+      order: 3,
+      prompt: 'Hot standby memungkinkan standby untuk?',
+      options: ['Menerima query read-only','Menulis data seperti primary','Menjalankan DDL','Mematikan primary'],
+      correctOptionIndex: 0,
+      explanation: 'Hot standby menerima query read-only sambil meneruskan replication dari primary.',
+    },
+    {
+      id: 'q-08-04',
+      order: 4,
+      prompt: 'pg_stat_statements berguna untuk?',
+      options: ['Mencadangkan database','Mengidentifikasi query berdasarkan total waktu eksekusi dan frekuensi','Mengelola koneksi pool','Membuat index otomatis'],
+      correctOptionIndex: 1,
+      explanation: 'pg_stat_statements mengumpulkan statistik eksekusi query untuk profiling.',
+    },
+    {
+      id: 'q-08-05',
+      order: 5,
+      prompt: 'Apa tujuan log_min_duration_statement?',
+      options: ['Membatasi durasi koneksi','Mencatat query yang melebihi durasi tertentu','Mengatur ukuran WAL','Mengaktifkan replication'],
+      correctOptionIndex: 1,
+      explanation: 'Parameter ini membuat PostgreSQL mencatat query yang berjalan lebih lama dari threshold.',
+    },
+    {
+      id: 'q-08-06',
+      order: 6,
+      prompt: 'RTO adalah?',
+      options: ['Jumlah data yang boleh hilang','Waktu maksimum yang diizinkan untuk recovery','Ukuran backup','Jumlah koneksi maksimum'],
+      correctOptionIndex: 1,
+      explanation: 'Recovery Time Objective menentukan target waktu sistem kembali beroperasi setelah kegagalan.',
+    },
+    {
+      id: 'q-08-07',
+      order: 7,
+      prompt: 'Tool mana yang digunakan untuk compressed WAL archiving dan cloud backup di PostgreSQL?',
+      options: ['PgBouncer','WAL-G','pg_dump','Knex.js'],
+      correctOptionIndex: 1,
+      explanation: 'WAL-G dirancang untuk compressed WAL archiving dan base backup ke cloud storage.',
+    },
+    {
+      id: 'q-08-08',
+      order: 8,
+      prompt: 'Mengapa backup perlu diuji dengan restore berkala?',
+      options: ['Untuk mengurangi ukuran backup','Untuk memastikan backup dapat dipulihkan dan data valid','Untuk meningkatkan replication lag','Karena backup otomatis selalu rusak'],
+      correctOptionIndex: 1,
+      explanation: 'Backup yang tidak pernah di-restore berisiko tidak dapat digunakan saat dibutuhkan.',
+    },
+  ],
+}

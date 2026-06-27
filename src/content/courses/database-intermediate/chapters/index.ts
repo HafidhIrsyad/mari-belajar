@@ -1,0 +1,8 @@
+export { ch01QueryOptimization } from './ch-01-query-optimization'
+export { ch02ExplainExecutionPlans } from './ch-02-explain-execution-plans'
+export { ch03IndexingLanjutan } from './ch-03-indexing-lanjutan'
+export { ch04ConnectionPoolingResourceManagement } from './ch-04-connection-pooling-resource-management'
+export { ch05SchemaMigrations } from './ch-05-schema-migrations'
+export { ch06OrmVsRawSqlVsQueryBuilder } from './ch-06-orm-vs-raw-sql-vs-query-builder'
+export { ch07NosqlOverview } from './ch-07-nosql-overview'
+export { ch08BackupRecoveryMonitoring } from './ch-08-backup-recovery-monitoring'
