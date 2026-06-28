@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch06CloudNativeSecurityQuiz: Quiz = {
+  id: 'quiz-ch-06-cloud-native-security',
+  title: 'Quiz: Cloud Native Security',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-06-01',
+      order: 1,
+      prompt: 'Best practice Dockerfile?',
+      options: [
+        'Run as root',
+        'Non-root user dan minimal base image',
+        'Simpan secret di ENV',
+        'Gunakan latest tag',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Non-root user dan minimal base image mengurangi attack surface container.',
+    },
+    {
+      id: 'q-06-02',
+      order: 2,
+      prompt: 'Image scanning mendeteksi?',
+      options: [
+        'CVE di layer image',
+        'Bug di kode aplikasi',
+        'DNS error',
+        'Network latency',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Image scanner menganalisis layer container image untuk known vulnerabilities (CVE).',
+    },
+    {
+      id: 'q-06-03',
+      order: 3,
+      prompt: 'Kubernetes RBAC mengontrol?',
+      options: [
+        'CPU limit',
+        'Izin API berdasarkan role',
+        'DNS resolution',
+        'Image pull',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'RBAC (Role-Based Access Control) mengatur siapa dapat melakukan operasi apa di API Kubernetes.',
+    },
+    {
+      id: 'q-06-04',
+      order: 4,
+      prompt: 'NetworkPolicy membatasi?',
+      options: [
+        'Lalu lintas antar Pod',
+        'Jumlah replica',
+        'Storage class',
+        'Ingress controller',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'NetworkPolicy mendefinisikan aturan ingress/egress traffic antar Pod di cluster.',
+    },
+    {
+      id: 'q-06-05',
+      order: 5,
+      prompt: 'Pod Security Standards level restricted?',
+      options: [
+        'Paling permisif',
+        'Paling ketat',
+        'Hanya untuk dev',
+        'Tidak ada',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Restricted adalah level paling ketat: non-root, drop capabilities, read-only root filesystem.',
+    },
+    {
+      id: 'q-06-06',
+      order: 6,
+      prompt: 'SLSA fokus pada?',
+      options: [
+        'Supply chain security',
+        'Frontend CSS',
+        'Database indexing',
+        'Load testing',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'SLSA (Supply-chain Levels for Software Artifacts) adalah framework keamanan supply chain.',
+    },
+    {
+      id: 'q-06-07',
+      order: 7,
+      prompt: 'Falco mendeteksi?',
+      options: [
+        'Runtime anomali di container',
+        'Syntax error',
+        'Lint warning',
+        'Git conflict',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Falco adalah runtime security tool yang mendeteksi perilaku anomali via syscall monitoring.',
+    },
+    {
+      id: 'q-06-08',
+      order: 8,
+      prompt: 'Admission controller Gatekeeper menggunakan?',
+      options: [
+        'Rego policy language',
+        'SQL',
+        'HTML',
+        'CSS',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'OPA Gatekeeper menggunakan Rego untuk mendefinisikan kebijakan Kubernetes.',
+    },
+  ],
+}

@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch01KubernetesControllersOperatorsApiServerQuiz: Quiz = {
+  id: 'quiz-ch-01-kubernetes-controllers-operators-api-server',
+  title: 'Quiz: Kubernetes Controllers, Operators & API Server Internals',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-01-01',
+      order: 1,
+      prompt: 'Apa tugas utama controller Kubernetes?',
+      options: [
+        'Menyimpan data di etcd',
+        'Merekonsiliasi desired state dengan actual state',
+        'Mengompilasi container image',
+        'Mengatur DNS cluster',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Controller terus membandingkan desired state dengan actual state lalu mengambil aksi rekonsiliasi.',
+    },
+    {
+      id: 'q-01-02',
+      order: 2,
+      prompt: 'Apa keuntungan SharedInformer?',
+      options: [
+        'Menghilangkan kebutuhan RBAC',
+        'Mengurangi beban API server dengan cache bersama',
+        'Menjalankan container secara langsung',
+        'Menggantikan scheduler',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'SharedInformer memungkinkan banyak controller berbagi cache lokal sehingga mengurangi jumlah watch ke API server.',
+    },
+    {
+      id: 'q-01-03',
+      order: 3,
+      prompt: 'Komponen apa yang mendeduplikasi event dan menangani retry?',
+      options: [
+        'kubelet',
+        'workqueue',
+        'kube-proxy',
+        'etcd',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Workqueue menyimpan key objek yang perlu diproses, mendeduplikasi, dan menangani retry dengan rate limiting.',
+    },
+    {
+      id: 'q-01-04',
+      order: 4,
+      prompt: 'CRD digunakan untuk?',
+      options: [
+        'Mengganti Deployment bawaan',
+        'Memperluas API Kubernetes dengan resource custom',
+        'Menghapus namespace otomatis',
+        'Mengatur HPA',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Custom Resource Definition memperluas skema API Kubernetes sehingga kita dapat membuat resource sendiri.',
+    },
+    {
+      id: 'q-01-05',
+      order: 5,
+      prompt: 'Operator terdiri dari?',
+      options: [
+        'Hanya Pod',
+        'CRD + custom controller + resource pendukung',
+        'Sebuah Service',
+        'Hanya ConfigMap',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Operator adalah paket yang berisi CRD, custom controller, dan resource pendukung seperti RBAC dan ServiceAccount.',
+    },
+    {
+      id: 'q-01-06',
+      order: 6,
+      prompt: 'Admission webhook mutating berfungsi?',
+      options: [
+        'Menolak objek tidak valid',
+        'Mengubah objek sebelum disimpan',
+        'Mengarsipkan log',
+        'Mengupdate image registry',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Mutating admission webhook dapat memodifikasi objek, misalnya menyuntikkan sidecar atau default field.',
+    },
+    {
+      id: 'q-01-07',
+      order: 7,
+      prompt: 'API server aggregation memungkinkan?',
+      options: [
+        'Menambahkan API group eksternal',
+        'Menghapus etcd',
+        'Mengganti kubelet',
+        'Menghentikan scheduler',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Aggregation layer memungkinkan menambahkan API group baru melalui APIService yang merujuk ke service eksternal.',
+    },
+    {
+      id: 'q-01-08',
+      order: 8,
+      prompt: 'Mengapa leader election penting untuk controller HA?',
+      options: [
+        'Agar semua instance aktif bersamaan',
+        'Menghindari race condition dengan satu leader',
+        'Mengurangi jumlah Pod',
+        'Mempercepat scheduling',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Leader election memastikan hanya satu instance controller yang aktif memproses event, mencegah konflik.',
+    },
+  ],
+}

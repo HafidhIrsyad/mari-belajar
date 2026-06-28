@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch04SrePracticesQuiz: Quiz = {
+  id: 'quiz-ch-04-sre-practices',
+  title: 'Quiz: SRE Practices',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-04-01',
+      order: 1,
+      prompt: 'Apa yang diukur oleh SLI?',
+      options: [
+        'Komitmen bisnis',
+        'Performa service seperti availability/latency',
+        'Jumlah karyawan',
+        'Biaya cloud',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'SLI adalah metrik kuantitatif performa service seperti availability, latency, atau error rate.',
+    },
+    {
+      id: 'q-04-02',
+      order: 2,
+      prompt: 'Jika SLO availability 99.9% per bulan, error budget adalah?',
+      options: [
+        '0.01%',
+        '0.1%',
+        '1%',
+        '10%',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Error budget = 100% - 99.9% = 0.1% dari total request dalam periode tersebut.',
+    },
+    {
+      id: 'q-04-03',
+      order: 3,
+      prompt: 'Toil adalah?',
+      options: [
+        'Pekerjaan kreatif',
+        'Pekerjaan manual berulang yang dapat diotomatisasi',
+        'Incident handling',
+        'Code review',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Toil adalah pekerjaan manual yang berulang dan dapat diotomatisasi.',
+    },
+    {
+      id: 'q-04-04',
+      order: 4,
+      prompt: 'Error budget policy menentukan?',
+      options: [
+        'Warna dashboard',
+        'Aksi saat budget habis',
+        'Jumlah server',
+        'Nama service',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Error budget policy menjelaskan apa yang harus dilakukan saat budget habis, seperti freeze release.',
+    },
+    {
+      id: 'q-04-05',
+      order: 5,
+      prompt: 'Burn rate mengukur?',
+      options: [
+        'Kecepatan penggunaan error budget',
+        'Kapasitas CPU',
+        'Biaya deployment',
+        'Jumlah commit',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Burn rate mengukur seberapa cepat error budget terpakai relatif terhadap periode SLO.',
+    },
+    {
+      id: 'q-04-06',
+      order: 6,
+      prompt: 'SLA berbeda dari SLO karena?',
+      options: [
+        'SLA adalah komitmen bisnis dengan konsekuensi',
+        'SLA hanya untuk developer',
+        'SLA tidak terukur',
+        'SLA selalu lebih tinggi',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'SLA adalah perjanjian dengan pelanggan yang biasanya memiliki konsekuensi finansial jika dilanggar.',
+    },
+    {
+      id: 'q-04-07',
+      order: 7,
+      prompt: 'Tujuan toil reduction?',
+      options: [
+        'Menambah pekerjaan manual',
+        'Membebaskan waktu untuk engineering',
+        'Menghapus otomasi',
+        'Meningkatkan handovers',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Mengurangi toil membebaskan waktu tim untuk pekerjaan engineering yang bernilai lebih tinggi.',
+    },
+    {
+      id: 'q-04-08',
+      order: 8,
+      prompt: 'Capacity planning penting untuk?',
+      options: [
+        'Mencegah kekurangan resource yang merusak SLO',
+        'Menghapus monitoring',
+        'Mengurangi jumlah test',
+        'Mempercepat commit',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Capacity planning memastikan sistem memiliki resource yang cukup untuk memenuhi SLO.',
+    },
+  ],
+}

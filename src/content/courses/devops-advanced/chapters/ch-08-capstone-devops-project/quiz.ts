@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch08CapstoneDevopsProjectQuiz: Quiz = {
+  id: 'quiz-ch-08-capstone-devops-project',
+  title: 'Quiz: Capstone DevOps Project',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-08-01',
+      order: 1,
+      prompt: 'Urutan pipeline CI yang benar?',
+      options: [
+        'Deploy → Test → Build',
+        'Lint → Test → Build → Scan → Push',
+        'Push → Build → Test',
+        'Scan → Deploy → Lint',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Pipeline standar: lint, test, build image, security scan, push ke registry, lalu deploy.',
+    },
+    {
+      id: 'q-08-02',
+      order: 2,
+      prompt: 'ArgoCD deploy dari?',
+      options: [
+        'Manual kubectl',
+        'Git repository sebagai source of truth',
+        'SSH ke server',
+        'Email notification',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'ArgoCD menyinkronkan cluster state dengan manifest di Git repository (GitOps).',
+    },
+    {
+      id: 'q-08-03',
+      order: 3,
+      prompt: 'Rollback di ArgoCD?',
+      options: [
+        'Revert ke revision sebelumnya di Git history',
+        'Hapus cluster',
+        'Rebuild dari scratch',
+        'Tidak mungkin',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'ArgoCD dapat rollback ke revision Git sebelumnya atau sync ke commit tertentu.',
+    },
+    {
+      id: 'q-08-04',
+      order: 4,
+      prompt: 'Security scanning di CI mencegah?',
+      options: [
+        'Vulnerable image masuk registry',
+        'Syntax error',
+        'Merge conflict',
+        'Slow build',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Image scanner (Trivy, Grype) mendeteksi CVE sebelum image di-push ke registry production.',
+    },
+    {
+      id: 'q-08-05',
+      order: 5,
+      prompt: 'Observability stack capstone?',
+      options: [
+        'Prometheus + Grafana + alerting',
+        'Hanya console.log',
+        'Spreadsheet',
+        'Email saja',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Stack observability: Prometheus untuk metrics, Grafana untuk dashboard, Alertmanager untuk alerting.',
+    },
+    {
+      id: 'q-08-06',
+      order: 6,
+      prompt: 'Progressive delivery abort?',
+      options: [
+        'Otomatis rollback jika analysis gagal',
+        'Deploy tanpa test',
+        'Skip canary',
+        'Force deploy',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Argo Rollouts dapat abort canary deployment jika analysis metrics gagal threshold.',
+    },
+    {
+      id: 'q-08-07',
+      order: 7,
+      prompt: 'Runbook berisi?',
+      options: [
+        'Langkah troubleshooting untuk alert',
+        'Source code',
+        'Dockerfile saja',
+        'Git history',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Runbook mendokumentasikan langkah diagnosis dan remediation untuk setiap alert/incident type.',
+    },
+    {
+      id: 'q-08-08',
+      order: 8,
+      prompt: 'Arsitektur capstone?',
+      options: [
+        'React frontend + Go/Node backend + PostgreSQL',
+        'Monolith PHP',
+        'Desktop app',
+        'Static HTML saja',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Capstone menggunakan stack full-stack modern: React, Go/Node backend, PostgreSQL, di-deploy ke K8s.',
+    },
+  ],
+}

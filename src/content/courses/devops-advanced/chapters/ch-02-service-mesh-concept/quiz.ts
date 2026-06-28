@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch02ServiceMeshConceptQuiz: Quiz = {
+  id: 'quiz-ch-02-service-mesh-concept',
+  title: 'Quiz: Service Mesh (Konsep)',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-02-01',
+      order: 1,
+      prompt: 'Apa peran data plane?',
+      options: [
+        'Menyimpan konfigurasi etcd',
+        'Mengirim dan menerima traffic via proxy sidecar',
+        'Mengelola DNS',
+        'Mengompilasi image',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Data plane terdiri dari proxy sidecar yang menangani lalu lintas aplikasi.',
+    },
+    {
+      id: 'q-02-02',
+      order: 2,
+      prompt: 'Sidecar proxy biasanya berjalan sebagai?',
+      options: [
+        'Container terpisah dalam Pod yang sama',
+        'VM terpisah',
+        'Proses di node',
+        'Bagian dari kernel',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Sidecar proxy berjalan sebagai container tambahan dalam Pod yang sama dengan aplikasi.',
+    },
+    {
+      id: 'q-02-03',
+      order: 3,
+      prompt: 'mTLS memastikan?',
+      options: [
+        'Hanya client memverifikasi server',
+        'Kedua sisi memverifikasi identitas satu sama lain',
+        'Tidak ada enkripsi',
+        'Penggunaan HTTP/1.1',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Mutual TLS memastikan kedua pihak saling mengautentikasi dan mengenkripsi komunikasi.',
+    },
+    {
+      id: 'q-02-04',
+      order: 4,
+      prompt: 'Konfigurasi apa yang mendefinisikan routing rules di Istio?',
+      options: [
+        'DestinationRule',
+        'VirtualService',
+        'PodSecurityPolicy',
+        'NetworkPolicy',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'VirtualService mendefinisikan aturan routing traffic di Istio.',
+    },
+    {
+      id: 'q-02-05',
+      order: 5,
+      prompt: 'Zero-trust mengasumsikan?',
+      options: [
+        'Semua host di dalam cluster aman',
+        'Tidak ada trust implisit berdasarkan lokasi jaringan',
+        'Firewall cukup',
+        'VPN wajib',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Zero-trust selalu memverifikasi identitas dan izin, tanpa mengandalkan lokasi jaringan.',
+    },
+    {
+      id: 'q-02-06',
+      order: 6,
+      prompt: 'eBPF dalam service mesh digunakan untuk?',
+      options: [
+        'Mengganti container runtime',
+        'Mengurangi overhead sidecar dengan kernel-level interception',
+        'Menyimpan secret',
+        'Mengelola etcd',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'eBPF memungkinkan interception di kernel sehingga mengurangi kebutuhan sidecar.',
+    },
+    {
+      id: 'q-02-07',
+      order: 7,
+      prompt: 'SPIFFE adalah?',
+      options: [
+        'Framework identity untuk workload',
+        'Container registry',
+        'Log aggregator',
+        'Build tool',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'SPIFFE menyediakan standard identity untuk workload yang digunakan service mesh untuk mTLS.',
+    },
+    {
+      id: 'q-02-08',
+      order: 8,
+      prompt: 'Kapan service mesh kurang tepat?',
+      options: [
+        'Cluster kecil dengan sedikit service',
+        'Kebutuhan mTLS dan observability tinggi',
+        'Arsitektur microservices',
+        'Multi-cluster',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Service mesh menambah kompleksitas dan overhead, sehingga kurang tepat untuk cluster sederhana.',
+    },
+  ],
+}

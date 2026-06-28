@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch05AdvancedMonitoringAlertingQuiz: Quiz = {
+  id: 'quiz-ch-05-advanced-monitoring-alerting',
+  title: 'Quiz: Advanced Monitoring & Alerting',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-05-01',
+      order: 1,
+      prompt: 'PromQL rate() digunakan untuk?',
+      options: [
+        'Menghitung perubahan per detik dari counter',
+        'Menyimpan log',
+        'Mengganti Grafana',
+        'Menghapus metrik',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'rate() menghitung perubahan rata-rata per detik dari counter time series.',
+    },
+    {
+      id: 'q-05-02',
+      order: 2,
+      prompt: 'Alertmanager berfungsi?',
+      options: [
+        'Menyimpan metrik',
+        'Routing, grouping, dan silencing alert',
+        'Build container',
+        'Deploy ke K8s',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Alertmanager menerima alert dari Prometheus/Grafana dan mengelola routing ke on-call.',
+    },
+    {
+      id: 'q-05-03',
+      order: 3,
+      prompt: 'SLO-based alerting fokus pada?',
+      options: [
+        'CPU threshold saja',
+        'Error budget burn rate',
+        'Jumlah pod',
+        'Git commit',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Alert berbasis SLO memantau burn rate error budget, bukan threshold arbitrer.',
+    },
+    {
+      id: 'q-05-04',
+      order: 4,
+      prompt: 'Silence di Alertmanager?',
+      options: [
+        'Menghapus alert permanen',
+        'Menekan alert sementara untuk maintenance',
+        'Menghentikan Prometheus',
+        'Menghapus dashboard',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Silence menekan alert selama periode tertentu, misalnya saat maintenance terencana.',
+    },
+    {
+      id: 'q-05-05',
+      order: 5,
+      prompt: 'Histogram vs Counter?',
+      options: [
+        'Histogram mengukur distribusi; counter hanya naik',
+        'Sama saja',
+        'Counter untuk log',
+        'Histogram untuk text',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Counter monotonik naik; histogram mengumpulkan observasi dalam bucket untuk distribusi.',
+    },
+    {
+      id: 'q-05-06',
+      order: 6,
+      prompt: 'On-call integration biasanya via?',
+      options: [
+        'PagerDuty/Opsgenie webhook',
+        'FTP',
+        'SMTP saja',
+        'Git push',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Alertmanager mengirim notifikasi ke PagerDuty, Opsgenie, Slack, atau webhook lain.',
+    },
+    {
+      id: 'q-05-07',
+      order: 7,
+      prompt: 'Anomaly detection berguna karena?',
+      options: [
+        'Tidak perlu threshold manual',
+        'Menghapus semua alert',
+        'Mengganti SLO',
+        'Menonaktifkan monitoring',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Anomaly detection mendeteksi pola abnormal secara otomatis tanpa threshold statis.',
+    },
+    {
+      id: 'q-05-08',
+      order: 8,
+      prompt: 'Recording rule di Prometheus?',
+      options: [
+        'Menyimpan query hasil sebagai metrik baru',
+        'Menghapus data lama',
+        'Mengganti Alertmanager',
+        'Backup etcd',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Recording rule mengevaluasi PromQL dan menyimpan hasilnya sebagai time series baru.',
+    },
+  ],
+}

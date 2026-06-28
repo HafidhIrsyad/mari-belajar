@@ -63,6 +63,9 @@ export default defineConfig({
           if (id.includes('/src/content/courses/devops-intermediate/')) {
             return 'course-devops-intermediate'
           }
+          if (id.includes('/src/content/courses/devops-advanced/')) {
+            return 'course-devops-advanced'
+          }
           if (id.includes('/src/content/courses/frontend-advanced/')) {
             return 'course-frontend-advanced'
           }

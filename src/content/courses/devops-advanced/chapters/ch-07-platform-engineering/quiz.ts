@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch07PlatformEngineeringQuiz: Quiz = {
+  id: 'quiz-ch-07-platform-engineering',
+  title: 'Quiz: Platform Engineering',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-07-01',
+      order: 1,
+      prompt: 'IDP adalah?',
+      options: [
+        'Cloud provider',
+        'Produk internal untuk developer',
+        'Database',
+        'CI tool',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Internal Developer Platform adalah produk internal yang mempercepat delivery tim developer.',
+    },
+    {
+      id: 'q-07-02',
+      order: 2,
+      prompt: 'Golden path?',
+      options: [
+        'Jalur hiking',
+        'Cara standar didukung untuk common tasks',
+        'Branch Git',
+        'Network route',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Golden path adalah template dan workflow standar yang didukung platform team.',
+    },
+    {
+      id: 'q-07-03',
+      order: 3,
+      prompt: 'Self-service infrastructure mengurangi?',
+      options: [
+        'Developer autonomy',
+        'Ticket queue ke platform team',
+        'Deployment speed',
+        'Code quality',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Self-service memungkinkan developer provisioning resource tanpa menunggu ticket manual.',
+    },
+    {
+      id: 'q-07-04',
+      order: 4,
+      prompt: 'Backstage menyediakan?',
+      options: [
+        'Service catalog dan templates',
+        'Container runtime',
+        'DNS server',
+        'Load balancer',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Backstage adalah developer portal dengan service catalog, software templates, dan plugin ecosystem.',
+    },
+    {
+      id: 'q-07-05',
+      order: 5,
+      prompt: 'Platform team dalam Team Topologies?',
+      options: [
+        'Stream-aligned team',
+        'Platform team',
+        'Enabling team',
+        'Complicated-subsystem team',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Platform team membangung internal platform sebagai produk untuk stream-aligned teams.',
+    },
+    {
+      id: 'q-07-06',
+      order: 6,
+      prompt: 'Cognitive load reduction?',
+      options: [
+        'Menambah dokumentasi saja',
+        'Menyederhanakan cara developer bekerja',
+        'Menghapus testing',
+        'Mengurangi jumlah developer',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Platform engineering mengurangi cognitive load dengan abstraksi dan golden paths.',
+    },
+    {
+      id: 'q-07-07',
+      order: 7,
+      prompt: 'DX metrics contoh?',
+      options: [
+        'Deployment frequency, lead time',
+        'Jumlah meeting',
+        'Ukuran monitor',
+        'Warna IDE',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Developer experience diukur dengan DORA metrics: deployment frequency, lead time, MTTR, change failure rate.',
+    },
+    {
+      id: 'q-07-08',
+      order: 8,
+      prompt: 'Thinnest viable platform?',
+      options: [
+        'Platform seminimal mungkin yang memberikan value',
+        'Platform paling kompleks',
+        'Tidak ada platform',
+        'Hanya SaaS',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Thinnest viable platform: mulai minimal, iterasi berdasarkan feedback developer.',
+    },
+  ],
+}

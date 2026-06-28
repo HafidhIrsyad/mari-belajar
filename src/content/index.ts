@@ -8,6 +8,7 @@ import { databaseBasicMeta } from './courses/database-basic/meta'
 import { databaseIntermediateMeta } from './courses/database-intermediate/meta'
 import { devopsBasicMeta } from './courses/devops-basic/meta'
 import { devopsIntermediateMeta } from './courses/devops-intermediate/meta'
+import { devopsAdvancedMeta } from './courses/devops-advanced/meta'
 import { frontendAdvancedMeta } from './courses/frontend-advanced/meta'
 import { frontendBasicMeta } from './courses/frontend-basic/meta'
 import { frontendIntermediateMeta } from './courses/frontend-intermediate/meta'
@@ -28,6 +29,7 @@ export const courseMetas: CourseMeta[] = [
   databaseIntermediateMeta,
   devopsBasicMeta,
   devopsIntermediateMeta,
+  devopsAdvancedMeta,
   frontendAdvancedMeta,
   frontendBasicMeta,
   frontendIntermediateMeta,
@@ -64,6 +66,7 @@ const courseLoaders: Record<string, () => Promise<Record<string, Course>>> = {
   'database-intermediate': () => import('./courses/database-intermediate'),
   'devops-basic': () => import('./courses/devops-basic'),
   'devops-intermediate': () => import('./courses/devops-intermediate'),
+  'devops-advanced': () => import('./courses/devops-advanced'),
   'frontend-advanced': () => import('./courses/frontend-advanced'),
   'frontend-basic': () => import('./courses/frontend-basic'),
   'frontend-intermediate': () => import('./courses/frontend-intermediate'),

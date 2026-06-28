@@ -1,0 +1,113 @@
+import type { Quiz } from '@/content/types'
+
+export const ch03GitopsLanjutanQuiz: Quiz = {
+  id: 'quiz-ch-03-gitops-lanjutan',
+  title: 'Quiz: GitOps Lanjutan',
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-03-01',
+      order: 1,
+      prompt: 'Prinsip utama GitOps?',
+      options: [
+        'State cluster disimpan di database SQL',
+        'Git sebagai single source of truth',
+        'Deployment manual via kubectl',
+        'Image tag selalu latest',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'GitOps menggunakan Git sebagai sumber kebenaran untuk desired state cluster.',
+    },
+    {
+      id: 'q-03-02',
+      order: 2,
+      prompt: 'Apa fungsi ApplicationSet?',
+      options: [
+        'Mengelola secret',
+        'Menghasilkan banyak Application dari generator',
+        'Mengganti kube-apiserver',
+        'Membangun image',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'ApplicationSet menghasilkan banyak ArgoCD Application dari generator seperti list, cluster, atau git.',
+    },
+    {
+      id: 'q-03-03',
+      order: 3,
+      prompt: 'Solusi mana yang aman untuk menyimpan secret di Git?',
+      options: [
+        'Sealed Secrets',
+        'Secret plaintext',
+        'ConfigMap tanpa encoding',
+        'Helm values terbuka',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Sealed Secrets mengenkripsi Kubernetes Secret sehingga aman untuk disimpan di Git.',
+    },
+    {
+      id: 'q-03-04',
+      order: 4,
+      prompt: 'Progressive delivery bertujuan?',
+      options: [
+        'Deploy sekaligus ke semua pod',
+        'Mengurangi risiko dengan rollout bertahap',
+        'Menghapus rollback',
+        'Menonaktifkan monitoring',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Progressive delivery seperti canary mengurangi risiko dengan melepas perubahan secara bertahap.',
+    },
+    {
+      id: 'q-03-05',
+      order: 5,
+      prompt: 'Multi-cluster GitOps memerlukan?',
+      options: [
+        'ArgoCD di setiap cluster atau management cluster',
+        'Tidak perlu kubeconfig',
+        'Hanya satu node',
+        'Database bersama',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Multi-cluster GitOps membutuhkan ArgoCD yang dapat mengakses kubeconfig setiap target cluster.',
+    },
+    {
+      id: 'q-03-06',
+      order: 6,
+      prompt: 'Drift terjadi ketika?',
+      options: [
+        'Cluster state berbeda dari Git',
+        'Git dan cluster identik',
+        'Tidak ada perubahan',
+        'Image belum di-build',
+      ],
+      correctOptionIndex: 0,
+      explanation: 'Drift adalah perbedaan antara state cluster dan state yang didefinisikan di Git.',
+    },
+    {
+      id: 'q-03-07',
+      order: 7,
+      prompt: 'OPA/Gatekeeper digunakan untuk?',
+      options: [
+        'Menyimpan log',
+        'Policy enforcement',
+        'Build container',
+        'Scheduling pod',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'OPA/Gatekeeper menegakkan kebijakan terhadap manifest sebelum diterapkan ke cluster.',
+    },
+    {
+      id: 'q-03-08',
+      order: 8,
+      prompt: 'Disaster recovery GitOps mengandalkan?',
+      options: [
+        'Backup seluruh etcd saja',
+        'Repository Git sebagai desired state',
+        'Snapshot VM manual',
+        'Secret di clipboard',
+      ],
+      correctOptionIndex: 1,
+      explanation: 'Karena seluruh desired state didokumentasikan di Git, recovery dapat dilakukan dengan mengarahkan cluster baru ke repository.',
+    },
+  ],
+}
