@@ -1,0 +1,8 @@
+export { ch01GitWorkflow } from './ch-01-git-workflow'
+export { ch02CiCdFundamentals } from './ch-02-ci-cd-fundamentals'
+export { ch03ContainerInternals } from './ch-03-container-internals'
+export { ch04EnvironmentManagement } from './ch-04-environment-management'
+export { ch05InfrastructureAsCode } from './ch-05-infrastructure-as-code'
+export { ch06MonitoringLogging } from './ch-06-monitoring-logging'
+export { ch07DeploymentStrategies } from './ch-07-deployment-strategies'
+export { ch08DevopsCultureCollaboration } from './ch-08-devops-culture-collaboration'
