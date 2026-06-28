@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch07DevsecopsQuiz: Quiz = {
+  id: "quiz-ch-07-devsecops",
+  title: "Quiz: DevSecOps",
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-07-01',
+      order: 1,
+      prompt: "Apa arti shift-left security?",
+      options: ['Menunda scanning hingga production', 'Memindahkan aktivitas security ke awal siklus pengembangan', 'Menggeser server ke zona waktu lain', 'Hanya menguji setelah deploy'],
+      correctOptionIndex: 1,
+      explanation: "Shift-left berarti menemukan dan memperbaiki masalah security sedini mungkin dalam siklus pengembangan.",
+    },
+    {
+      id: 'q-07-02',
+      order: 2,
+      prompt: "SAST menganalisis aplikasi pada kondisi apa?",
+      options: ['Saat berjalan', 'Tanpa menjalankan aplikasi', 'Setelah exploit', 'Di browser pengguna'],
+      correctOptionIndex: 1,
+      explanation: "SAST adalah static analysis terhadap source code tanpa menjalankan aplikasi.",
+    },
+    {
+      id: 'q-07-03',
+      order: 3,
+      prompt: "Tool mana yang umum digunakan untuk dynamic application security testing?",
+      options: ['SonarQube', 'OWASP ZAP', 'Trivy', 'npm audit'],
+      correctOptionIndex: 1,
+      explanation: "OWASP ZAP adalah tool DAST yang menguji aplikasi yang sedang berjalan.",
+    },
+    {
+      id: 'q-07-04',
+      order: 4,
+      prompt: "Apa kegunaan SBOM?",
+      options: ['Menandatangani image', 'Mendokumentasikan komponen software', 'Menjalankan load test', 'Mengenkripsi secret'],
+      correctOptionIndex: 1,
+      explanation: "SBOM (Software Bill of Materials) mendokumentasikan komponen, versi, dan lisensi software.",
+    },
+    {
+      id: 'q-07-05',
+      order: 5,
+      prompt: "Tool signing image container dari Sigstore adalah?",
+      options: ['Helm', 'cosign', 'kubectl', 'Terraform'],
+      correctOptionIndex: 1,
+      explanation: "cosign adalah tool dari Sigstore untuk menandatangani dan memverifikasi container image.",
+    },
+    {
+      id: 'q-07-06',
+      order: 6,
+      prompt: "Trivy umumnya digunakan untuk?",
+      options: ['SAST', 'Container image scanning', 'DAST', 'Network monitoring'],
+      correctOptionIndex: 1,
+      explanation: "Trivy adalah scanner open-source untuk image, filesystem, dan repository vulnerability.",
+    },
+    {
+      id: 'q-07-07',
+      order: 7,
+      prompt: "SLSA level tertinggi mencakup?",
+      options: ['Build manual', 'Reproducible build dan two-person review', 'Tidak ada provenance', 'Dependency tanpa versi'],
+      correctOptionIndex: 1,
+      explanation: "SLSA Level 4 mencakup reproducible build dan two-person review untuk tingkat kepercayaan tertinggi.",
+    },
+    {
+      id: 'q-07-08',
+      order: 8,
+      prompt: "Mengapa signing artifact penting untuk supply chain security?",
+      options: ['Mengurangi ukuran artifact', 'Memastikan integritas dan asal usul artifact', 'Menambah kecepatan build', 'Menghapus dependency'],
+      correctOptionIndex: 1,
+      explanation: "Signing memastikan artifact tidak dimodifikasi dan berasal dari sumber tepercaya.",
+    },
+  ],
+}

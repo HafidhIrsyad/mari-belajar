@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch05ObservabilityStackQuiz: Quiz = {
+  id: "quiz-ch-05-observability-stack",
+  title: "Quiz: Observability Stack",
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-05-01',
+      order: 1,
+      prompt: "Pilar observability mana yang cocok untuk menemukan detail root cause error spesifik?",
+      options: ['Metrics', 'Logs', 'Traces', 'Alerts'],
+      correctOptionIndex: 1,
+      explanation: "Logs menyediakan detail event ber timestamp untuk debugging error tertentu.",
+    },
+    {
+      id: 'q-05-02',
+      order: 2,
+      prompt: "Standar open-source untuk instrumentation logs, metrics, dan traces adalah?",
+      options: ['SNMP', 'OpenTelemetry', 'Syslog', 'JMX'],
+      correctOptionIndex: 1,
+      explanation: "OpenTelemetry menyediakan SDK, API, dan protocol standar untuk telemetry.",
+    },
+    {
+      id: 'q-05-03',
+      order: 3,
+      prompt: "Komponen OpenTelemetry mana yang dapat menerima, memproses, dan mengekspor telemetry dari banyak sumber?",
+      options: ['SDK', 'Collector', 'Backend', 'Agent'],
+      correctOptionIndex: 1,
+      explanation: "OpenTelemetry Collector bertindak sebagai pipeline receive-process-export untuk telemetry.",
+    },
+    {
+      id: 'q-05-04',
+      order: 4,
+      prompt: "Apa keuntungan tail-based sampling dibanding head-based sampling?",
+      options: ['Lebih sedikit data', 'Dapat memutuskan menyimpan trace menarik setelah trace selesai', 'Tidak memerlukan collector', 'Lebih cepat di aplikasi'],
+      correctOptionIndex: 1,
+      explanation: "Tail-based sampling menilai seluruh trace setelah selesai, sehingga dapat menyimpan trace error atau latency tinggi yang mungkin terlewat oleh head-based.",
+    },
+    {
+      id: 'q-05-05',
+      order: 5,
+      prompt: "Mengapa high cardinality pada metrics menjadi masalah?",
+      options: ['Membuat log hilang', 'Meningkatkan jumlah time series dan biaya', 'Menghapus trace', 'Memperlambat build image'],
+      correctOptionIndex: 1,
+      explanation: "High cardinality menghasilkan banyak kombinasi label, yang membuat storage dan query metrics mahal.",
+    },
+    {
+      id: 'q-05-06',
+      order: 6,
+      prompt: "Header standar untuk propagasi trace context antar service adalah?",
+      options: ['Authorization', 'traceparent', 'Content-Type', 'X-API-Key'],
+      correctOptionIndex: 1,
+      explanation: "W3C traceparent adalah header standar untuk membawa trace ID dan span ID antar service.",
+    },
+    {
+      id: 'q-05-07',
+      order: 7,
+      prompt: "eBPF digunakan untuk observability di level mana?",
+      options: ['Application bytecode', 'Kernel', 'Database query', 'Browser'],
+      correctOptionIndex: 1,
+      explanation: "eBPF memungkinkan observability aman di kernel Linux tanpa memodifikasi aplikasi.",
+    },
+    {
+      id: 'q-05-08',
+      order: 8,
+      prompt: "Stack observability LGTM terdiri dari?",
+      options: ['Lambda, Glue, Terraform, MongoDB', 'Loki, Grafana, Tempo, Mimir', 'Linux, Git, Teamcity, Maven', 'Logs, Graphs, Traces, Metrics'],
+      correctOptionIndex: 1,
+      explanation: "LGTM adalah singkatan Loki (logs), Grafana (visualisasi), Tempo (traces), Mimir (metrics).",
+    },
+  ],
+}

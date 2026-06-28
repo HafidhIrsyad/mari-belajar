@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch04GitopsQuiz: Quiz = {
+  id: "quiz-ch-04-gitops",
+  title: "Quiz: GitOps",
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-04-01',
+      order: 1,
+      prompt: "Dalam GitOps, apa yang menjadi single source of truth?",
+      options: ['Cluster state', 'Container registry', 'Git repository', 'CI/CD database'],
+      correctOptionIndex: 2,
+      explanation: "Git repository menjadi sumber kebenaran untuk state yang diinginkan dari aplikasi dan infrastruktur.",
+    },
+    {
+      id: 'q-04-02',
+      order: 2,
+      prompt: "Keuntungan utama pull deployment dibanding push deployment adalah?",
+      options: ['Lebih cepat build image', 'Cluster tidak perlu memberikan kredensial write ke pipeline eksternal', 'Tidak memerlukan Git', 'Lebih mudah debugging lokal'],
+      correctOptionIndex: 1,
+      explanation: "Pada pull deployment, agen di cluster membaca Git sehingga kredensial cluster tidak perlu diekspos ke pipeline CI/CD eksternal.",
+    },
+    {
+      id: 'q-04-03',
+      order: 3,
+      prompt: "Komponen ArgoCD mana yang membandingkan desired state dengan live state?",
+      options: ['API server', 'Repository server', 'Application controller', 'Dex'],
+      correctOptionIndex: 2,
+      explanation: "Application controller bertanggung jawab untuk observasi dan sinkronisasi desired state dari Git ke live state cluster.",
+    },
+    {
+      id: 'q-04-04',
+      order: 4,
+      prompt: "Apa fungsi sync waves?",
+      options: ['Mengenkripsi secret', 'Mengatur urutan deployment resource', 'Membangun image container', 'Menghapus namespace'],
+      correctOptionIndex: 1,
+      explanation: "Sync waves mengontrol urutan deployment agar dependensi seperti database diterapkan sebelum aplikasi.",
+    },
+    {
+      id: 'q-04-05',
+      order: 5,
+      prompt: "Tool mana yang dapat mengupdate tag image di Git secara otomatis?",
+      options: ['ArgoCD Image Updater', 'Helm', 'kubectl', 'Docker Compose'],
+      correctOptionIndex: 0,
+      explanation: "ArgoCD Image Updater memantau registry dan mengupdate Git dengan tag image baru untuk continuous deployment.",
+    },
+    {
+      id: 'q-04-06',
+      order: 6,
+      prompt: "Solusi apa yang digunakan untuk menyimpan secret di Git secara aman?",
+      options: ['Plain YAML', 'Sealed Secrets atau SOPS', 'ConfigMap', 'Dockerfile'],
+      correctOptionIndex: 1,
+      explanation: "Sealed Secrets dan SOPS mengenkripsi secret sehingga dapat disimpan di Git tanpa membocorkan nilai asli.",
+    },
+    {
+      id: 'q-04-07',
+      order: 7,
+      prompt: "Bagaimana rollback dilakukan di GitOps?",
+      options: ['Reinstall cluster', 'Revert commit di Git', 'Hapus semua pod', 'Restart node'],
+      correctOptionIndex: 1,
+      explanation: "Rollback di GitOps dilakukan dengan merevert commit atau mengubah branch/tag, yang kemudian disinkronkan oleh agen.",
+    },
+    {
+      id: 'q-04-08',
+      order: 8,
+      prompt: "Flux menggunakan pattern controller apa untuk menyinkronkan Git ke cluster?",
+      options: ['Push-based Jenkins', 'GitRepository dan Kustomization CRD', 'SSH manual', 'SQL replication'],
+      correctOptionIndex: 1,
+      explanation: "Flux menggunakan GitRepository dan Kustomization CRD yang bekerja sesuai controller pattern untuk menyinkronkan state.",
+    },
+  ],
+}

@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch03KubernetesInternalsQuiz: Quiz = {
+  id: "quiz-ch-03-kubernetes-internals",
+  title: "Quiz: Kubernetes Internals: Control Plane, etcd, Scheduler & Networking",
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-03-01',
+      order: 1,
+      prompt: "Komponen mana yang menjadi frontend API dan gateway ke etcd?",
+      options: ['kubelet', 'kube-proxy', 'kube-apiserver', 'kube-scheduler'],
+      correctOptionIndex: 2,
+      explanation: "kube-apiserver menerima semua request API, mengautentikasi, mengotorisasi, dan menulis objek ke etcd.",
+    },
+    {
+      id: 'q-03-02',
+      order: 2,
+      prompt: "Algoritma konsensus apa yang digunakan oleh etcd?",
+      options: ['Paxos', 'RAFT', 'Gossip', 'Two-phase commit'],
+      correctOptionIndex: 1,
+      explanation: "etcd menggunakan algoritma RAFT untuk memilih leader dan mereplikasi writes ke follower.",
+    },
+    {
+      id: 'q-03-03',
+      order: 3,
+      prompt: "Dalam scheduling, tahap mana yang membuang node yang tidak memenuhi syarat hard requirements?",
+      options: ['Priorities', 'Predicates', 'Scoring', 'Binding'],
+      correctOptionIndex: 1,
+      explanation: "Predicates adalah fase filter yang membuang node yang tidak memenuhi syarat seperti resource requests atau nodeSelector.",
+    },
+    {
+      id: 'q-03-04',
+      order: 4,
+      prompt: "Apa peran kubelet di node worker?",
+      options: ['Menyimpan state cluster', 'Mengelola container di pod', 'Mengatur routing service', 'Memilih node untuk pod'],
+      correctOptionIndex: 1,
+      explanation: "kubelet adalah agen node yang memastikan container di pod berjalan dan sehat.",
+    },
+    {
+      id: 'q-03-05',
+      order: 5,
+      prompt: "Antarmuka apa yang menghubungkan Kubernetes dengan plugin jaringan seperti Calico atau Cilium?",
+      options: ['CRI', 'CNI', 'CSI', 'CPI'],
+      correctOptionIndex: 1,
+      explanation: "CNI (Container Network Interface) adalah standar untuk plugin jaringan container di Kubernetes.",
+    },
+    {
+      id: 'q-03-06',
+      order: 6,
+      prompt: "Admission webhook mana yang dapat mengubah objek sebelum disimpan?",
+      options: ['ValidatingAdmissionWebhook', 'MutatingAdmissionWebhook', 'AuthorizationWebhook', 'AuditWebhook'],
+      correctOptionIndex: 1,
+      explanation: "MutatingAdmissionWebhook dapat memodifikasi objek, misalnya menambahkan sidecar atau label default.",
+    },
+    {
+      id: 'q-03-07',
+      order: 7,
+      prompt: "Apa yang dimaksud dengan informer pada controller?",
+      options: ['Tool untuk deploy pod', 'Cache lokal resource dari API server', 'Plugin jaringan', 'Storage driver'],
+      correctOptionIndex: 1,
+      explanation: "Informer menyediakan cache lokal dan notifikasi perubahan resource untuk mengurangi beban API server.",
+    },
+    {
+      id: 'q-03-08',
+      order: 8,
+      prompt: "CSI pada Kubernetes berfungsi untuk?",
+      options: ['Runtime container', 'Network overlay', 'Storage volume', 'Service discovery'],
+      correctOptionIndex: 2,
+      explanation: "CSI (Container Storage Interface) mengabstraksi penyedia storage untuk volume persisten.",
+    },
+  ],
+}

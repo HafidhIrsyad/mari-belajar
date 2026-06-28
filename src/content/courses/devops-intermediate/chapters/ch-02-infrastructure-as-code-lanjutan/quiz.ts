@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch02InfrastructureAsCodeLanjutanQuiz: Quiz = {
+  id: "quiz-ch-02-infrastructure-as-code-lanjutan",
+  title: "Quiz: Infrastructure as Code Lanjutan",
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-02-01',
+      order: 1,
+      prompt: "Apa fungsi utama module di Terraform?",
+      options: ['Menyembunyikan state file', 'Mengelompokkan resource reusable', 'Menggantikan provider', 'Menghapus dependency graph'],
+      correctOptionIndex: 1,
+      explanation: "Module Terraform mengelompokkan resource terkait sehingga dapat digunakan ulang di banyak konfigurasi.",
+    },
+    {
+      id: 'q-02-02',
+      order: 2,
+      prompt: "Mengapa state file Terraform harus disimpan di remote backend saat bekerja dalam tim?",
+      options: ['Agar lebih cepat diunduh', 'Untuk kolaborasi dan state locking', 'Agar tidak perlu di-backup', 'Untuk menghindari penggunaan provider'],
+      correctOptionIndex: 1,
+      explanation: "Remote backend memusatkan state dan menyediakan locking sehingga beberapa engineer tidak saling menimpa perubahan.",
+    },
+    {
+      id: 'q-02-03',
+      order: 3,
+      prompt: "Komponen apa yang mencegah dua proses terraform apply berjalan bersamaan?",
+      options: ['Workspace', 'State locking', 'Output', 'Provider plugin'],
+      correctOptionIndex: 1,
+      explanation: "State locking mengunci state selama apply untuk mencegah race condition dan korupsi state.",
+    },
+    {
+      id: 'q-02-04',
+      order: 4,
+      prompt: "Perintah mana yang menampilkan perubahan tanpa menerapkannya?",
+      options: ['terraform apply', 'terraform plan', 'terraform destroy', 'terraform refresh'],
+      correctOptionIndex: 1,
+      explanation: "terraform plan menghitung diff antara konfigurasi dan state tanpa mengubah infrastruktur nyata.",
+    },
+    {
+      id: 'q-02-05',
+      order: 5,
+      prompt: "Apa itu drift detection?",
+      options: ['Proses upgrade Terraform', 'Deteksi perubahan manual di cloud yang tidak tercatat di kode', 'Pemeriksaan syntax HCL', 'Pengujian performance aplikasi'],
+      correctOptionIndex: 1,
+      explanation: "Drift detection mengidentifikasi selisih antara state/kode dengan kondisi infrastruktur nyata akibat perubahan manual.",
+    },
+    {
+      id: 'q-02-06',
+      order: 6,
+      prompt: "Tool policy as code mana yang menggunakan bahasa Rego?",
+      options: ['Sentinel', 'OPA', 'Terratest', 'tflint'],
+      correctOptionIndex: 1,
+      explanation: "Open Policy Agent (OPA) menggunakan bahasa Rego untuk mengevaluasi kebijakan terhadap data seperti Terraform plan JSON.",
+    },
+    {
+      id: 'q-02-07',
+      order: 7,
+      prompt: "Mengapa state file dianggap sensitive?",
+      options: ['Karena berisi password dan mapping resource ke cloud', 'Karena berisi source code aplikasi', 'Karena hanya bisa dibaca root', 'Karena berisi binary provider'],
+      correctOptionIndex: 0,
+      explanation: "State dapat berisi nilai sensitive dan mapping lengkap ke resource cloud, sehingga aksesnya harus dibatasi dan dienkripsi.",
+    },
+    {
+      id: 'q-02-08',
+      order: 8,
+      prompt: "Static analysis pada IaC biasanya mencakup?",
+      options: ['Load testing', 'terraform validate dan tflint', 'Penetration testing', 'Backup restore'],
+      correctOptionIndex: 1,
+      explanation: "Static analysis untuk IaC mencakup validasi syntax, format, dan linting tanpa harus deploy infrastruktur.",
+    },
+  ],
+}

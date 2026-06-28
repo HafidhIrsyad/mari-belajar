@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch06SecretsManagementQuiz: Quiz = {
+  id: "quiz-ch-06-secrets-management",
+  title: "Quiz: Secrets Management",
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-06-01',
+      order: 1,
+      prompt: "Mengapa hardcoded secret di source code berbahaya?",
+      options: ['Membuat build lebih lambat', 'Dapat bocor melalui repository history', 'Meningkatkan ukuran binary', 'Tidak kompatibel dengan cloud'],
+      correctOptionIndex: 1,
+      explanation: "Secret yang ter-commit dapat bocor melalui repository dan history Git sulit sepenuhnya dihapus.",
+    },
+    {
+      id: 'q-06-02',
+      order: 2,
+      prompt: "Tool mana yang dapat mengenkripsi file YAML/JSON agar aman disimpan di Git?",
+      options: ['Terraform', 'SOPS', 'Prometheus', 'Helm'],
+      correctOptionIndex: 1,
+      explanation: "SOPS mengenkripsi file YAML/JSON dengan KMS sehingga secret dapat diversioning di Git.",
+    },
+    {
+      id: 'q-06-03',
+      order: 3,
+      prompt: "Apa keunggulan dynamic secrets?",
+      options: ['Tidak perlu autentikasi', 'Masa hidup singkat dan dibuat sesuai permintaan', 'Selalu gratis', 'Tidak perlu rotasi'],
+      correctOptionIndex: 1,
+      explanation: "Dynamic secrets dibuat saat dibutuhkan dan memiliki lease terbatas, sehingga mengurangi risiko credential statis.",
+    },
+    {
+      id: 'q-06-04',
+      order: 4,
+      prompt: "Sealed Secrets cocok untuk?",
+      options: ['Menyimpan secret plain di Git', 'Mengenkripsi Kubernetes Secret agar bisa di-commit', 'Mengganti container runtime', 'Memantau metrics'],
+      correctOptionIndex: 1,
+      explanation: "Sealed Secrets mengenkripsi Kubernetes Secret menjadi SealedSecret yang dapat disimpan di Git dan hanya didekripsi oleh cluster target.",
+    },
+    {
+      id: 'q-06-05',
+      order: 5,
+      prompt: "Kapan aplikasi sebaiknya memuat secret?",
+      options: ['Saat build image', 'Saat runtime', 'Saat commit kode', 'Saat compile'],
+      correctOptionIndex: 1,
+      explanation: "Secret harus dimuat saat runtime agar tidak tertanam dalam image atau artifact build.",
+    },
+    {
+      id: 'q-06-06',
+      order: 6,
+      prompt: "Vault engine mana yang menghasilkan credential database sementara?",
+      options: ['KV secrets engine', 'Database secrets engine', 'PKI secrets engine', 'Transit secrets engine'],
+      correctOptionIndex: 1,
+      explanation: "Database secrets engine Vault menghasilkan user dan password database sementara dengan lease terbatas.",
+    },
+    {
+      id: 'q-06-07',
+      order: 7,
+      prompt: "Apa fungsi HSM dalam secrets management?",
+      options: ['Menyimpan log aplikasi', 'Melindungi root key secara fisik', 'Mengompres state file', 'Mengelola container image'],
+      correctOptionIndex: 1,
+      explanation: "Hardware Security Module melindungi root encryption key dari ekstraksi perangkat keras.",
+    },
+    {
+      id: 'q-06-08',
+      order: 8,
+      prompt: "Prinsip apa yang menentukan aplikasi hanya boleh mengakses secret yang benar-benar dibutuhkan?",
+      options: ['Scalability', 'Least privilege', 'High availability', 'Immutability'],
+      correctOptionIndex: 1,
+      explanation: "Least privilege membatasi akses secret hanya untuk kebutuhan operasional aplikasi.",
+    },
+  ],
+}

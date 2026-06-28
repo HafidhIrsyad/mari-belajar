@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch08ReliabilityIncidentResponseQuiz: Quiz = {
+  id: "quiz-ch-08-reliability-incident-response",
+  title: "Quiz: Reliability & Incident Response",
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-08-01',
+      order: 1,
+      prompt: "Apa tujuan utama runbook?",
+      options: ['Mengganti monitoring', 'Memberikan langkah standar menangani insiden', 'Menghapus history insiden', 'Menggantikan postmortem'],
+      correctOptionIndex: 1,
+      explanation: "Runbook memberikan panduan langkah demi langkah untuk mendiagnosis dan mitigasi insiden tertentu.",
+    },
+    {
+      id: 'q-08-02',
+      order: 2,
+      prompt: "Prinsip apa yang menekankan fokus pada sistem bukan individu dalam postmortem?",
+      options: ['Blameless', 'Agile', 'Waterfall', 'Lean'],
+      correctOptionIndex: 0,
+      explanation: "Blameless postmortem fokus pada sistem dan proses, bukan menyalahkan individu.",
+    },
+    {
+      id: 'q-08-03',
+      order: 3,
+      prompt: "Jika SLO target adalah 99.9%, berapa error budget-nya?",
+      options: ['0.01%', '0.1%', '1%', '10%'],
+      correctOptionIndex: 1,
+      explanation: "Error budget = 100% - 99.9% = 0.1% dari total request.",
+    },
+    {
+      id: 'q-08-04',
+      order: 4,
+      prompt: "Apa yang dimaksud dengan SLI?",
+      options: ['Komitmen kontrak pengguna', 'Indikator level layanan', 'Tujuan level layanan', 'Anggaran error'],
+      correctOptionIndex: 1,
+      explanation: "SLI (Service Level Indicator) adalah metrik kuantitatif seperti availability atau latency.",
+    },
+    {
+      id: 'q-08-05',
+      order: 5,
+      prompt: "Chaos engineering bertujuan untuk?",
+      options: ['Menghapus semua data', 'Membangun kepercayaan pada ketahanan sistem', 'Menghentikan deploy', 'Mengurangi jumlah test'],
+      correctOptionIndex: 1,
+      explanation: "Chaos engineering menguji sistem dengan gangguan terkontrol untuk memvalidasi ketahanan.",
+    },
+    {
+      id: 'q-08-06',
+      order: 6,
+      prompt: "Pattern apa yang mengisolasi failure domain agar tidak menyebar?",
+      options: ['Retry', 'Circuit breaker', 'Bulkhead', 'Timeout'],
+      correctOptionIndex: 2,
+      explanation: "Bulkhead mengisolasi komponen sehingga kegagalan satu bagian tidak memengaruhi keseluruhan sistem.",
+    },
+    {
+      id: 'q-08-07',
+      order: 7,
+      prompt: "Game day digunakan untuk?",
+      options: ['Menguji runbook dan respons tim', 'Bermain game', 'Mengganti on-call', 'Meluncurkan fitur baru'],
+      correctOptionIndex: 0,
+      explanation: "Game day adalah latihan simulasi insiden untuk menguji proses, runbook, dan kerja sama tim.",
+    },
+    {
+      id: 'q-08-08',
+      order: 8,
+      prompt: "Apa yang terjadi jika error budget habis menurut kebijakan umum?",
+      options: ['Tambah lebih banyak fitur', 'Hentikan deploy non-kritis dan fokus pada stabilitas', 'Naikkan SLO', 'Hapus monitoring'],
+      correctOptionIndex: 1,
+      explanation: "Saat error budget habis, tim biasanya mengurangi risiko dan memprioritaskan perbaikan stabilitas.",
+    },
+  ],
+}

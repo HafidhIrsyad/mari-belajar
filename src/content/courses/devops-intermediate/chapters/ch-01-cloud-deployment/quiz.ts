@@ -1,0 +1,73 @@
+import type { Quiz } from '@/content/types'
+
+export const ch01CloudDeploymentQuiz: Quiz = {
+  id: "quiz-ch-01-cloud-deployment",
+  title: "Quiz: Cloud Deployment",
+  passingScore: 8,
+  questions: [
+    {
+      id: 'q-01-01',
+      order: 1,
+      prompt: "Manakah yang termasuk model layanan cloud di mana provider mengelola runtime dan database, sementara developer fokus pada aplikasi?",
+      options: ['IaaS', 'PaaS', 'SaaS', 'FaaS'],
+      correctOptionIndex: 1,
+      explanation: "PaaS menyediakan platform siap pakai termasuk runtime dan managed database; developer hanya mengelola aplikasi dan datanya.",
+    },
+    {
+      id: 'q-01-02',
+      order: 2,
+      prompt: "Model deployment cloud mana yang menggunakan infrastruktur dari lebih dari satu provider untuk mengurangi vendor lock-in?",
+      options: ['Private cloud', 'Hybrid cloud', 'Multi-cloud', 'Public cloud'],
+      correctOptionIndex: 2,
+      explanation: "Multi-cloud berarti menjalankan workload di beberapa cloud provider untuk redundansi dan fleksibilitas.",
+    },
+    {
+      id: 'q-01-03',
+      order: 3,
+      prompt: "Dalam shared responsibility model, tanggung jawab customer lebih besar pada?",
+      options: ['SaaS', 'PaaS', 'IaaS', 'Edge computing'],
+      correctOptionIndex: 2,
+      explanation: "Pada IaaS, customer mengelola OS, patching, runtime, dan aplikasi, sehingga tanggung jawab keamanan lebih besar di sisi customer.",
+    },
+    {
+      id: 'q-01-04',
+      order: 4,
+      prompt: "Apa yang terjadi saat function-as-a-service dipanggil tanpa instance yang aktif?",
+      options: ['Warm start', 'Cold start', 'Hot reload', 'Auto rollback'],
+      correctOptionIndex: 1,
+      explanation: "Cold start adalah latency inisialisasi execution environment saat tidak ada instance aktif.",
+    },
+    {
+      id: 'q-01-05',
+      order: 5,
+      prompt: "Edge function umumnya berjalan di dalam?",
+      options: ['Virtual machine penuh', 'Container Docker', 'Isolat V8', 'Kubernetes pod'],
+      correctOptionIndex: 2,
+      explanation: "Edge function sering dijalankan dalam isolat V8 untuk startup yang sangat cepat dan overhead rendah.",
+    },
+    {
+      id: 'q-01-06',
+      order: 6,
+      prompt: "Instance cloud mana yang paling murah tetapi dapat dihentikan provider kapan saja?",
+      options: ['Reserved instance', 'On-demand instance', 'Spot instance', 'Dedicated host'],
+      correctOptionIndex: 2,
+      explanation: "Spot/Preemptible instance menawarkan harga rendah dengan risiko terminasi, cocok untuk workload fault-tolerant.",
+    },
+    {
+      id: 'q-01-07',
+      order: 7,
+      prompt: "Komponen apa yang mendistribusikan lalu lintas ke instance yang sehat?",
+      options: ['Auto scaling group', 'Load balancer', 'CDN', 'NAT gateway'],
+      correctOptionIndex: 1,
+      explanation: "Load balancer mendistribusikan permintaan ke backend yang lulus health check.",
+    },
+    {
+      id: 'q-01-08',
+      order: 8,
+      prompt: "Mengapa single-tenancy sering dipilih dibanding multi-tenancy?",
+      options: ['Biaya lebih rendah', 'Isolasi hardware dan kepatuhan lebih kuat', 'Scaling lebih elastis', 'Cold start lebih cepat'],
+      correctOptionIndex: 1,
+      explanation: "Single-tenancy menyediakan hardware khusus, meningkatkan isolasi dan memenuhi kebutuhan regulasi ketat.",
+    },
+  ],
+}
