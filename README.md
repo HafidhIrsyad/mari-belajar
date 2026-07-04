@@ -2,6 +2,8 @@
 
 **Mari Belajar** is a browser-based learning platform for software engineering, written in **Bahasa Indonesia**. It delivers structured courses across computer science fundamentals and popular engineering tracks, with chapter-level quizzes, interactive visualizations, and local progress tracking — no account required.
 
+**Live site:** [mari-belajar.hafidhirsyad.workers.dev](https://mari-belajar.hafidhirsyad.workers.dev)
+
 ---
 
 ## Table of contents
@@ -22,7 +24,7 @@
 - [Available scripts](#available-scripts)
 - [Testing](#testing)
 - [Linting](#linting)
-- [Deployment (Cloudflare Pages)](#deployment-cloudflare-pages)
+- [Deployment (Cloudflare Workers)](#deployment-cloudflare-workers)
 - [Build optimization](#build-optimization)
 
 ---
@@ -180,7 +182,9 @@ Chapter access is **sequential**: a chapter stays locked until the previous chap
 ```
 mari-belajar/
 ├── public/
-│   └── _redirects          # SPA fallback for static hosts (/* → / 200)
+│   ├── _redirects          # SPA fallback for Cloudflare Pages (/* → /index.html 200)
+│   └── .assetsignore       # Excludes _redirects from Workers static asset uploads
+├── wrangler.jsonc          # Cloudflare Workers config (assets + SPA routing)
 ├── scripts/                # Content generation & validation utilities
 ├── src/
 │   ├── App.tsx             # Root router and lazy page loading
@@ -333,7 +337,7 @@ Visualizations respect `prefers-reduced-motion` for accessibility.
 | `/courses/:courseId/:chapterId` | Lesson | Lesson content + quiz |
 | `*` | Not found | 404 page |
 
-`public/_redirects` maps all paths to `index.html` with HTTP 200 so client-side routing works on static hosts like Cloudflare Pages.
+`public/_redirects` maps all paths to `index.html` with HTTP 200 so client-side routing works on **Cloudflare Pages**. On **Cloudflare Workers**, SPA routing is handled by `wrangler.jsonc` instead (see [Deployment](#deployment-cloudflare-workers)).
 
 ---
 
@@ -385,6 +389,7 @@ pnpm preview
 | `pnpm dev` | Start Vite dev server with HMR |
 | `pnpm build` | Run TypeScript project build, then Vite production build → `dist/` |
 | `pnpm preview` | Serve the production build locally |
+| `pnpm deploy` | Build and deploy to Cloudflare Workers via Wrangler |
 | `pnpm test` | Run Vitest test suite once |
 | `pnpm test:watch` | Run Vitest in watch mode |
 | `pnpm lint` | Lint `src/` with Oxlint |
@@ -425,11 +430,39 @@ For stricter, type-aware rules in production workflows, consider enabling Oxlint
 
 ---
 
-## Deployment (Cloudflare Pages)
+## Deployment (Cloudflare Workers)
 
-This project uses **Vite 6**. Cloudflare Wrangler 4 requires Vite ≥ 6.0.0 for automatic framework configuration.
+**Live deployment:** [https://mari-belajar.hafidhirsyad.workers.dev](https://mari-belajar.hafidhirsyad.workers.dev)
 
-### Option A — Cloudflare Pages dashboard (recommended for static SPA)
+This project uses **Vite 6** and deploys as a static SPA to **Cloudflare Workers** with [Wrangler](https://developers.cloudflare.com/workers/wrangler/commands/#deploy).
+
+### Deploy with Wrangler CLI (recommended)
+
+```bash
+pnpm wrangler login   # one-time: authenticate with Cloudflare
+pnpm run deploy
+```
+
+The `deploy` script runs `pnpm run build`, removes `dist/_redirects` (Workers rejects it with an infinite-loop error), then runs `wrangler deploy`.
+
+Configuration lives in `wrangler.jsonc`:
+
+```jsonc
+{
+  "name": "mari-belajar",
+  "compatibility_date": "2026-07-04",
+  "assets": {
+    "directory": "./dist/",
+    "not_found_handling": "single-page-application"
+  }
+}
+```
+
+SPA routing for Workers is handled by `not_found_handling: "single-page-application"` — see [Cloudflare SPA routing docs](https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/).
+
+### Option B — Cloudflare Pages dashboard
+
+If you prefer Pages instead of Workers:
 
 | Setting | Value |
 |---------|-------|
@@ -445,24 +478,16 @@ Ensure `public/_redirects` is included in the build output so SPA routes resolve
 /* /index.html 200
 ```
 
-(Current file uses `/* / 200`, which also works on Cloudflare Pages.)
-
-### Option B — Wrangler CLI
-
-```bash
-pnpm run build
-npx wrangler deploy
-```
-
-Wrangler auto-detects the Vite framework when `vite` ≥ 6 is present in `devDependencies`.
-
 ### Troubleshooting
 
 | Error | Fix |
 |-------|-----|
 | `Vite version ... cannot be automatically configured` | Upgrade to Vite 6+ (`pnpm add -D vite@^6`) |
-| 404 on direct URL refresh | Add or verify `public/_redirects` SPA fallback |
-| Build fails on Node 18 | Use Node 20+ in Pages build settings |
+| `Invalid _redirects configuration: Infinite loop detected` | Do not upload `_redirects` to Workers — use `wrangler.jsonc` SPA mode; the `deploy` script removes it automatically |
+| JS assets return `text/html` (blank page) | Do not use `/* / 200` in `_redirects` on Workers — it rewrites all paths including `/assets/*` to HTML |
+| 404 on direct URL refresh (Pages) | Add or verify `public/_redirects` SPA fallback |
+| Build fails on Node 18 | Use Node 20+ in build settings |
+| `CLOUDFLARE_API_TOKEN` required | Run `pnpm wrangler login` or set an API token with **Workers Scripts: Edit** permission |
 
 ---
 
