@@ -201,40 +201,41 @@ Cara menegakkan budget:
 Performance budget harus diputuskan bersama tim produk dan desain, bukan hanya engineer.`,
     },
     {
-      id: 'sec-08-go-example',
+      id: 'sec-08-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-08-go',
-        filename: 'bundle_budget.go',
-        language: 'go',
-        title: 'Go: Skrip Memeriksa Ukuran Bundle Terhadap Budget',
-        code: `package main
+        id: 'code-08-advanced',
+        filename: 'vite.config.ts',
+        language: 'typescript',
+        title: 'Vite: Performance Budget Plugin untuk CI',
+        code: `import { defineConfig, type Plugin } from 'vite'
 
-import (
-	"fmt"
-	"os"
-)
+const BUDGET_KB = 200
 
-func main() {
-	const budgetKB = 200
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: budget-check <size-in-kb>")
-		os.Exit(1)
-	}
+function bundleBudgetPlugin(): Plugin {
+  return {
+    name: 'bundle-budget',
+    closeBundle(_options, bundle) {
+      const totalBytes = Object.values(bundle).reduce(
+        (sum, chunk) => sum + ('code' in chunk ? chunk.code.length : 0),
+        0,
+      )
+      const sizeKB = Math.round(totalBytes / 1024)
 
-	var size int
-	fmt.Sscanf(os.Args[1], "%d", &size)
+      if (sizeKB > BUDGET_KB) {
+        throw new Error(
+          \`Bundle \${sizeKB} KB melebihi budget \${BUDGET_KB} KB\`,
+        )
+      }
+    },
+  }
+}
 
-	fmt.Printf("Bundle size: %d KB (budget: %d KB)\n", size, budgetKB)
-	if size > budgetKB {
-		fmt.Printf("FAIL: bundle exceeds budget by %d KB\n", size-budgetKB)
-		os.Exit(1)
-	}
-
-	fmt.Println("PASS: bundle within budget")
-}`,
+export default defineConfig({
+  plugins: [bundleBudgetPlugin()],
+})`,
         explanation:
-          'Skrip sederhana ini dapat diintegrasikan ke CI untuk menegakkan performance budget. Pendekatan serupa dapat diimplementasikan dengan tooling khusus seperti bundlesize atau Lighthouse CI.',
+          'Plugin Vite ini gagalkan build jika total bundle melebihi budget yang ditetapkan. Integrasikan ke pipeline CI agar regresi ukuran bundle terdeteksi sebelum merge, melengkapi Lighthouse CI untuk metrik runtime seperti LCP dan INP.',
       },
     },
     {

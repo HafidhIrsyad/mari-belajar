@@ -1,14 +1,14 @@
-import type { Lesson } from '@/content/types'
+import type { Lesson } from "@/content/types";
 
 export const ch06Lesson: Lesson = {
-  id: 'lesson-ch-06-accessibility-dasar',
+  id: "lesson-ch-06-accessibility-dasar",
   estimatedMinutes: 21,
   sections: [
     {
-      id: 'sec-06-basic-accessibility',
-      type: 'markdown',
-      level: 'basic',
-      title: 'Prinsip WCAG, Semantic HTML, dan Keyboard Navigation',
+      id: "sec-06-basic-accessibility",
+      type: "markdown",
+      level: "basic",
+      title: "Prinsip WCAG, Semantic HTML, dan Keyboard Navigation",
       content: `## Empat Prinsip WCAG
 
 WCAG menyusun aksesibilitas ke dalam empat prinsip yang sering disingkat **POUR**:
@@ -46,48 +46,45 @@ Atribut \`alt\` pada gambar memberikan deskripsi teks. Gunakan:
 Tag semantik seperti \`<button>\`, \`<a>\`, \`<nav>\`, dan \`<main>\` sudah memiliki peran bawaan. Menggunakannya dengan benar seringkali lebih baik daripada menambahkan banyak atribut ARIA.`,
     },
     {
-      id: 'sec-06-js-example',
-      type: 'code-example',
+      id: "sec-06-html-example",
+      type: "code-example",
       codeExample: {
-        id: 'code-06-js',
-        filename: 'focus-trap.js',
-        language: 'javascript',
-        title: 'JavaScript: Focus Trap untuk Modal',
-        code: `function trapFocus(container) {
-  const focusable = container.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  )
-  const first = focusable[0]
-  const last = focusable[focusable.length - 1]
+        id: "code-06-html",
+        filename: "accessible-content.html",
+        language: "html",
+        title: "HTML: Konten Aksesibel dengan Semantik dan Alt Text",
+        code: `<main>
+  <h1>Panduan Aksesibilitas</h1>
 
-  function handleKeyDown(event) {
-    if (event.key !== 'Tab') return
+  <nav aria-label="Navigasi utama">
+    <ul>
+      <li><a href="/">Beranda</a></li>
+      <li><a href="/kursus">Kursus</a></li>
+    </ul>
+  </nav>
 
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault()
-      last.focus()
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault()
-      first.focus()
-    }
-  }
+  <figure>
+    <img src="hero.jpg" alt="Tim belajar di depan laptop" />
+    <figcaption>Sesi belajar kolaboratif.</figcaption>
+  </figure>
 
-  container.addEventListener('keydown', handleKeyDown)
-  return () => container.removeEventListener('keydown', handleKeyDown)
-}
+  <img src="decoration.svg" alt="" role="presentation" />
 
-const modal = document.getElementById('modal')
-const release = trapFocus(modal)
-// Panggil release() saat modal ditutup untuk membersihkan listener`,
+  <form>
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" required />
+    <button type="submit">Kirim</button>
+  </form>
+</main>`,
         explanation:
-          'Focus trap memastikan keyboard tidak keluar dari modal yang sedang terbuka. Ini penting untuk pengalaman screen reader dan navigasi keyboard yang aman.',
+          "Label eksplisit, alt text bermakna, dan gambar dekoratif dengan alt kosong adalah fondasi aksesibilitas HTML tanpa JavaScript.",
       },
     },
     {
-      id: 'sec-06-intermediate-aria',
-      type: 'markdown',
-      level: 'intermediate',
-      title: 'ARIA Labels, Focus Management, dan Color Contrast',
+      id: "sec-06-intermediate-aria",
+      type: "markdown",
+      level: "intermediate",
+      title: "ARIA Labels, Focus Management, dan Color Contrast",
       content: `## ARIA Labels
 
 ARIA dapat memperkaya atau mengubah peran elemen, tetapi sebaiknya digunakan hanya ketika HTML semantik tidak cukup. Atribut umum meliputi:
@@ -127,78 +124,38 @@ Screen reader membaca accessibility tree, bukan DOM visual. Mereka menggunakan:
 Menguji dengan screen reader sungguhan seperti NVDA, JAWS, atau VoiceOver memberikan wawasan yang tidak didapat dari audit otomatis semata.`,
     },
     {
-      id: 'sec-06-ts-example',
-      type: 'code-example',
+      id: "sec-06-html-aria-example",
+      type: "code-example",
       codeExample: {
-        id: 'code-06-ts',
-        filename: 'AccessibleModal.tsx',
-        language: 'typescript',
-        title: 'TypeScript: Modal yang Accessible',
-        code: `import { useEffect, useRef, useCallback, useState } from 'react'
+        id: "code-06-html-aria",
+        filename: "aria-patterns.html",
+        language: "html",
+        title: "HTML: ARIA Labels dan Form Feedback",
+        code: `<button aria-label="Tutup dialog">&times;</button>
 
-interface AccessibleModalProps {
-  isOpen: boolean
-  title: string
-  onClose: () => void
-  children: React.ReactNode
-}
+<label for="email">Email</label>
+<input
+  id="email"
+  type="email"
+  aria-describedby="email-hint email-error"
+  aria-invalid="true"
+/>
+<div id="email-hint">Gunakan email aktif Anda.</div>
+<div id="email-error" role="alert">Email tidak valid.</div>
 
-export function AccessibleModal({ isOpen, title, onClose, children }: AccessibleModalProps) {
-  const overlayRef = useRef<HTMLDivElement>(null)
-  const previousFocus = useRef<HTMLElement | null>(null)
-  const [active, setActive] = useState(isOpen)
-
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      onClose()
-    }
-  }, [onClose])
-
-  useEffect(() => {
-    if (isOpen) {
-      previousFocus.current = document.activeElement as HTMLElement
-      setActive(true)
-      overlayRef.current?.focus()
-      document.addEventListener('keydown', handleKeyDown)
-    } else {
-      document.removeEventListener('keydown', handleKeyDown)
-      if (previousFocus.current) {
-        previousFocus.current.focus()
-      }
-    }
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, handleKeyDown])
-
-  if (!active && !isOpen) return null
-
-  return (
-    <div
-      ref={overlayRef}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-      tabIndex={-1}
-      onClick={(e) => {
-        if (e.target === overlayRef.current) onClose()
-      }}
-    >
-      <h2 id="modal-title">{title}</h2>
-      {children}
-      <button onClick={onClose} aria-label="Tutup modal">
-        Tutup
-      </button>
-    </div>
-  )
-}`,
+<section aria-labelledby="news-heading">
+  <h2 id="news-heading">Berita Terbaru</h2>
+  <p>Konten section dengan landmark yang jelas.</p>
+</section>`,
         explanation:
-          'Modal ini memindahkan fokus saat dibuka, menangani tombol Escape, mengembalikan fokus saat ditutup, dan menggunakan aria-modal serta aria-labelledby agar screen reader mengenalinya sebagai dialog.',
+          'aria-label, aria-describedby, dan aria-labelledby melengkapi HTML semantik ketika label visual tidak cukup. role="alert" mengumumkan error ke screen reader.',
       },
     },
     {
-      id: 'sec-06-advanced-audit',
-      type: 'markdown',
-      level: 'advanced',
-      title: 'Audits dengan Lighthouse, axe, dan Accessible Components',
+      id: "sec-06-advanced-audit",
+      type: "markdown",
+      level: "advanced",
+      title: "Audits dengan Lighthouse, axe, dan Accessible Components",
       content: `## Audit Otomatis
 
 Alat audit otomatis membantu menemukan masalah aksesibilitas umum dengan cepat:
@@ -235,59 +192,44 @@ Pengguna dengan gangguan vestibular dapat mematikan animasi di sistem operasi. H
 Hindari animasi yang berkedip cepat karena dapat memicu kejang fotosensitif.`,
     },
     {
-      id: 'sec-06-go-example',
-      type: 'code-example',
+      id: "sec-06-advanced-example",
+      type: "code-example",
       codeExample: {
-        id: 'code-06-go',
-        filename: 'a11y_scanner.go',
-        language: 'go',
-        title: 'Go: Scanner HTML Aksesibilitas Sederhana',
-        code: `package main
+        id: "code-06-advanced",
+        filename: "dialog-accordion.html",
+        language: "html",
+        title: "HTML: Dialog Native dan Accordion Aksesibel",
+        code: `<button type="button" popovertarget="info-dialog">
+  Buka informasi
+</button>
 
-import (
-	"fmt"
-	"regexp"
-	"strings"
-)
+<dialog id="info-dialog" aria-labelledby="dialog-title">
+  <h2 id="dialog-title">Informasi Penting</h2>
+  <p>Elemen dialog native mendukung fokus dan penutupan dengan Escape.</p>
+  <form method="dialog">
+    <button type="submit">Tutup</button>
+  </form>
+</dialog>
 
-const sampleHTML = \`<html>
-<body>
-  <img src="hero.jpg" alt="Hero banner">
-  <img src="decoration.svg">
-  <input type="email" id="email">
-  <label for="email">Email</label>
-</body>
-</html>\`
+<details>
+  <summary>Apa itu WCAG?</summary>
+  <p>Web Content Accessibility Guidelines — standar aksesibilitas web.</p>
+</details>
 
-func main() {
-	// Cek gambar tanpa alt
-	imgRe := regexp.MustCompile(\`<img\\b[^>]*>\`)
-	for _, img := range imgRe.FindAllString(sampleHTML, -1) {
-		if !strings.Contains(img, \`alt=\`) {
-			fmt.Println("Gambar tanpa alt:", img)
-		}
-	}
-
-	// Cek input tanpa label yang terhubung
-	inputRe := regexp.MustCompile(\`<input\\b[^>]*id="([^"]+)"[^>]*>\`)
-	for _, match := range inputRe.FindAllStringSubmatch(sampleHTML, -1) {
-		id := match[1]
-		if !strings.Contains(sampleHTML, \`for="\`+id+\`"\`) {
-			fmt.Println("Input tanpa label terhubung:", id)
-		}
-	}
-}
-`,
+<details>
+  <summary>Bagaimana cara audit?</summary>
+  <p>Gunakan Lighthouse, axe DevTools, dan uji manual dengan keyboard.</p>
+</details>`,
         explanation:
-          'Meskipun tidak menggantikan audit yang lengkap, program Go ini menunjukkan bagaimana kita bisa memindai markup secara otomatis untuk menemukan gambar tanpa alt dan input tanpa label.',
+          "Elemen dialog dan details/summary HTML native sudah memiliki perilaku aksesibel bawaan. Ini lebih baik daripada membangun modal custom jika kebutuhan sederhana.",
       },
     },
     {
-      id: 'sec-06-summary',
-      type: 'callout',
-      calloutType: 'info',
+      id: "sec-06-summary",
+      type: "callout",
+      calloutType: "info",
       content:
-        '**Ingat:** aksesibilitas bukan fitur tambahan. Mulailah dengan HTML semantik, uji navigasi keyboard, periksa kontras, dan gunakan ARIA hanya jika diperlukan. Audit otomatis membantu, tetapi pengujian manual dengan screen reader adalah standar emas.',
+        "**Ingat:** aksesibilitas bukan fitur tambahan. Mulailah dengan HTML semantik, uji navigasi keyboard, periksa kontras, dan gunakan ARIA hanya jika diperlukan. Audit otomatis membantu, tetapi pengujian manual dengan screen reader adalah standar emas.",
     },
   ],
-}
+};

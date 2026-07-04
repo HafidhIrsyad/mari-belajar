@@ -9,7 +9,31 @@
  */
 
 export type SectionLevel = 'basic' | 'intermediate' | 'advanced'
-export type CodeLanguage = 'javascript' | 'typescript' | 'go' | 'text'
+export type CodeLanguage =
+  | 'javascript'
+  | 'typescript'
+  | 'go'
+  | 'text'
+  | 'html'
+  | 'css'
+  | 'sql'
+  | 'bash'
+  | 'yaml'
+
+export type VisualizationComponentId =
+  | 'sort'
+  | 'graph-bfs'
+  | 'graph-dfs'
+  | 'process-state'
+  | 'memory-layout'
+  | 'tcp-handshake'
+
+export interface VisualizationConfig {
+  id: string
+  component: VisualizationComponentId
+  title: string
+  props?: Record<string, unknown>
+}
 
 export type ReferenceType = 'article' | 'video' | 'book' | 'documentation' | 'interactive'
 
@@ -53,6 +77,11 @@ export type LessonSection =
       id: string
       type: 'list'
       items: string[]
+    }
+  | {
+      id: string
+      type: 'visualization'
+      visualization: VisualizationConfig
     }
 
 export interface Lesson {

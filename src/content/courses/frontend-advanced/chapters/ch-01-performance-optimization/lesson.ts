@@ -207,46 +207,43 @@ Edge caching menyimpan hasil render di CDN edge location terdekat dengan penggun
 - **RUM (Real User Monitoring)**: diukur dari browser pengguna sebenarnya. Lebih akurat untuk segmentasi perangkat dan jaringan, tetapi bervariasi.`,
     },
     {
-      id: 'sec-01-go-example',
+      id: 'sec-01-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-01-go',
-        filename: 'cache_headers.go',
-        language: 'go',
-        title: 'Go: HTTP Cache Headers untuk Aset Statis',
-        code: `package main
+        id: 'code-01-advanced',
+        filename: 'vite.config.ts',
+        language: 'typescript',
+        title: 'Vite: Code Splitting dengan manualChunks',
+        code: `import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-import (
-	"fmt"
-	"net/http"
-	"time"
-)
+export default defineConfig({
+  plugins: [react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // Vendor terpisah agar cache browser lebih efektif
+          if (id.includes('node_modules/react')) {
+            return 'vendor-react'
+          }
+          // Route/feature chunk — hanya dimuat saat dibutuhkan
+          if (id.includes('/features/analytics/')) {
+            return 'feature-analytics'
+          }
+          if (id.includes('/features/checkout/')) {
+            return 'feature-checkout'
+          }
+        },
+      },
+    },
+  },
+})
 
-func staticFileHandler(w http.ResponseWriter, r *http.Request) {
-	// Aset dengan hash di nama file dapat di-cache sangat lama
-	w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
-	w.Header().Set("Vary", "Accept-Encoding")
-	fmt.Fprintln(w, "/* hashed-asset.css */")
-}
-
-func htmlHandler(w http.ResponseWriter, r *http.Request) {
-	// HTML halaman di-cache singkat dengan stale-while-revalidate
-	w.Header().Set("Cache-Control", "public, max-age=60, stale-while-revalidate=300")
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "<html><body>Generated at %s</body></html>", time.Now().Format(time.RFC3339))
-}
-
-func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/static/", staticFileHandler)
-	mux.HandleFunc("/", htmlHandler)
-
-	fmt.Println("Server listening on :8080")
-	http.ListenAndServe(":8080", mux)
-}`,
+// Di komponen route, lazy load feature chunk:
+// const Analytics = lazy(() => import('./features/analytics/Analytics'))`,
         explanation:
-          'Strategi cache yang berbeda untuk aset statis (immutable, long-term) dan HTML halaman (short-term dengan stale-while-revalidate) mengoptimalkan penggunaan CDN dan browser cache.',
+          'manualChunks memecah bundle menjadi chunk vendor dan feature sehingga pengguna hanya mengunduh kode yang relevan. Kombinasikan dengan React.lazy dan Suspense untuk route-level code splitting yang mengurangi JavaScript awal.',
       },
     },
     {

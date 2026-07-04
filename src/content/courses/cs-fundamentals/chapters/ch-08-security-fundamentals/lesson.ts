@@ -41,28 +41,33 @@ Contoh umum:
 Kesadaran dan kebiasaan curiga terhadap permintaan tidak wajar adalah pertahanan pertama yang sangat efektif.`,
     },
     {
-      id: 'sec-08-js-example',
+      id: 'sec-08-go-basic',
       type: 'code-example',
       codeExample: {
-        id: 'code-08-js',
-        filename: 'hash-sha256.js',
-        language: 'javascript',
-        title: 'JavaScript: Hashing SHA-256 dengan Web Crypto API',
-        code: `const encoder = new TextEncoder();
+        id: 'code-08-go-basic',
+        filename: 'hash-sha256.go',
+        language: 'go',
+        title: 'Go: Hashing SHA-256',
+        code: `package main
 
-async function sha256(message) {
-  const data = encoder.encode(message);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+import (
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
+)
+
+func sha256Hash(message string) string {
+	hash := sha256.Sum256([]byte(message))
+	return hex.EncodeToString(hash[:])
 }
 
-sha256("halo").then((hash) => console.log(hash));
-// Output: contoh nilai hash heksadesimal 64 karakter`,
+func main() {
+	hash := sha256Hash("halo")
+	fmt.Println(hash)
+	// Output: contoh nilai hash heksadesimal 64 karakter
+}`,
         explanation:
-          'Web Crypto API menyediakan crypto.subtle.digest untuk menghitung hash SHA-256 secara asinkron. Hash ini bersifat deterministik dan one-way, cocok untuk verifikasi integritas data.',
+          'Package crypto/sha256 menyediakan fungsi hashing SHA-256. Hash ini bersifat deterministik dan one-way, cocok untuk verifikasi integritas data.',
       },
     },
     {
@@ -107,37 +112,42 @@ Contoh bahaya tanpa validasi:
 Validasi dilakukan secepat mungkin, idealnya sebelum data masuk ke logika bisnis.`,
     },
     {
-      id: 'sec-08-ts-example',
+      id: 'sec-08-go-intermediate',
       type: 'code-example',
       codeExample: {
-        id: 'code-08-ts',
-        filename: 'password-flow.ts',
-        language: 'typescript',
-        title: 'TypeScript: Tipe Aman untuk Alur Password Hashing',
-        code: `type PlainPassword = string & { __brand: "PlainPassword" };
-type HashedPassword = string & { __brand: "HashedPassword" };
+        id: 'code-08-go-intermediate',
+        filename: 'password-flow.go',
+        language: 'go',
+        title: 'Go: Tipe Aman untuk Alur Password Hashing',
+        code: `package main
 
-function hashPassword(plain: PlainPassword): HashedPassword {
-  // Simulasi: di produksi gunakan bcrypt atau Argon2 di sisi server
-  const simulated = \`[hash-of-\${plain.length}-chars]\`;
-  return simulated as HashedPassword;
+import "fmt"
+
+// Tipe kustom mencegah pencampuran password mentah dan hash
+type PlainPassword string
+type HashedPassword string
+
+func hashPassword(plain PlainPassword) HashedPassword {
+	// Simulasi: di produksi gunakan bcrypt atau Argon2
+	return HashedPassword(fmt.Sprintf("[hash-of-%d-chars]", len(plain)))
 }
 
-function verifyPassword(
-  plain: PlainPassword,
-  hashed: HashedPassword
-): boolean {
-  return hashPassword(plain) === hashed;
+func verifyPassword(plain PlainPassword, hashed HashedPassword) bool {
+	return hashPassword(plain) == hashed
 }
 
-const password = "rahasia123" as PlainPassword;
-const hashed = hashPassword(password);
+func main() {
+	password := PlainPassword("rahasia123")
+	hashed := hashPassword(password)
 
-console.log(verifyPassword(password, hashed)); // true
-// console.log(verifyPassword("rahasia123", hashed));
-// ^ Error compile: plain string tidak boleh dipakai sebagai PlainPassword`,
+	fmt.Println(verifyPassword(password, hashed)) // true
+
+	// Kode berikut tidak akan dikompilasi:
+	// verifyPassword("rahasia123", hashed)
+	// ^ Error compile: string literal tidak bisa dipakai sebagai PlainPassword
+}`,
         explanation:
-          'Branded types membedakan password mentah dan password yang sudah di-hash sehingga programmer tidak bisa secara tidak sengaja menukar keduanya saat compile time.',
+          'Tipe kustom PlainPassword dan HashedPassword membedakan password mentah dan password yang sudah di-hash sehingga programmer tidak bisa secara tidak sengaja menukar keduanya saat compile time.',
       },
     },
     {
@@ -186,11 +196,11 @@ Menulis kode dengan mindset keamanan:
 Secret yang bocor sering kali menjadi pintu masuk utama bagi penyerang.`,
     },
     {
-      id: 'sec-08-go-example',
+      id: 'sec-08-go-advanced',
       type: 'code-example',
       codeExample: {
-        id: 'code-08-go',
-        filename: 'main.go',
+        id: 'code-08-go-advanced',
+        filename: 'bcrypt.go',
         language: 'go',
         title: 'Go: Konsep Hashing Password dengan bcrypt',
         code: `package main

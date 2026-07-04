@@ -199,52 +199,39 @@ Ketika membuat custom hook:
 - Pertimbangkan cleanup pada \`useEffect\` agar tidak bocor.`,
     },
     {
-      id: 'sec-02-go-example',
+      id: 'sec-02-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-02-go',
-        filename: 'hook_order.go',
-        language: 'go',
-        title: 'Go: Simulasi Array Penyimpanan Hook State',
-        code: `package main
-
-import "fmt"
-
-type HookState struct {
-	memos []interface{}
-	index int
+        id: 'code-02-advanced',
+        filename: 'useDocumentTitle.ts',
+        language: 'typescript',
+        title: 'React: Custom Hook dengan Dependency Array yang Benar',
+        code: `function useDocumentTitle(title: string) {
+  useEffect(() => {
+    const previous = document.title
+    document.title = title
+    return () => {
+      document.title = previous
+    }
+  }, [title])
 }
 
-func (h *HookState) useState(initial interface{}) (*interface{}, func(interface{})) {
-	idx := h.index
-	if idx >= len(h.memos) {
-		h.memos = append(h.memos, initial)
-	}
-	state := &h.memos[idx]
-	setter := func(v interface{}) {
-		h.memos[idx] = v
-	}
-	h.index++
-	return state, setter
+function ArticlePage({ article }: { article: { title: string; body: string } }) {
+  useDocumentTitle(article.title)
+
+  return (
+    <article>
+      <h1>{article.title}</h1>
+      <p>{article.body}</p>
+    </article>
+  )
 }
 
-func render(h *HookState) {
-	h.index = 0
-	name, setName := h.useState("React")
-	count, setCount := h.useState(0)
-
-	fmt.Printf("render: name=%v count=%v\\n", *name, *count)
-	setCount(1)
-	setName("Go")
-}
-
-func main() {
-	h := &HookState{}
-	render(h)
-	render(h)
-}`,
+// Hooks dipanggil di level atas — tidak di dalam if/loop.
+// Dependency [title] memastikan efek re-run saat judul berubah.
+// Cleanup mengembalikan title sebelumnya saat komponen unmount.`,
         explanation:
-          'Simulasi sederhana ini menunjukkan mengapa urutan pemanggilan hooks penting. React mengambil state berdasarkan indeks, sehingga pemanggilan bersyarat akan menggeser seluruh indeks.',
+          'Custom hook ini mengikuti aturan hooks: dipanggil tanpa syarat di level atas, dan useEffect menyertakan semua dependency reaktif. Cleanup mencegah side effect bocor saat komponen unmount atau title berubah.',
       },
     },
     {

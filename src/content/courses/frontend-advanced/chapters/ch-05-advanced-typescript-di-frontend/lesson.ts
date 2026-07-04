@@ -185,46 +185,34 @@ type AsyncState<T> =
 Dengan discriminated union, kita tidak perlu lagi memeriksa \`data != null\` secara defensif karena TypeScript tahu \`data\` hanya ada saat \`status === 'success'\`.`,
     },
     {
-      id: 'sec-05-go-example',
+      id: 'sec-05-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-05-go',
-        filename: 'generic_comparison.go',
-        language: 'go',
-        title: 'Go: Generic Filter untuk Perbandingan dengan TypeScript',
-        code: `package main
+        id: 'code-05-advanced',
+        filename: 'Text.tsx',
+        language: 'typescript',
+        title: 'React: Generic Polymorphic Component',
+        code: `import { ElementType, ComponentPropsWithoutRef } from 'react'
 
-import "fmt"
+type PolymorphicProps<C extends ElementType> = {
+  as?: C
+} & ComponentPropsWithoutRef<C>
 
-func Filter[T any](items []T, predicate func(T) bool) []T {
-	result := make([]T, 0, len(items))
-	for _, item := range items {
-		if predicate(item) {
-			result = append(result, item)
-		}
-	}
-	return result
+export function Text<C extends ElementType = 'span'>({
+  as,
+  children,
+  ...props
+}: PolymorphicProps<C>) {
+  const Component = as ?? 'span'
+  return <Component {...props}>{children}</Component>
 }
 
-type User struct {
-	Name string
-	Age  int
-}
-
-func main() {
-	users := []User{
-		{Name: "Andi", Age: 25},
-		{Name: "Budi", Age: 17},
-	}
-
-	adults := Filter(users, func(u User) bool {
-		return u.Age >= 18
-	})
-
-	fmt.Printf("Adults: %+v\n", adults)
-}`,
+// TypeScript menyimpulkan prop yang valid per elemen HTML:
+// <Text as="h1" className="title">Judul</Text>       ✓
+// <Text as="a" href="/docs">Dokumentasi</Text>       ✓
+// <Text as="a" invalidProp>Bad</Text>                 ✗ compile error`,
         explanation:
-          'Go generics (sejak Go 1.18) memungkinkan fungsi filter yang bekerja untuk tipe apa pun, mirip dengan generic components di TypeScript.',
+          'Polymorphic component dengan generic type parameter memungkinkan satu komponen dirender sebagai elemen HTML berbeda sambil mempertahankan type safety. Prop yang valid disesuaikan otomatis berdasarkan nilai as.',
       },
     },
     {

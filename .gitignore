@@ -23,3 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 .worktrees
+
+
+.ai/
+.cursor/
+.env
+.superpowers/
+.pnpm-store/
+docs/

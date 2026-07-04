@@ -148,12 +148,12 @@ Network partition dapat terjadi di berbagai lapisan: switch failure, packet loss
       id: "sec-03-06",
       type: 'code-example',
       codeExample: {
-        id: "code-03-go",
-        filename: "raft_vote.go",
-        language: 'go',
-        title: "Go: Simulasi Leader Election Raft-like",
-        code: "package main\n\nimport (\n\t\"fmt\"\n\t\"math/rand\"\n\t\"time\"\n)\n\ntype Node struct {\n\tID       string\n\tTerm     int\n\tIsLeader bool\n}\n\nfunc (n *Node) RequestVote(peers []Node) bool {\n\tvotes := 1 // vote untuk diri sendiri\n\tfor _, peer := range peers {\n\t\t// Simulasi peer setuju jika term lebih tinggi atau sama\n\t\tif n.Term >= peer.Term {\n\t\t\tvotes++\n\t\t}\n\t}\n\treturn votes > len(peers)/2\n}\n\nfunc main() {\n\trand.Seed(time.Now().UnixNano())\n\n\tnodes := []Node{\n\t\t{ID: \"A\", Term: 2},\n\t\t{ID: \"B\", Term: 1},\n\t\t{ID: \"C\", Term: 1},\n\t}\n\n\tcandidate := nodes[0]\n\tif candidate.RequestVote(nodes[1:]) {\n\t\tfmt.Printf(\"Node %s menang pemilihan leader pada term %d\\n\", candidate.ID, candidate.Term)\n\t} else {\n\t\tfmt.Println(\"Tidak ada yang memperoleh majority\")\n\t}\n}",
-        explanation: "Simulasi sederhana ini menunjukkan prinsip leader election Raft: candidate harus mendapatkan majority vote untuk menjadi leader.",
+        id: "code-03-advanced",
+        filename: "cap-tradeoff.ts",
+        language: 'typescript',
+        title: "TypeScript: Simulasi Trade-off CAP pada Distributed Cache",
+        code: "type NodeId = 'A' | 'B' | 'C'\n\ntype CacheNode = {\n  id: NodeId\n  data: Map<string, string>\n  available: boolean\n}\n\nfunction writeCP(nodes: CacheNode[], key: string, value: string): boolean {\n  const reachable = nodes.filter((n) => n.available)\n  if (reachable.length < Math.ceil(nodes.length / 2)) return false\n  for (const node of reachable) node.data.set(key, value)\n  return true\n}\n\nfunction readAP(nodes: CacheNode[], key: string): string | undefined {\n  const reachable = nodes.filter((n) => n.available)\n  if (reachable.length === 0) return undefined\n  return reachable[0].data.get(key)\n}\n\nconst nodes: CacheNode[] = [\n  { id: 'A', data: new Map(), available: true },\n  { id: 'B', data: new Map(), available: true },\n  { id: 'C', data: new Map(), available: false },\n]\n\nwriteCP(nodes, 'balance', '1000000')\nconsole.log('AP read (eventual):', readAP(nodes, 'balance'))",
+        explanation: "Simulasi ini menunjukkan perbedaan CP (write hanya jika majority tersedia) dan AP (read dari node yang reachable meski belum konsisten).",
       },
     },
     {

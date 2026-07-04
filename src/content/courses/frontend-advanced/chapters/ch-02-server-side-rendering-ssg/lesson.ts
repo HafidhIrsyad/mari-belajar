@@ -195,62 +195,42 @@ Edge runtime adalah environment JavaScript yang berjalan di CDN edge nodes. Kara
 Edge runtime berbeda dengan Node.js runtime tradisional karena didesain untuk startup cepat dan isolasi request.`,
     },
     {
-      id: 'sec-02-go-example',
+      id: 'sec-02-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-02-go',
-        filename: 'ssr_template.go',
-        language: 'go',
-        title: 'Go: Server-Side Rendering dengan Template HTML',
-        code: `package main
+        id: 'code-02-advanced',
+        filename: 'app/dashboard/page.tsx',
+        language: 'typescript',
+        title: 'Next.js App Router: Server Component Async Page',
+        code: `// app/dashboard/page.tsx
+type Metrics = { LCP: number; INP: number; CLS: number }
 
-import (
-	"html/template"
-	"log"
-	"net/http"
-)
-
-type PageData struct {
-	Title   string
-	Metrics map[string]int
+async function getMetrics(): Promise<Metrics> {
+  const res = await fetch('https://api.example.com/metrics', {
+    next: { revalidate: 60 }, // ISR: revalidate setiap 60 detik
+  })
+  if (!res.ok) throw new Error('Gagal memuat metrik')
+  return res.json()
 }
 
-func main() {
-	tmpl := template.Must(template.New("page").Parse(\`
-<!DOCTYPE html>
-<html>
-<head><title>{{ .Title }}</title></head>
-<body>
-  <h1>{{ .Title }}</h1>
-  <ul>
-    {{ range $k, $v := .Metrics }}
-      <li>{{ $k }}: {{ $v }}ms</li>
-    {{ end }}
-  </ul>
-  <script src="/app.js"></script>
-</body>
-</html>
-\`))
+export default async function DashboardPage() {
+  const metrics = await getMetrics()
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		data := PageData{
-			Title: "Dashboard Performa",
-			Metrics: map[string]int{
-				"LCP": 1200,
-				"INP": 120,
-				"CLS": 5,
-			},
-		}
-		if err := tmpl.Execute(w, data); err != nil {
-			log.Printf("render error: %v", err)
-		}
-	})
-
-	log.Println("Server on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+  return (
+    <main>
+      <h1>Dashboard Performa</h1>
+      <ul>
+        {Object.entries(metrics).map(([key, value]) => (
+          <li key={key}>
+            {key}: {value}ms
+          </li>
+        ))}
+      </ul>
+    </main>
+  )
 }`,
         explanation:
-          'Go template engine dapat digunakan untuk SSR sederhana. Server merender HTML lengkap dengan data, lalu client JavaScript mengambil alih interaktivitas melalui hydrasi.',
+          'App Router Next.js merender halaman di server sebagai React Server Component. Data di-fetch di server sebelum HTML dikirim ke browser, sehingga pengguna melihat konten lebih cepat tanpa menunggu hydrasi client-side.',
       },
     },
     {

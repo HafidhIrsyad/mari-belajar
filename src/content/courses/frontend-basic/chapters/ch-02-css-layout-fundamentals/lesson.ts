@@ -50,43 +50,37 @@ Properti \`display\` menentukan cara elemen berperilaku dalam layout:
 \`z-index\` hanya berlaku pada elemen yang membentuk stacking context, seperti elemen dengan \`position\` selain static atau dengan \`opacity\` kurang dari 1, \`transform\`, dan \`filter\`.`,
     },
     {
-      id: 'sec-02-js-example',
+      id: 'sec-02-css-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-02-js',
-        filename: 'card-layout.js',
-        language: 'javascript',
-        title: 'JavaScript: Membangun Card dengan Box Model',
-        code: `function createCard(title, description) {
-  const card = document.createElement('article')
-  card.className = 'card'
-
-  const heading = document.createElement('h2')
-  heading.textContent = title
-
-  const body = document.createElement('p')
-  body.textContent = description
-
-  card.appendChild(heading)
-  card.appendChild(body)
-
-  // Style langsung untuk demonstrasi box model
-  card.style.boxSizing = 'border-box'
-  card.style.width = '300px'
-  card.style.padding = '16px'
-  card.style.border = '2px solid #3b82f6'
-  card.style.margin = '16px'
-  card.style.borderRadius = '8px'
-
-  return card
+        id: 'code-02-css',
+        filename: 'card-layout.css',
+        language: 'css',
+        title: 'CSS: Box Model pada Card Layout',
+        code: `* {
+  box-sizing: border-box;
 }
 
-const app = document.getElementById('app')
-if (app) {
-  app.appendChild(createCard('CSS Layout', 'Memahami box model adalah fondasi layout web.'))
+.card {
+  width: 300px;
+  padding: 16px;
+  border: 2px solid #3b82f6;
+  margin: 16px;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+}
+
+.card p {
+  margin-bottom: 0;
+  color: #475569;
 }`,
         explanation:
-          'Mengatur style secara langsung via JavaScript memperlihatkan hubungan antara width, padding, border, dan margin. Dalam produksi, preferensikan class CSS agar reusable.',
+          'Property width, padding, border, dan margin memperlihatkan box model secara langsung. border-box memastikan lebar total elemen tetap 300px termasuk padding dan border.',
       },
     },
     {
@@ -118,49 +112,39 @@ Flex formatting context memungkinkan distribusi ruang sepanjang satu sumbu utama
 Keduanya adalah *formatting contexts* yang mengubah cara anak elemen diukur dan diposisikan. Elemen di luar formatting context tidak terpengaruh oleh layout internal flex atau grid container.`,
     },
     {
-      id: 'sec-02-ts-example',
+      id: 'sec-02-flex-grid-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-02-ts',
-        filename: 'layout-helpers.ts',
-        language: 'typescript',
-        title: 'TypeScript: Utility Type-Safe untuk Utility Classes',
-        code: `type Display = 'block' | 'flex' | 'grid' | 'inline' | 'none'
-type JustifyContent = 'start' | 'center' | 'end' | 'between' | 'around'
-type AlignItems = 'start' | 'center' | 'end' | 'stretch'
-
-interface FlexOptions {
-  display?: Extract<Display, 'flex'>
-  justify?: JustifyContent
-  align?: AlignItems
-  gap?: string
+        id: 'code-02-flex-grid',
+        filename: 'navbar-layout.css',
+        language: 'css',
+        title: 'CSS: Flexbox untuk Navbar Layout',
+        code: `.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background-color: #0f172a;
+  color: #f8fafc;
 }
 
-function flexClasses(options: FlexOptions): string {
-  const map: Record<JustifyContent, string> = {
-    start: 'justify-start',
-    center: 'justify-center',
-    end: 'justify-end',
-    between: 'justify-between',
-    around: 'justify-around',
-  }
-  const alignMap: Record<AlignItems, string> = {
-    start: 'items-start',
-    center: 'items-center',
-    end: 'items-end',
-    stretch: 'items-stretch',
-  }
-  const classes = ['flex']
-  if (options.justify) classes.push(map[options.justify])
-  if (options.align) classes.push(alignMap[options.align])
-  if (options.gap) classes.push(\`gap-[\${options.gap}]\`)
-  return classes.join(' ')
+.navbar__links {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-const navbar = flexClasses({ justify: 'between', align: 'center', gap: '1rem' })
-console.log(navbar) // flex justify-between items-center gap-[1rem]`,
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+}`,
         explanation:
-          'Dengan TypeScript, kita bisa membatasi nilai yang valid untuk display, justify, dan align. Ini mengurangi typo dan membuat abstraksi utility class lebih aman.',
+          'Flexbox mengatur distribusi ruang sepanjang satu sumbu (navbar), sedangkan Grid membagi area menjadi baris dan kolom (card grid). Keduanya membentuk formatting context yang berbeda.',
       },
     },
     {
@@ -217,56 +201,39 @@ for (const box of boxes) {
 \`contain\` memberi tahu browser bahwa perubahan pada elemen tidak akan memengaruhi area di luar elemen tersebut. Nilai seperti \`layout\`, \`paint\`, \`size\`, dan \`strict\` dapat mengurangi area yang perlu di-reflow saat elemen berubah.`,
     },
     {
-      id: 'sec-02-go-example',
+      id: 'sec-02-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-02-go',
-        filename: 'layout.go',
-        language: 'go',
-        title: 'Go: Layout Template dengan Grid Classes',
-        code: `package main
-
-import (
-	"html/template"
-	"os"
-)
-
-type Card struct {
-	Title string
-	Body  string
+        id: 'code-02-advanced',
+        filename: 'layout.css',
+        language: 'css',
+        title: 'CSS: Grid Layout dengan Container Queries dan Contain',
+        code: `.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  container-type: inline-size;
 }
 
-const page = \`<!DOCTYPE html>
-<html lang="id">
-<head>
-  <style>
-    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-    .card { border: 1px solid #ccc; padding: 1rem; border-radius: 0.5rem; }
-  </style>
-</head>
-<body>
-  <main class="grid">
-    {{range .}}
-    <article class="card">
-      <h2>{{.Title}}</h2>
-      <p>{{.Body}}</p>
-    </article>
-    {{end}}
-  </main>
-</body>
-</html>\`
+.card {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  contain: layout paint;
+}
 
-func main() {
-	t := template.Must(template.New("layout").Parse(page))
-	cards := []Card{
-		{Title: "Flexbox", Body: "Satu dimensi"},
-		{Title: "Grid", Body: "Dua dimensi"},
-		{Title: "Contain", Body: "Isolasi layout"},
-	}
-	_ = t.Execute(os.Stdout, cards)
+@container (max-width: 600px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
 }`,
         explanation:
-          'Template Go menghasilkan HTML dengan class Grid dan Card. Di dunia frontend, class yang sama akan ditafsirkan browser untuk membentuk render tree dan layout engine yang efisien.',
+          'CSS Grid mengatur layout dua dimensi, container queries membuat komponen responsif tanpa media query global, dan property contain membantu browser mengisolasi area reflow untuk performa layout yang lebih baik.',
       },
     },
     {

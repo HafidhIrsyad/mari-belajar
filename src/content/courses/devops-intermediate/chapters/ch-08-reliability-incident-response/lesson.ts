@@ -50,15 +50,15 @@ export const ch08ReliabilityIncidentResponseLesson: Lesson = {
       content: "## Chaos Engineering\n\nChaos engineering adalah disiplin eksperimental untuk membangun kepercayaan pada kemampuan sistem menahan kondisi turbulent. Prinsipnya:\n\n1. Definisikan steady state.\n2. Bentuk hipotesis tentang bagaimana sistem merespons gangguan.\n3. Injeksikan gangguan terkontrol.\n4. Amati perbedaan steady state.\n5. Perbaiki dan ulangi.\n\n## Game Days\n\nGame day adalah latihan terjadwal di mana tim mensimulasikan insiden untuk menguji runbook, komunikasi, dan tooling. Game days membantu tim merespons lebih baik saat insiden nyata terjadi.\n\n## Resilience Patterns\n\n- **Circuit breaker**: mencegah cascading failure dengan membuka sirkuit saat dependency gagal.\n- **Bulkhead**: mengisolasi failure domain sehingga satu bagian yang gagal tidak memengaruhi seluruh sistem.\n- **Retry dengan backoff**: mengulang operasi yang gagal dengan jeda yang meningkat.\n- **Timeout**: membatasi waktu tunggu untuk mencegah resource exhaustion.\n- **Rate limiting**: membatasi beban ke sistem atau downstream.\n- **Graceful degradation**: tetap menyediakan fungsionalitas terbatas saat bagian sistem gagal.\n\n## Capacity Planning\n\nCapacity planning memastikan sistem memiliki resource yang cukup untuk menangani pertumbuhan beban. Metode:\n\n- **Trend analysis**: memproyeksikan pertumbuhan dari data historis.\n- **Load testing**: menguji batas sistem dengan beban sintetis.\n- **Headroom**: menjaga resource cadangan untuk lonjakan tak terduga.\n\n## Error Budget Policy\n\nKebijakan error budget menjelaskan apa yang terjadi saat budget tersisa atau habis. Contoh: jika budget habis, semua deploy non-kritis dihentikan sampai SLO pulih.",
     },
     {
-      id: "sec-08-go-example",
+      id: "sec-08-advanced-example",
       type: 'code-example',
       codeExample: {
-        id: "code-08-go",
-        filename: "error-budget.go",
-        language: "go",
-        title: "Go: Kalkulator Error Budget",
-        code: "package main\n\nimport (\n\t\"fmt\"\n)\n\ntype SLO struct {\n\tTargetPercent float64\n\tTotalRequests int\n}\n\nfunc (s SLO) ErrorBudget() float64 {\n\treturn (1 - s.TargetPercent/100) * float64(s.TotalRequests)\n}\n\nfunc (s SLO) RemainingBudget(failed int) float64 {\n\treturn s.ErrorBudget() - float64(failed)\n}\n\nfunc main() {\n\tslo := SLO{TargetPercent: 99.9, TotalRequests: 1_000_000}\n\tfmt.Printf(\"Error budget: %.0f requests\\n\", slo.ErrorBudget())\n\tfmt.Printf(\"Remaining after 500 failures: %.0f requests\\n\", slo.RemainingBudget(500))\n}",
-        explanation: "Kalkulator ini menghitung error budget berdasarkan SLO dan jumlah request. Budget yang tersisa menentukan seberapa banyak risiko yang masih dapat diambil tim.",
+        id: "code-08-advanced",
+        filename: "runbook-checkout-latency.md",
+        language: "text",
+        title: "Runbook: Latency Spike pada Checkout Service",
+        code: "# Runbook: Checkout Service Latency Spike\n\n**Severity:** SEV-2\n**On-call:** SRE + Backend\n**Dashboard:** https://grafana.example.com/d/checkout-latency\n\n## Symptoms\n- Alert: `checkout_p99_latency > 2s` aktif\n- Error rate checkout naik\n- Queue depth payment gateway meningkat\n\n## Diagnosis Steps\n1. Periksa dashboard latensi p50/p95/p99 — isolasi endpoint mana yang lambat\n2. Cek deployment terakhir: `kubectl rollout history deploy/checkout -n prod`\n3. Periksa query database: slow query log, connection pool usage\n4. Verifikasi dependency: payment gateway, inventory service health\n\n## Mitigation\n| Langkah | Perintah / Tindakan |\n|---------|---------------------|\n| Rollback deploy | `kubectl rollout undo deploy/checkout -n prod` |\n| Scale up | `kubectl scale deploy/checkout --replicas=6 -n prod` |\n| Enable circuit breaker | Toggle feature flag `checkout.circuit_breaker=true` |\n\n## Escalation\n- SEV-1 jika downtime > 30 menit atau revenue impact > threshold\n- Panggil incident commander via PagerDuty\n\n## Post-Incident\n- Buat blameless postmortem dalam 48 jam\n- Update runbook jika langkah baru ditemukan",
+        explanation: "Runbook terstruktur memandu on-call engineer melalui diagnosis, mitigasi, dan eskalasi saat insiden. Dokumentasi ini mengurangi MTTR dan memastikan respons konsisten antar shift.",
       },
     },
     {

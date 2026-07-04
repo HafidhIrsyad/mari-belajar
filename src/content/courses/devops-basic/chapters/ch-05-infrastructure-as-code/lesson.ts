@@ -245,55 +245,50 @@ Terraform workspace memungkinkan satu konfigurasi digunakan untuk banyak environ
 - Terratest: framework pengujian infrastruktur dengan Go.`,
     },
     {
-      id: 'sec-05-go-example',
+      id: 'sec-05-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-05-go',
-        filename: 'state-diff.go',
-        language: 'go',
-        title: 'Go: Perbandingan Desired State dan Current State',
-        code: `package main
+        id: 'code-05-advanced',
+        filename: 'modules/web-server/main.tf',
+        language: 'text',
+        title: 'Terraform HCL: Module Web Server dengan Desired State',
+        code: `# modules/web-server/main.tf
+# Module mendeklarasikan desired state; terraform plan menampilkan diff
 
-import (
-	"fmt"
-	"reflect"
-)
-
-type Server struct {
-	ID           string
-	InstanceType string
-	Count        int
-	Tags         map[string]string
+variable "instance_type" {
+  type        = string
+  description = "Tipe EC2 instance"
+  default     = "t3.medium"
 }
 
-func computeDiff(desired, current Server) map[string][2]interface{} {
-	diff := make(map[string][2]interface{})
-	dv := reflect.ValueOf(desired)
-	cv := reflect.ValueOf(current)
-
-	for i := 0; i < dv.NumField(); i++ {
-		fieldName := dv.Type().Field(i).Name
-		if !reflect.DeepEqual(dv.Field(i).Interface(), cv.Field(i).Interface()) {
-			diff[fieldName] = [2]interface{}{
-				dv.Field(i).Interface(),
-				cv.Field(i).Interface(),
-			}
-		}
-	}
-	return diff
+variable "count" {
+  type        = number
+  description = "Jumlah instance"
+  default     = 3
 }
 
-func main() {
-	desired := Server{InstanceType: "t3.medium", Count: 3, Tags: map[string]string{"env": "prod"}}
-	current := Server{ID: "i-abc", InstanceType: "t3.small", Count: 2, Tags: map[string]string{"env": "prod"}}
+variable "environment" {
+  type = string
+}
 
-	diff := computeDiff(desired, current)
-	for field, values := range diff {
-		fmt.Printf("%s: %v -> %v\\n", field, values[1], values[0])
-	}
-}`,
+resource "aws_instance" "web" {
+  count         = var.count
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+
+  tags = {
+    Name        = "web-\${count.index}"
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  }
+}
+
+# Contoh output terraform plan saat desired state berubah:
+#   ~ aws_instance.web[0]
+#       ~ instance_type = "t3.small" -> "t3.medium"
+#   + aws_instance.web[2]  (count naik dari 2 ke 3)`,
         explanation:
-          'Fungsi ini membandingkan desired state dengan current state. Hasilnya menunjukkan field mana yang perlu diubah, mirip dengan output terraform plan.',
+          'Module Terraform mendeklarasikan desired state infrastruktur. Saat konfigurasi berubah, terraform plan membandingkan state file dengan deklarasi dan menampilkan field mana yang perlu di-create, update, atau destroy.',
       },
     },
     {

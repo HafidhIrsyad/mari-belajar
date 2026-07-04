@@ -1,4 +1,5 @@
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { CodeBlock } from './code-block'
 
 interface MarkdownContentProps {
@@ -9,6 +10,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
   return (
     <div className="prose-lesson">
       <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
         components={{
           p({ children }) {
             return <p className="mb-5 leading-[1.7] text-foreground">{children}</p>
@@ -21,6 +23,38 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           },
           strong({ children }) {
             return <strong className="font-semibold text-foreground">{children}</strong>
+          },
+          table({ children }) {
+            return (
+              <div className="mb-6 overflow-x-auto rounded-lg border border-border">
+                <table className="w-full min-w-[20rem] border-collapse text-sm">
+                  {children}
+                </table>
+              </div>
+            )
+          },
+          thead({ children }) {
+            return <thead className="bg-muted/60">{children}</thead>
+          },
+          tbody({ children }) {
+            return <tbody className="divide-y divide-border">{children}</tbody>
+          },
+          tr({ children }) {
+            return <tr className="border-b border-border last:border-b-0">{children}</tr>
+          },
+          th({ children }) {
+            return (
+              <th className="border border-border px-4 py-2.5 text-left font-semibold text-foreground">
+                {children}
+              </th>
+            )
+          },
+          td({ children }) {
+            return (
+              <td className="border border-border px-4 py-2.5 text-foreground">
+                {children}
+              </td>
+            )
           },
           code({ className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || '')

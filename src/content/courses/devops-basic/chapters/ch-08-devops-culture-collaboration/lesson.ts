@@ -225,54 +225,50 @@ Psychological safety adalah keyakinan tim bahwa mereka dapat mengambil risiko in
 - **FinOps**: praktik mengelola dan mengoptimalkan pengeluaran cloud secara kolaboratif.`,
     },
     {
-      id: 'sec-08-go-example',
+      id: 'sec-08-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-08-go',
-        filename: 'dora-metrics.go',
-        language: 'go',
-        title: 'Go: Kalkulator DORA Metrics',
-        code: `package main
+        id: 'code-08-advanced',
+        filename: 'postmortem-template.md',
+        language: 'text',
+        title: 'Template Blameless Postmortem',
+        code: `# Postmortem: [Judul Insiden]
 
-import (
-	"fmt"
-)
+**ID:** INC-2026-042
+**Severity:** SEV-2
+**Tanggal:** 2026-06-15
+**Penulis:** Tim SRE + Engineering
 
-type DoraMetrics struct {
-	Deployments          int
-	FailedChanges        int
-	TotalRestoreMinutes  int
-	Incidents            int
-}
+## Ringkasan
+Latensi p99 checkout naik akibat query tanpa index setelah migration database.
 
-func (m DoraMetrics) ChangeFailureRate() float64 {
-	if m.Deployments == 0 {
-		return 0
-	}
-	return float64(m.FailedChanges) / float64(m.Deployments) * 100
-}
+## Impact
+- Durasi: 25 menit (08:00–08:25 WIB)
+- Pengguna terdampak: ~12.000 sesi checkout
+- Revenue impact estimasi: [isi jika tersedia]
 
-func (m DoraMetrics) MeanTimeToRestore() float64 {
-	if m.Incidents == 0 {
-		return 0
-	}
-	return float64(m.TotalRestoreMinutes) / float64(m.Incidents)
-}
+## Timeline (UTC)
+| Waktu | Peristiwa | Actor |
+|-------|-----------|-------|
+| 08:00 | Alert latensi p99 > 2s aktif | monitoring |
+| 08:05 | Incident commander ditunjuk | on-call SRE |
+| 08:15 | Index ditambahkan ke kolom order_date | DBA |
+| 08:25 | Metrik kembali normal, incident resolved | SRE |
 
-func main() {
-	metrics := DoraMetrics{
-		Deployments:         120,
-		FailedChanges:       6,
-		TotalRestoreMinutes: 90,
-		Incidents:           6,
-	}
+## Root Cause
+Migration v2.4 menambah query ORDER BY tanpa index pada kolom order_date.
 
-	fmt.Printf("Deployment Frequency: %d deploy\\n", metrics.Deployments)
-	fmt.Printf("Change Failure Rate: %.2f%%\\n", metrics.ChangeFailureRate())
-	fmt.Printf("Mean Time to Restore: %.1f menit\\n", metrics.MeanTimeToRestore())
-}`,
+## Action Items
+| Owner | Tindakan | Due Date | Status |
+|-------|----------|----------|--------|
+| backend | Tambahkan migration lint untuk query plan review | 2026-07-10 | open |
+| platform | Alert burn rate untuk latensi checkout | 2026-07-15 | open |
+
+## Lessons Learned
+- Migration review harus mencakup EXPLAIN plan, bukan hanya schema diff.
+- Blameless: fokus perbaiki sistem, bukan menyalahkan individu.`,
         explanation:
-          'Kalkulator ini menghitung dua dari empat DORA metrics: change failure rate dan mean time to restore. Metrik ini membantu tim menyeimbangkan velocity dengan stability.',
+          'Template postmortem blameless memastikan setiap insiden didokumentasikan dengan timeline, root cause, impact, dan action items yang dapat ditindaklanjuti. Struktur ini mendukung pembelajaran organisasi tanpa culture of blame.',
       },
     },
     {

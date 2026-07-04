@@ -59,47 +59,96 @@ Content-Type: application/json
 Method umum: \`GET\`, \`POST\`, \`PUT\`, \`PATCH\`, \`DELETE\`. Status code umum: \`200\` sukses, \`201\` dibuat, \`400\` request salah, \`401\` tidak terautentikasi, \`403\` dilarang, \`404\` tidak ditemukan, \`500\` error server.`,
     },
     {
-      id: 'sec-06-js-fetch',
+      id: 'sec-06-go-basic',
       type: 'code-example',
       codeExample: {
-        id: 'code-06-js',
-        filename: 'fetch-example.js',
-        language: 'javascript',
-        title: 'JavaScript: HTTP GET dan POST dengan fetch',
-        code: `async function getPost(postId) {
-  const response = await fetch(
-    'https://jsonplaceholder.typicode.com/posts/' + postId
-  );
-  if (!response.ok) {
-    throw new Error('HTTP error! status: ' + response.status);
-  }
-  return response.json();
+        id: 'code-06-go-basic',
+        filename: 'http-client.go',
+        language: 'go',
+        title: 'Go: HTTP GET dan POST dengan net/http',
+        code: `package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+)
+
+func getPost(postID int) (map[string]interface{}, error) {
+	resp, err := http.Get(
+		fmt.Sprintf("https://jsonplaceholder.typicode.com/posts/%d", postID),
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("HTTP error! status: %d", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var data map[string]interface{}
+	if err := json.Unmarshal(body, &data); err != nil {
+		return nil, err
+	}
+	return data, nil
 }
 
-async function createPost(title, body) {
-  const response = await fetch(
-    'https://jsonplaceholder.typicode.com/posts',
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, body, userId: 1 }),
-    }
-  );
-  if (!response.ok) {
-    throw new Error('HTTP error! status: ' + response.status);
-  }
-  return response.json();
+func createPost(title, body string) (map[string]interface{}, error) {
+	payload, _ := json.Marshal(map[string]interface{}{
+		"title": title, "body": body, "userId": 1,
+	})
+
+	resp, err := http.Post(
+		"https://jsonplaceholder.typicode.com/posts",
+		"application/json",
+		bytes.NewReader(payload),
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
+		return nil, fmt.Errorf("HTTP error! status: %d", resp.StatusCode)
+	}
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var data map[string]interface{}
+	if err := json.Unmarshal(respBody, &data); err != nil {
+		return nil, err
+	}
+	return data, nil
 }
 
-getPost(1)
-  .then((data) => console.log('Judul:', data.title))
-  .catch((err) => console.error('Gagal mengambil:', err));
+func main() {
+	post, err := getPost(1)
+	if err != nil {
+		fmt.Println("Gagal mengambil:", err)
+	} else {
+		fmt.Println("Judul:", post["title"])
+	}
 
-createPost('Halo Jaringan', 'Ini contoh request POST')
-  .then((data) => console.log('Dibuat dengan id:', data.id))
-  .catch((err) => console.error('Gagal membuat:', err));`,
+	created, err := createPost("Halo Jaringan", "Ini contoh request POST")
+	if err != nil {
+		fmt.Println("Gagal membuat:", err)
+	} else {
+		fmt.Println("Dibuat dengan id:", created["id"])
+	}
+}`,
         explanation:
-          'Method fetch di JavaScript mengirim HTTP request secara asynchronous. GET digunakan untuk mengambil data, sedangkan POST mengirim data baru ke server.',
+          'Package net/http di Go menyediakan client HTTP bawaan. http.Get digunakan untuk mengambil data, sedangkan http.Post mengirim data baru ke server.',
       },
     },
     {
@@ -141,37 +190,64 @@ Ketika data dikirim dari client ke server, data dipecah menjadi **packet**. Seti
 > Penting: internet tidak memiliki jalur tetap. Packet-packet dari data yang sama bisa saja melewati jalur berbeda dan disusun ulang di tujuan.`,
     },
     {
-      id: 'sec-06-ts-fetch',
+      id: 'sec-06-go-intermediate',
       type: 'code-example',
       codeExample: {
-        id: 'code-06-ts',
-        filename: 'typed-fetch.ts',
-        language: 'typescript',
-        title: 'TypeScript: Fetch dengan Interface',
-        code: `interface Post {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
+        id: 'code-06-go-intermediate',
+        filename: 'typed-fetch.go',
+        language: 'go',
+        title: 'Go: HTTP Client dengan Struct Bertipe',
+        code: `package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+)
+
+type Post struct {
+	UserID int    \`json:"userId"\`
+	ID     int    \`json:"id"\`
+	Title  string \`json:"title"\`
+	Body   string \`json:"body"\`
 }
 
-async function fetchPost(id: number): Promise<Post> {
-  const response = await fetch(
-    'https://jsonplaceholder.typicode.com/posts/' + id
-  );
+func fetchPost(id int) (*Post, error) {
+	resp, err := http.Get(
+		fmt.Sprintf("https://jsonplaceholder.typicode.com/posts/%d", id),
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
 
-  if (!response.ok) {
-    throw new Error('Gagal mengambil data: ' + response.status);
-  }
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("gagal mengambil data: %d", resp.StatusCode)
+	}
 
-  return response.json() as Promise<Post>;
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var post Post
+	if err := json.Unmarshal(body, &post); err != nil {
+		return nil, err
+	}
+	return &post, nil
 }
 
-fetchPost(1)
-  .then((post) => console.log('Judul:', post.title))
-  .catch((error) => console.error('Terjadi kesalahan:', error));`,
+func main() {
+	post, err := fetchPost(1)
+	if err != nil {
+		fmt.Println("Terjadi kesalahan:", err)
+		return
+	}
+	fmt.Println("Judul:", post.Title)
+}`,
         explanation:
-          'Interface Post memberikan tipe data pada hasil fetch. Type assertion memastikan TypeScript mengetahui struktur objek yang dikembalikan, sehingga kesalahan penggunaan properti bisa tertangkap saat compile time.',
+          'Struct Post dengan tag json memberikan tipe data pada hasil decode. Compiler Go memastikan hanya field yang didefinisikan yang bisa diakses, sehingga kesalahan penggunaan properti bisa tertangkap saat compile time.',
       },
     },
     {
@@ -213,11 +289,11 @@ Selalu gunakan HTTPS untuk mengirim data sensitif seperti kata sandi, token, ata
 REST API tidak memaksakan teknologi tertentu, sehingga bisa diakses dari berbagai client: web, mobile, maupun perangkat lain.`,
     },
     {
-      id: 'sec-06-go-server',
+      id: 'sec-06-go-advanced',
       type: 'code-example',
       codeExample: {
-        id: 'code-06-go',
-        filename: 'main.go',
+        id: 'code-06-go-advanced',
+        filename: 'http-server.go',
         language: 'go',
         title: 'Go: Server HTTP Sederhana',
         code: `package main

@@ -190,8 +190,8 @@ describe('Mari Belajar Milestone 1 — E2E happy paths', () => {
     })
 
     expect(screen.getByRole('heading', { name: /Dari Listrik ke Bit/i })).toBeInTheDocument()
-    expect(screen.getByText(/JavaScript: Mengonversi Desimal ke Biner/i)).toBeInTheDocument()
-    expect(screen.getByText(/TypeScript: Konverter Basis Bilangan Type-Safe/i)).toBeInTheDocument()
+    expect(screen.getByText(/Go: Mengonversi Desimal ke Biner/i)).toBeInTheDocument()
+    expect(screen.getByText(/Go: Konverter Basis Bilangan Type-Safe/i)).toBeInTheDocument()
     expect(screen.getByText(/Go: Bit Manipulation dan Representasi Data/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Periksa Jawaban/i })).toBeInTheDocument()
   })

@@ -47,34 +47,42 @@ Secara sederhana, sebuah proses bisa berada dalam salah satu kondisi:
 - **Terminated**: proses selesai atau dihentikan.`,
     },
     {
-      id: 'sec-05-js-event-loop',
+      id: 'sec-05-go-basic',
       type: 'code-example',
       codeExample: {
-        id: 'code-05-js',
-        filename: 'event-loop.js',
-        language: 'javascript',
-        title: 'JavaScript: Event Loop sebagai Model Concurrency Single-Threaded',
-        code: `console.log("A: mulai");
+        id: 'code-05-go-basic',
+        filename: 'goroutine-order.go',
+        language: 'go',
+        title: 'Go: Urutan Eksekusi Goroutine',
+        code: `package main
 
-// Callback ini masuk ke task queue dan dieksekusi nanti
-setTimeout(() => {
-  console.log("C: timeout selesai");
-}, 0);
+import (
+	"fmt"
+	"time"
+)
 
-// Promise callback masuk ke microtask queue, diprioritaskan sebelum task queue
-Promise.resolve().then(() => {
-  console.log("B: promise selesai");
-});
+func main() {
+	fmt.Println("A: mulai")
 
-console.log("D: akhir sinkron");
+	// Goroutine ini dijadwalkan dan dieksekusi nanti
+	go func() {
+		time.Sleep(1 * time.Millisecond)
+		fmt.Println("C: goroutine selesai")
+	}()
 
-// Urutan output:
-// A: mulai
-// D: akhir sinkron
-// B: promise selesai
-// C: timeout selesai`,
+	// Kode sinkron berjalan terlebih dahulu
+	fmt.Println("D: akhir sinkron")
+
+	// Beri waktu agar goroutine sempat berjalan sebelum program berakhir
+	time.Sleep(10 * time.Millisecond)
+
+	// Urutan output:
+	// A: mulai
+	// D: akhir sinkron
+	// C: goroutine selesai
+}`,
         explanation:
-          'JavaScript berjalan single-threaded, tetapi event loop memungkinkan tugas asynchronous ditangguhkan dan dijalankan setelah kode sinkron selesai. Microtask queue diproses sebelum task queue biasa.',
+          'Keyword go meluncurkan fungsi sebagai goroutine yang berjalan secara concurrent. Kode sinkron di main selesai terlebih dahulu sebelum goroutine dieksekusi.',
       },
     },
     {
@@ -122,43 +130,57 @@ Proses dijalankan sesuai urutan kedatangan. Sederhana dan adil, tetapi proses ya
 Setiap proses mendapatkan **time slice** atau kuota waktu yang sama, misalnya 10 ms. Jika proses belum selesai, ia kembali ke antrean ready dan menunggu giliran berikutnya. Round Robin memberikan respons yang lebih merata dibanding FIFO.`,
     },
     {
-      id: 'sec-05-ts-task-queue',
+      id: 'sec-05-go-intermediate',
       type: 'code-example',
       codeExample: {
-        id: 'code-05-ts',
-        filename: 'task-queue.ts',
-        language: 'typescript',
-        title: 'TypeScript: Simulasi Task Queue dengan Promise',
-        code: `type Task = {
-  name: string;
-  durationMs: number;
-};
+        id: 'code-05-go-intermediate',
+        filename: 'task-queue.go',
+        language: 'go',
+        title: 'Go: Simulasi Task Queue dengan Goroutine',
+        code: `package main
 
-function runTaskQueue(tasks: Task[]): Promise<string[]> {
-  return Promise.all(
-    tasks.map(
-      (task) =>
-        new Promise<string>((resolve) => {
-          setTimeout(() => {
-            resolve(\`\${task.name} selesai dalam \${task.durationMs}ms\`);
-          }, task.durationMs);
-        })
-    )
-  );
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+type Task struct {
+	Name       string
+	DurationMs int
 }
 
-const tasks: Task[] = [
-  { name: "Backup database", durationMs: 300 },
-  { name: "Kirim email", durationMs: 100 },
-  { name: "Generate laporan", durationMs: 200 },
-];
+func runTask(task Task, wg *sync.WaitGroup, results chan<- string) {
+	defer wg.Done()
+	time.Sleep(time.Duration(task.DurationMs) * time.Millisecond)
+	results <- fmt.Sprintf("%s selesai dalam %dms", task.Name, task.DurationMs)
+}
 
-runTaskQueue(tasks).then((results) => {
-  console.log("Semua tugas selesai:");
-  console.log(results);
-});`,
+func main() {
+	tasks := []Task{
+		{Name: "Backup database", DurationMs: 300},
+		{Name: "Kirim email", DurationMs: 100},
+		{Name: "Generate laporan", DurationMs: 200},
+	}
+
+	var wg sync.WaitGroup
+	results := make(chan string, len(tasks))
+
+	for _, task := range tasks {
+		wg.Add(1)
+		go runTask(task, &wg, results)
+	}
+
+	wg.Wait()
+	close(results)
+
+	fmt.Println("Semua tugas selesai:")
+	for result := range results {
+		fmt.Println(result)
+	}
+}`,
         explanation:
-          'Promise.all menjalankan banyak tugas secara concurrent dalam satu thread. Meskipun tugas dimulai bersamaan, event loop menangani penyelesaiannya satu per satu sesuai urutan waktu.',
+          'Setiap tugas dijalankan sebagai goroutine terpisah dengan sync.WaitGroup untuk menunggu semua selesai. Channel mengumpulkan hasil dari goroutine yang berjalan secara concurrent.',
       },
     },
     {
@@ -193,11 +215,11 @@ Karena proses terisolasi, mereka tidak bisa berbagi memori secara langsung. **IP
 > Catatan: topik goroutine, channel, dan concurrency di Go hanya diperkenalkan secara ringkas di Phase 1. Deep-dive akan dibahas pada milestone berikutnya.`,
     },
     {
-      id: 'sec-05-go-goroutine',
+      id: 'sec-05-go-advanced',
       type: 'code-example',
       codeExample: {
-        id: 'code-05-go',
-        filename: 'main.go',
+        id: 'code-05-go-advanced',
+        filename: 'goroutines.go',
         language: 'go',
         title: 'Go: Pengenalan Goroutine dan sync.WaitGroup',
         code: `package main

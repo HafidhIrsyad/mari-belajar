@@ -225,50 +225,45 @@ Keuntungan shadcn/ui:
 Komposisi berarti membangun komponen kompleks dari komponen kecil yang fokus pada satu tanggung jawab. Pola ini meningkatkan reusability dan testability.`,
     },
     {
-      id: 'sec-07-go-example',
+      id: 'sec-07-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-07-go',
-        filename: 'tokens.go',
-        language: 'go',
-        title: 'Go: Representasi Design Tokens sebagai Struct',
-        code: `package main
+        id: 'code-07-advanced',
+        filename: 'Button.tsx',
+        language: 'typescript',
+        title: 'Tailwind + CVA: Komponen Button dengan Variant',
+        code: `import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '@/lib/utils'
 
-import "fmt"
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline: 'border border-input bg-background hover:bg-accent',
+      },
+      size: {
+        sm: 'h-8 px-3 text-sm',
+        md: 'h-10 px-4',
+        lg: 'h-11 px-6 text-lg',
+      },
+    },
+    defaultVariants: { variant: 'default', size: 'md' },
+  },
+)
 
-type Tokens struct {
-	Colors struct {
-		Primary500   string
-		Destructive  string
-		Background   string
-		Foreground   string
-	}
-	Spacing struct {
-		Small  string
-		Medium string
-		Large  string
-	}
-	Radius struct {
-		MD string
-	}
-}
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonVariants>
 
-func main() {
-	tokens := Tokens{}
-	tokens.Colors.Primary500 = "#3b82f6"
-	tokens.Colors.Destructive = "#ef4444"
-	tokens.Spacing.Medium = "1rem"
-	tokens.Radius.MD = "0.375rem"
-
-	fmt.Printf(
-		"button { background: %s; padding: %s; border-radius: %s }\\n",
-		tokens.Colors.Primary500,
-		tokens.Spacing.Medium,
-		tokens.Radius.MD,
-	)
+function Button({ className, variant, size, ...props }: ButtonProps) {
+  return (
+    <button className={cn(buttonVariants({ variant, size }), className)} {...props} />
+  )
 }`,
         explanation:
-          'Design tokens dapat direpresentasikan sebagai struktur data. Di frontend, nilai-nilai ini biasanya diekspos sebagai CSS variables atau di-extend di Tailwind config agar konsisten di seluruh aplikasi.',
+          'CVA mengelola variant styling secara type-safe dengan Tailwind utility classes. Pola ini dipakai shadcn/ui: design tokens didefinisikan sebagai CSS variables di Tailwind config, lalu dikonsumsi melalui variant yang konsisten di seluruh aplikasi.',
       },
     },
     {

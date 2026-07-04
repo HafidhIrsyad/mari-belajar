@@ -50,15 +50,62 @@ export const ch07PlatformEngineeringLesson: Lesson = {
       content: '## DX Metrics\n- **DORA metrics**: deployment frequency, lead time for changes, MTTR, change failure rate.\n- **Developer satisfaction**: survey periodik (SPACE framework).\n- **Platform adoption**: berapa % team menggunakan golden path vs manual.\n\n## Cognitive Load Reduction\nPlatform team bertanggung jawab mengurangi cognitive load stream-aligned teams:\n- Abstraksi kompleksitas infrastruktur.\n- Dokumentasi terintegrasi di portal.\n- Feedback loop: platform roadmap driven by developer pain points.\n\n## Thinnest Viable Platform\nMulai dengan golden path untuk 1-2 use case paling common. Iterasi berdasarkan adoption dan feedback. Jangan over-engineer platform sebelum ada demand.',
     },
     {
-      id: 'sec-07-go',
+      id: 'sec-07-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-07-go',
-        filename: 'platform-cli.go',
-        language: 'go',
-        title: 'Go: Platform CLI Stub',
-        code: 'package main\n\nimport (\n\t"fmt"\n\t"os"\n)\n\nfunc main() {\n\tif len(os.Args) < 2 {\n\t\tfmt.Println("Usage: platform create <service-name>")\n\t\tos.Exit(1)\n\t}\n\tname := os.Args[1]\n\tfmt.Printf("Creating service %q via golden path...\\n", name)\n\tfmt.Println("  ✓ GitHub repo created")\n\tfmt.Println("  ✓ CI pipeline configured")\n\tfmt.Println("  ✓ K8s namespace provisioned")\n\tfmt.Println("  ✓ Monitoring dashboard ready")\n\tfmt.Printf("Service %q ready at https://backstage.example.com/catalog/%s\\n", name, name)\n}',
-        explanation: 'CLI stub yang mensimulasikan self-service provisioning via platform golden path.',
+        id: 'code-07-advanced',
+        filename: 'node-microservice-template.yaml',
+        language: 'yaml',
+        title: 'Backstage: Software Template Golden Path',
+        code: `apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: node-microservice
+  title: Node.js Microservice
+  description: Golden path untuk service Node.js dengan CI/CD dan monitoring
+  tags:
+    - nodejs
+    - recommended
+spec:
+  owner: platform-team
+  type: service
+  parameters:
+    - title: Service Info
+      required:
+        - name
+        - owner
+      properties:
+        name:
+          title: Service Name
+          type: string
+          description: Nama service (kebab-case)
+        owner:
+          title: Team Owner
+          type: string
+          ui:field: OwnerPicker
+  steps:
+    - id: fetch-template
+      name: Fetch Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+    - id: create-repo
+      name: Create GitHub Repository
+      action: publish:github
+      input:
+        repoUrl: github.com?owner=org&repo=\${{ parameters.name }}
+    - id: setup-ci
+      name: Setup CI Pipeline
+      action: github:actions:dispatch
+      input:
+        workflowId: setup-service.yml
+    - id: register-catalog
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: \${{ steps.create-repo.output.repoContentsUrl }}`,
+        explanation:
+          'Software template Backstage mendefinisikan golden path self-service: developer mengisi parameter, platform otomatis membuat repo, CI pipeline, dan registrasi catalog. Pola ini mengurangi cognitive load dan memastikan konsistensi infrastruktur antar tim.',
       },
     },
     {

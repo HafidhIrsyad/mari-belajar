@@ -246,56 +246,69 @@ Mesin semacam ini berguna untuk memastikan urutan state di API atau protokol kom
 Type-level programming tidak menambahkan overhead runtime karena hasilnya dihapus saat kompilasi. Namun, kompleksitas berlebihan bisa memperlambat TypeScript compiler dan membuat error message sulit dibaca.`,
     },
     {
-      id: 'sec-01-go-example',
+      id: 'sec-01-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-01-go',
-        filename: 'path_parser.go',
-        language: 'go',
-        title: 'Go: Validasi Path Parameter di Runtime dengan Generics',
-        code: `package main
+        id: 'code-01-advanced',
+        filename: 'type-level-validation.ts',
+        language: 'typescript',
+        title: 'TypeScript: Validasi Form di Level Tipe dengan Conditional Types',
+        code: `// Template literal types + conditional types untuk validasi shape form
 
-import (
-\t"fmt"
-\t"regexp"
-)
+type FieldRule = 'required' | 'email' | 'minLength:3';
 
-// Go tidak memiliki type-level computation seperti TypeScript,
-// tetapi generics dapat membantu membuat helper parsing yang aman tipe.
+type RuleError<R extends FieldRule, Label extends string> =
+  R extends 'required'
+    ? \`\${Label} wajib diisi\`
+    : R extends 'email'
+      ? \`\${Label} harus email valid\`
+      : R extends \`minLength:\${infer N extends number}\`
+        ? \`\${Label} minimal \${N} karakter\`
+        : never;
 
-type Params map[string]string
+type FormErrors<T extends Record<string, FieldRule[]>> = {
+  [K in keyof T]: RuleError<T[K][number], Capitalize<string & K>>;
+}[keyof T][];
 
-func ParsePath(pattern string, path string) (Params, error) {
-\tre := regexp.MustCompile(\`([^/]+)\`)
-\tnames := re.FindAllStringSubmatch(pattern, -1)
-\tescaped := regexp.QuoteMeta(pattern)
-\tfor _, n := range names {
-\t\tescaped = regexp.MustCompile(regexp.QuoteMeta(n[0])).ReplaceAllString(
-\t\t\tescaped,
-\t\t\t\`([^/]+)\`,
-\t\t)
-\t}
-\tregex := regexp.MustCompile("^" + escaped + "$")
-\tmatches := regex.FindStringSubmatch(path)
-\tif matches == nil {
-\t\treturn nil, fmt.Errorf("path does not match pattern")
-\t}
-\tparams := make(Params)
-\tfor i, n := range names {
-\t\tparams[n[1]] = matches[i+1]
-\t}
-\treturn params, nil
-}
+type UserFormRules = {
+  name: ['required', 'minLength:3'];
+  email: ['required', 'email'];
+};
 
-func main() {
-\tparams, err := ParsePath("/users/:userId/posts/:postId", "/users/42/posts/7")
-\tif err != nil {
-\t\tpanic(err)
-\t}
-\tfmt.Println(params["userId"], params["postId"])
+type UserFormErrors = FormErrors<UserFormRules>;
+// ("Name wajib diisi" | "Name minimal 3 karakter" | "Email wajib diisi" | "Email harus email valid")[]
+
+// Type-level state machine: transisi event yang tidak valid tidak bisa dicapai
+type Transition<S extends string, E extends string> =
+  S extends 'idle'
+    ? E extends 'SUBMIT' ? 'submitting' : 'idle'
+    : S extends 'submitting'
+      ? E extends 'SUCCESS' ? 'success' : E extends 'FAIL' ? 'error' : 'submitting'
+      : S extends 'error'
+        ? E extends 'RETRY' ? 'submitting' : 'error'
+        : S extends 'success'
+          ? E extends 'RESET' ? 'idle' : 'success'
+          : never;
+
+type AfterSubmit = Transition<'idle', 'SUBMIT'>;       // "submitting"
+type InvalidRetry = Transition<'idle', 'RETRY'>;       // "idle" (transisi tidak valid)
+
+function validateForm(
+  values: Record<string, string>,
+  rules: Record<string, FieldRule[]>
+): string[] {
+  const errors: string[] = [];
+  for (const [field, fieldRules] of Object.entries(rules)) {
+    for (const rule of fieldRules) {
+      if (rule === 'required' && !values[field]?.trim()) {
+        errors.push(\`\${field} wajib diisi\`);
+      }
+    }
+  }
+  return errors;
 }`,
         explanation:
-          'Go generics baru tersedia di level runtime/compile untuk tipe konkret. Tidak ada template literal types, jadi validasi path parameter harus dilakukan di runtime menggunakan regex.',
+          'Conditional types dan template literal types memungkinkan validasi bentuk error message sejak compile time. Pola Transition memodelkan state machine di level tipe sehingga transisi yang tidak valid langsung terlihat tanpa menjalankan kode.',
       },
     },
     {

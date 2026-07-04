@@ -50,15 +50,15 @@ export const ch04GitopsLesson: Lesson = {
       content: "## Image Updater\n\nArgoCD Image Updater dan Flux Image Automation secara berkala memeriksa registry container dan mengupdate Git dengan tag image baru. Ini memungkinkan continuous deployment tanpa menyimpan kredensial registry di cluster secara berlebihan.\n\n## Multi-Cluster GitOps\n\nDengan ApplicationSet atau Flux Kustomization, satu repository Git dapat mengelola banyak cluster. Pattern umum:\n\n- **App of Apps**: satu aplikasi induk yang mengelola banyak aplikasi anak.\n- **ApplicationSet**: menghasilkan banyak Application berdasarkan generator seperti cluster list, Git directories, atau matrix.\n\n## Rollback via Git\n\nRollback di GitOps semudah revert commit atau memindahkan tag/branch. Karena Git menjadi sumber kebenaran, revert secara otomatis akan disinkronkan oleh agen.\n\n## Secrets in Git\n\nMenyimpan secret plain di Git berbahaya. Solusi:\n\n- **Sealed Secrets**: mengenkripsi secret sehingga hanya cluster target yang dapat membukanya.\n- **SOPS**: mengenkripsi bagian file YAML/JSON dengan KMS.\n- **External Secrets Operator**: mengambil secret dari cloud secret manager atau Vault.\n\n## Webhook vs Polling\n\nPolling Git secara berkala sederhana tetapi menambah latensi. Webhook dari Git provider ke agen GitOps memberikan notifikasi instan saat ada push, mengurangi waktu sinkronisasi.\n\n## Observability GitOps\n\nStatus sinkronisasi, drift, dan error apply dapat diekspos sebagai metrics Prometheus atau ditampilkan di dashboard ArgoCD/Flux.",
     },
     {
-      id: "sec-04-go-example",
+      id: "sec-04-advanced-example",
       type: 'code-example',
       codeExample: {
-        id: "code-04-go",
-        filename: "gitops-controller.go",
-        language: "go",
-        title: "Go: Loop GitOps Controller Sederhana",
-        code: "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nfunc fetchDesiredState() string {\n\treturn \"replicas: 3\"\n}\n\nfunc fetchLiveState() string {\n\treturn \"replicas: 2\"\n}\n\nfunc applyDesired(state string) {\n\tfmt.Println(\"Applying:\", state)\n}\n\nfunc main() {\n\tticker := time.NewTicker(5 * time.Second)\n\tdefer ticker.Stop()\n\n\tfor range ticker.C {\n\t\tdesired := fetchDesiredState()\n\t\tlive := fetchLiveState()\n\t\tif desired == live {\n\t\t\tfmt.Println(\"State synchronized\")\n\t\t\tcontinue\n\t\t}\n\t\tapplyDesired(desired)\n\t}\n}",
-        explanation: "GitOps controller berjalan dalam loop: menarik desired state dari Git, membandingkan dengan live state di cluster, dan menerapkan perubahan. Pola ini adalah inti dari ArgoCD dan Flux.",
+        id: "code-04-advanced",
+        filename: "argocd-application.yaml",
+        language: "yaml",
+        title: "ArgoCD: Application Manifest untuk GitOps",
+        code: "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: order-service\n  namespace: argocd\n  finalizers:\n    - resources-finalizer.argocd.argoproj.io\nspec:\n  project: default\n  source:\n    repoURL: https://github.com/org/gitops.git\n    targetRevision: main\n    path: apps/order-service\n  destination:\n    server: https://kubernetes.default.svc\n    namespace: order-service\n  syncPolicy:\n    automated:\n      prune: true\n      selfHeal: true\n    syncOptions:\n      - CreateNamespace=true\n    retry:\n      limit: 3\n      backoff:\n        duration: 5s\n        factor: 2\n        maxDuration: 3m",
+        explanation: "Application manifest ArgoCD mendeklarasikan desired state dari Git repository. Sync policy automated dengan selfHeal memastikan cluster terus selaras dengan Git — inti dari pull-based GitOps deployment.",
       },
     },
     {

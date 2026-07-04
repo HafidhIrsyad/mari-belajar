@@ -49,45 +49,45 @@ Media queries memungkinkan kita menerapkan CSS berdasarkan karakteristik device,
 **Desktop-first** dimulai dari layout kompleks lalu mengoverride dengan \`max-width\` untuk layar lebih kecil. Pendekatan ini kadang masih digunakan untuk migrasi lama tetapi cenderung menghasilkan lebih banyak override.`,
     },
     {
-      id: 'sec-03-js-example',
+      id: 'sec-03-css-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-03-js',
-        filename: 'responsive-nav.js',
-        language: 'javascript',
-        title: 'JavaScript: Responsive Navigation dengan matchMedia',
-        code: `function initResponsiveNav(toggleId, navId) {
-  const toggle = document.getElementById(toggleId)
-  const nav = document.getElementById(navId)
-  if (!toggle || !nav) return
-
-  // Tutup menu secara default di layar kecil
-  nav.hidden = true
-
-  toggle.addEventListener('click', () => {
-    const isHidden = nav.hidden
-    nav.hidden = !isHidden
-    toggle.setAttribute('aria-expanded', String(isHidden))
-  })
-
-  // Buka menu otomatis saat layar cukup lebar
-  const media = window.matchMedia('(min-width: 768px)')
-  function handleMediaChange(event) {
-    if (event.matches) {
-      nav.hidden = false
-      toggle.setAttribute('aria-expanded', 'true')
-    } else {
-      nav.hidden = true
-      toggle.setAttribute('aria-expanded', 'false')
-    }
-  }
-  media.addEventListener('change', handleMediaChange)
-  handleMediaChange(media)
+        id: 'code-03-css',
+        filename: 'responsive-cards.css',
+        language: 'css',
+        title: 'CSS: Media Queries Mobile-First',
+        code: `/* Mobile-first: default untuk layar kecil */
+.card {
+  width: 100%;
+  padding: 1rem;
 }
 
-initResponsiveNav('menu-toggle', 'main-nav')`,
+.card-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .card-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .card {
+    width: 48%;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .card {
+    width: 30%;
+  }
+}`,
         explanation:
-          'matchMedia memungkinkan JavaScript bereaksi terhadap breakpoint yang sama dengan CSS. Dengan menyetel aria-expanded, screen reader dapat memberitahu pengguna apakah menu terbuka.',
+          'Pendekatan mobile-first menulis style dasar untuk layar kecil, lalu menambahkan min-width breakpoint saat layout perlu berubah.',
       },
     },
     {
@@ -128,45 +128,34 @@ Untuk kasus format atau orientasi berbeda, gunakan elemen \`<picture>\`.
 Jangan menargetkan device tertentu seperti "iPhone" atau "iPad". Sebaiknya pilih breakpoint berdasarkan perubahan layout yang sebenarnya dibutuhkan konten. Umumnya dimulai dengan satu breakpoint untuk tablet dan satu untuk desktop, lalu ditambahkan jika konten benar-benar membutuhkan.`,
     },
     {
-      id: 'sec-03-ts-example',
+      id: 'sec-03-fluid-css-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-03-ts',
-        filename: 'useMediaQuery.ts',
-        language: 'typescript',
-        title: 'TypeScript: React Hook untuk Media Query',
-        code: `import { useState, useEffect, useSyncExternalStore } from 'react'
-
-function subscribe(callback: () => void, query: string) {
-  const media = window.matchMedia(query)
-  media.addEventListener('change', callback)
-  return () => media.removeEventListener('change', callback)
+        id: 'code-03-fluid-css',
+        filename: 'fluid-typography.css',
+        language: 'css',
+        title: 'CSS: Fluid Typography dan Responsive Images',
+        code: `:root {
+  --font-size-base: clamp(1rem, 0.85rem + 0.5vw, 1.25rem);
+  --font-size-heading: clamp(1.75rem, 1.25rem + 2vw, 3rem);
 }
 
-function getSnapshot(query: string) {
-  return window.matchMedia(query).matches
+body {
+  font-size: var(--font-size-base);
 }
 
-export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(() =>
-    typeof window !== 'undefined' ? getSnapshot(query) : false
-  )
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    return subscribe(() => setMatches(getSnapshot(query)), query)
-  }, [query])
-
-  return matches
+h1 {
+  font-size: var(--font-size-heading);
 }
 
-// Penggunaan
-function App() {
-  const isDesktop = useMediaQuery('(min-width: 1024px)')
-  return <p>{isDesktop ? 'Layout desktop' : 'Layout mobile'}</p>
+.hero-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 0.5rem;
 }`,
         explanation:
-          'Hook ini membungkus matchMedia agar komponen React dapat bereaksi terhadap perubahan viewport. Versi produksi bisa menggunakan useSyncExternalStore untuk integrasi yang lebih baik dengan concurrent rendering.',
+          'Fungsi clamp() membuat tipografi menyesuaikan viewport tanpa banyak media query. Kombinasi width 100% dan height auto membuat gambar responsif di berbagai lebar layar.',
       },
     },
     {
@@ -214,43 +203,37 @@ Pola umum meliputi:
 - **Image crop**: gambar yang berbeda dipilih melalui picture atau object-fit.`,
     },
     {
-      id: 'sec-03-conceptual-example',
+      id: 'sec-03-container-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-03-conceptual',
-        filename: 'responsive-strategies.js',
-        language: 'javascript',
-        title: 'Perbandingan Runtime: Media Query vs Container Query vs ResizeObserver',
-        code: `const strategies = {
-  mediaQuery: {
-    scope: 'viewport',
-    api: 'window.matchMedia',
-    bestFor: 'Layout global seperti nav, sidebar, grid halaman',
-    performance: 'Tinggi, didukung native CSS',
-  },
-  containerQuery: {
-    scope: 'container element',
-    api: '@container (CSS)',
-    bestFor: 'Komponen reusable seperti card, table, chart',
-    performance: 'Tinggi, didukung modern browser',
-  },
-  resizeObserver: {
-    scope: 'element',
-    api: 'ResizeObserver',
-    bestFor: 'Integrasi dengan canvas, map, atau library pihak ketiga',
-    performance: 'Baik, tetapi menjalankan callback di JavaScript',
-  },
+        id: 'code-03-container',
+        filename: 'container-queries.css',
+        language: 'css',
+        title: 'CSS: Container Queries dan Min/Max/Clamp',
+        code: `.card-wrapper {
+  container-type: inline-size;
+  container-name: card;
 }
 
-function chooseStrategy(componentContext) {
-  if (componentContext.isSelfContained) return strategies.containerQuery
-  if (componentContext.needsPixelExactSize) return strategies.resizeObserver
-  return strategies.mediaQuery
+.card {
+  display: block;
+  padding: 1rem;
 }
 
-console.log(chooseStrategy({ isSelfContained: true }))`,
+@container card (min-width: 400px) {
+  .card {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
+
+.sidebar {
+  width: min(50%, 600px);
+  font-size: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
+}`,
         explanation:
-          'Setiap mekanisme responsif memiliki scope dan trade-off berbeda. Media query berbasis viewport tetap relevan untuk layout halaman, sementara container query lebih tepat untuk komponen yang tidak tahu di mana akan dipakai.',
+          'Container queries membuat komponen beradaptasi terhadap lebar container induk, bukan viewport. Fungsi min() dan clamp() memberi batas fleksibel tanpa breakpoint manual.',
       },
     },
     {

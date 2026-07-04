@@ -235,61 +235,44 @@ useMutation({
 Query yang tidak lagi digunakan oleh komponen akan di-cache untuk sementara. Setelah \`gcTime\` berlalu, query dihapus dari cache untuk menghemat memori.`,
     },
     {
-      id: 'sec-05-go-example',
+      id: 'sec-05-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-05-go',
-        filename: 'cache.go',
-        language: 'go',
-        title: 'Go: Simulasi Cache Key-Value dengan TTL',
-        code: `package main
+        id: 'code-05-advanced',
+        filename: 'UserProfile.tsx',
+        language: 'typescript',
+        title: 'TanStack Query: useQuery dengan Cache Key',
+        code: `import { useQuery } from '@tanstack/react-query'
 
-import (
-	"fmt"
-	"sync"
-	"time"
-)
+type User = { id: string; name: string; email: string }
 
-type CacheEntry struct {
-	value     interface{}
-	expiresAt time.Time
+async function fetchUser(id: string): Promise<User> {
+  const response = await fetch(\`/api/users/\${id}\`)
+  if (!response.ok) throw new Error('Gagal memuat user')
+  return response.json()
 }
 
-type Cache struct {
-	mu     sync.RWMutex
-	store  map[string]CacheEntry
-	ttl    time.Duration
-}
+function UserProfile({ userId }: { userId: string }) {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['users', userId],
+    queryFn: () => fetchUser(userId),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  })
 
-func NewCache(ttl time.Duration) *Cache {
-	return &Cache{store: make(map[string]CacheEntry), ttl: ttl}
-}
+  if (isLoading) return <p>Memuat...</p>
+  if (error) return <p>Error: {error.message}</p>
 
-func (c *Cache) Set(key string, value interface{}) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	c.store[key] = CacheEntry{value: value, expiresAt: time.Now().Add(c.ttl)}
-}
-
-func (c *Cache) Get(key string) (interface{}, bool) {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-	entry, ok := c.store[key]
-	if !ok || time.Now().After(entry.expiresAt) {
-		return nil, false
-	}
-	return entry.value, true
-}
-
-func main() {
-	cache := NewCache(5 * time.Minute)
-	cache.Set("users:1", []string{"Rina", "Budi"})
-	if val, ok := cache.Get("users:1"); ok {
-		fmt.Println("cached:", val)
-	}
+  return (
+    <section>
+      <h2>{data.name}</h2>
+      <p>{data.email}</p>
+      <button type="button" onClick={() => refetch()}>Refresh</button>
+    </section>
+  )
 }`,
         explanation:
-          'Implementasi cache sederhana ini meniru konsep TanStack Query: data diindeks oleh key dan memiliki masa hidup (TTL) sebelum dihapus, mirip dengan gcTime.',
+          'TanStack Query mengelola server state dengan queryKey sebagai indeks cache. staleTime menentukan kapan data dianggap usang, gcTime mengontrol berapa lama cache disimpan setelah tidak digunakan — menggantikan implementasi cache manual.',
       },
     },
     {

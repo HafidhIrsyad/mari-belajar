@@ -50,15 +50,15 @@ export const ch02InfrastructureAsCodeLanjutanLesson: Lesson = {
       content: "## Policy as Code\n\nSetiap perubahan infrastruktur harus mematuhi kebijakan organisasi. Policy as code mengekspresikan kebijakan dalam bahasa yang dapat dievaluasi otomatis:\n\n- **HashiCorp Sentinel**: policy framework untuk Terraform Cloud/Enterprise.\n- **Open Policy Agent (OPA)**: mesin policy universal dengan bahasa Rego. Dapat mengevaluasi plan Terraform JSON.\n\nContoh kebijakan: semua S3 bucket harus encrypted, semua security group harus membatasi port 22, semua resource harus punya tag `Environment`.\n\n## Drift Detection\n\nDrift terjadi ketika seseorang mengubah resource langsung melalui console atau CLI cloud, sehingga state tidak lagi mencerminkan realitas. Terraform mendeteksi drift saat `terraform plan` berikutnya. Tool seperti Terraform Cloud drift detection atau Spacelift dapat menjadwalkan pemeriksaan drift.\n\n## Testing IaC\n\nTiga tingkat pengujian:\n\n1. **Static analysis**: `terraform validate`, `terraform fmt`, linting dengan tflint.\n2. **Unit/integration test**: Terratest atau terraform-compliance menjalankan plan dan memverifikasi output.\n3. **End-to-end test**: deploy ke environment sementara dan jalankan smoke test.\n\n## State File Internals\n\nState adalah JSON yang berisi version, serial, lineage, resources dengan atribut `mode`, `type`, `name`, `provider`, dan `instances`. Terraform menghitung diff antara state dan konfigurasi untuk menentukan create, update, destroy.\n\n## Partial Apply dan Dependency Graph\n\nTerraform membangun directed acyclic graph (DAG) dari resource dan provider. Apply dapat diparalelkan untuk resource independen, sementara resource bergantung menunggu dependency selesai. `-target` memungkinkan apply parsial untuk emergency, tetapi sebaiknya dihindari karena menyebabkan state parsial.",
     },
     {
-      id: "sec-02-go-example",
+      id: "sec-02-advanced-example",
       type: 'code-example',
       codeExample: {
-        id: "code-02-go",
-        filename: "plan-policy.go",
-        language: "go",
-        title: "Go: Evaluasi Policy pada Terraform Plan JSON",
-        code: "package main\n\nimport (\n\t\"encoding/json\"\n\t\"fmt\"\n\t\"os\"\n)\n\nfunc main() {\n\tplanJSON := `{\n\t\t\"resource_changes\": [\n\t\t\t{\"address\": \"aws_s3_bucket.data\", \"change\": {\"after\": {\"bucket\": \"data-bucket\", \"acl\": \"private\"}}},\n\t\t\t{\"address\": \"aws_security_group.web\", \"change\": {\"after\": {\"ingress\": [{\"from_port\": 22, \"cidr_blocks\": [\"0.0.0.0/0\"\"}]}}}\n\t\t]\n\t}`\n\n\tvar plan map[string]interface{}\n\tif err := json.Unmarshal([]byte(planJSON), &plan); err != nil {\n\t\tfmt.Fprintln(os.Stderr, err)\n\t\treturn\n\t}\n\n\tfor _, rc := range plan[\"resource_changes\"].([]interface{}) {\n\t\tfmt.Println(\"Checking\", rc.(map[string]interface{})[\"address\"])\n\t}\n\n\tfmt.Println(\"Policy check selesai\")\n}",
-        explanation: "Terraform plan dapat diekspor sebagai JSON dan dievaluasi oleh policy engine. Contoh Go ini menunjukkan parsing plan untuk inspeksi atribut seperti ACL bucket atau aturan security group.",
+        id: "code-02-advanced",
+        filename: "modules/vpc/main.tf",
+        language: "text",
+        title: "Terraform HCL: Module VPC Reusable",
+        code: "# modules/vpc/main.tf\n\nvariable \"name\" {\n  type = string\n}\n\nvariable \"cidr_block\" {\n  type    = string\n  default = \"10.0.0.0/16\"\n}\n\nvariable \"azs\" {\n  type = list(string)\n}\n\nresource \"aws_vpc\" \"main\" {\n  cidr_block           = var.cidr_block\n  enable_dns_hostnames = true\n  enable_dns_support   = true\n\n  tags = {\n    Name        = var.name\n    ManagedBy   = \"terraform\"\n  }\n}\n\nresource \"aws_subnet\" \"private\" {\n  count             = length(var.azs)\n  vpc_id            = aws_vpc.main.id\n  cidr_block        = cidrsubnet(var.cidr_block, 8, count.index)\n  availability_zone = var.azs[count.index]\n\n  tags = { Name = \"\${var.name}-private-\${count.index}\" }\n}\n\noutput \"vpc_id\" {\n  value = aws_vpc.main.id\n}\n\noutput \"private_subnet_ids\" {\n  value = aws_subnet.private[*].id\n}",
+        explanation: "Module VPC reusable mengenkapsulasi pola infrastruktur jaringan yang kompleks. Tim dapat memanggil module ini dari environment berbeda dengan variable yang disesuaikan, mengurangi duplikasi dan memastikan konsistensi kebijakan jaringan.",
       },
     },
     {

@@ -1,10 +1,15 @@
 import { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter'
+import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash'
+import css from 'react-syntax-highlighter/dist/esm/languages/prism/css'
 import go from 'react-syntax-highlighter/dist/esm/languages/prism/go'
 import javascript from 'react-syntax-highlighter/dist/esm/languages/prism/javascript'
+import markup from 'react-syntax-highlighter/dist/esm/languages/prism/markup'
+import sql from 'react-syntax-highlighter/dist/esm/languages/prism/sql'
 import typescript from 'react-syntax-highlighter/dist/esm/languages/prism/typescript'
 import tsx from 'react-syntax-highlighter/dist/esm/languages/prism/tsx'
+import yaml from 'react-syntax-highlighter/dist/esm/languages/prism/yaml'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { cn } from '@/lib/utils'
 
@@ -12,6 +17,11 @@ SyntaxHighlighter.registerLanguage('javascript', javascript)
 SyntaxHighlighter.registerLanguage('typescript', typescript)
 SyntaxHighlighter.registerLanguage('tsx', tsx)
 SyntaxHighlighter.registerLanguage('go', go)
+SyntaxHighlighter.registerLanguage('html', markup)
+SyntaxHighlighter.registerLanguage('css', css)
+SyntaxHighlighter.registerLanguage('sql', sql)
+SyntaxHighlighter.registerLanguage('bash', bash)
+SyntaxHighlighter.registerLanguage('yaml', yaml)
 
 interface CodeBlockProps {
   code: string
@@ -26,6 +36,11 @@ const languageLabels: Record<string, string> = {
   typescript: 'TypeScript',
   go: 'Go',
   text: 'Text',
+  html: 'HTML',
+  css: 'CSS',
+  sql: 'SQL',
+  bash: 'Bash',
+  yaml: 'YAML',
 }
 
 const plainLanguages = new Set(['text', 'plain'])

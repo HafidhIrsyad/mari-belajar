@@ -232,60 +232,50 @@ RHF mengelola form state di dalam ref dan hanya merender saat:
 Ini berbeda dengan controlled form yang merender pada setiap keystroke.`,
     },
     {
-      id: 'sec-06-go-example',
+      id: 'sec-06-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-06-go',
-        filename: 'resolver.go',
-        language: 'go',
-        title: 'Go: Konsep Resolver Validasi dengan Struct Tag',
-        code: `package main
+        id: 'code-06-advanced',
+        filename: 'SignupForm.tsx',
+        language: 'typescript',
+        title: 'React Hook Form + Zod Resolver',
+        code: `import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
-import (
-	"fmt"
-	"reflect"
-	"strings"
-)
+const signupSchema = z.object({
+  name: z.string().min(2, 'Nama minimal 2 karakter'),
+  email: z.string().email('Email tidak valid'),
+  password: z.string().min(8, 'Password minimal 8 karakter'),
+})
 
-type SignupInput struct {
-	Name     string \`validate:"min=2"\`
-	Email    string \`validate:"email"\`
-	Password string \`validate:"min=8"\`
-}
+type SignupInput = z.infer<typeof signupSchema>
 
-func validate(input interface{}) map[string]string {
-	errors := make(map[string]string)
-	t := reflect.TypeOf(input)
-	v := reflect.ValueOf(input)
+function SignupForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignupInput>({ resolver: zodResolver(signupSchema) })
 
-	for i := 0; i < t.NumField(); i++ {
-		field := t.Field(i)
-		value := v.Field(i).String()
-		tag := field.Tag.Get("validate")
+  const onSubmit = async (data: SignupInput) => {
+    await fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+  }
 
-		if strings.HasPrefix(tag, "min=") {
-			var min int
-			fmt.Sscanf(tag, "min=%d", &min)
-			if len(value) < min {
-				errors[field.Name] = fmt.Sprintf("%s minimal %d karakter", field.Name, min)
-			}
-		}
-		if tag == "email" && !strings.Contains(value, "@") {
-			errors[field.Name] = "Email tidak valid"
-		}
-	}
-	return errors
-}
-
-func main() {
-	input := SignupInput{Name: "A", Email: "bademail", Password: "123"}
-	errs := validate(input)
-	for k, v := range errs {
-		fmt.Printf("%s: %s\\n", k, v)
-	}
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register('name')} aria-invalid={!!errors.name} />
+      {errors.name && <span role="alert">{errors.name.message}</span>}
+      <button type="submit" disabled={isSubmitting}>Daftar</button>
+    </form>
+  )
 }`,
         explanation:
-          'Go ini mensimulasikan resolver validasi: membaca struct tag, memeriksa nilai, dan mengembalikan map error berdasarkan nama field. Konsep ini mirip dengan cara RHF resolver menghubungkan error ke field.',
+          'Zod mendefinisikan skema validasi dengan type inference otomatis. zodResolver menghubungkan error Zod ke field React Hook Form berdasarkan nama field, sehingga validasi dan type safety konsisten tanpa boilerplate manual.',
       },
     },
     {

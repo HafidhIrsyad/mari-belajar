@@ -40,49 +40,46 @@ Continuous Deployment melangkah lebih jauh: setiap perubahan yang lolos CI/CD se
 - Waktu recovery lebih cepat saat rollback diperlukan.`,
     },
     {
-      id: 'sec-02-js-example',
+      id: 'sec-02-yaml-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-02-js',
-        filename: 'pipeline-parser.js',
-        language: 'javascript',
-        title: 'JavaScript: Parser Pipeline Sederhana',
-        code: `const pipeline = {
-  name: 'devops-basic-ci',
-  trigger: ['push', 'pull_request'],
-  jobs: [
-    { name: 'install', script: ['pnpm install --frozen-lockfile'] },
-    { name: 'lint', needs: ['install'], script: ['pnpm lint'] },
-    { name: 'test', needs: ['install'], script: ['pnpm test'] },
-    { name: 'build', needs: ['lint', 'test'], script: ['pnpm build'] },
-  ],
-}
+        id: 'code-02-yaml',
+        filename: 'ci-basic.yml',
+        language: 'yaml',
+        title: 'GitHub Actions: Pipeline CI Dasar',
+        code: `name: CI Basic
 
-function getExecutionOrder(jobs) {
-  const done = new Set()
-  const order = []
+on:
+  push:
+    branches: [main]
+  pull_request:
 
-  function canRun(job) {
-    return (job.needs || []).every((need) => done.has(need))
-  }
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pnpm install --frozen-lockfile
 
-  while (done.size < jobs.length) {
-    const runnable = jobs.filter((job) => !done.has(job.name) && canRun(job))
-    if (runnable.length === 0) {
-      throw new Error('Terdapat siklus dependensi atau kebutuhan yang tidak ada')
-    }
-    for (const job of runnable) {
-      order.push(job.name)
-      done.add(job.name)
-    }
-  }
+  lint:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - run: pnpm lint
 
-  return order
-}
+  test:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - run: pnpm test
 
-console.log('Urutan eksekusi:', getExecutionOrder(pipeline.jobs).join(' → '))`,
+  build:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    steps:
+      - run: pnpm build`,
         explanation:
-          'Parser ini menentukan urutan eksekusi job berdasarkan dependensi. Konsep yang sama digunakan CI runner untuk membangun directed acyclic graph (DAG) dari pipeline.',
+          'Setiap job mendefinisikan langkah pipeline. Keyword needs membentuk DAG dependensi — konsep yang sama dengan parser pipeline di runner CI.',
       },
     },
     {
@@ -121,60 +118,36 @@ Secrets seperti token, password, atau kunci privat tidak boleh di-hardcode di ko
 Dalam CD Delivery, artefak yang sama dipromosikan antar environment (dev → staging → production). Ini memastikan apa yang diuji persis sama dengan apa yang dirilis, mengurangi masalah "works on my machine".`,
     },
     {
-      id: 'sec-02-ts-example',
+      id: 'sec-02-yaml-cache-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-02-ts',
-        filename: 'pipeline-validator.ts',
-        language: 'typescript',
-        title: 'TypeScript: Validator Pipeline Stage',
-        code: `interface PipelineJob {
-  name: string
-  needs?: string[]
-  script: string[]
-  allowFailure?: boolean
-}
+        id: 'code-02-yaml-cache',
+        filename: 'ci-with-cache.yml',
+        language: 'yaml',
+        title: 'GitHub Actions: Pipeline dengan Cache dan Artefak',
+        code: `name: CI with Cache
 
-interface Pipeline {
-  name: string
-  jobs: PipelineJob[]
-}
+on: [push, pull_request]
 
-class PipelineValidator {
-  validate(pipeline: Pipeline): string[] {
-    const errors: string[] = []
-    const jobNames = new Set(pipeline.jobs.map((job) => job.name))
-
-    for (const job of pipeline.jobs) {
-      if (job.script.length === 0) {
-        errors.push(\`Job "\${job.name}" tidak memiliki script\`)
-      }
-      for (const need of job.needs || []) {
-        if (!jobNames.has(need)) {
-          errors.push(\`Job "\${job.name}" bergantung pada job tidak dikenal "\${need}"\`)
-        }
-      }
-      if ((job.needs || []).includes(job.name)) {
-        errors.push(\`Job "\${job.name}" bergantung pada dirinya sendiri\`)
-      }
-    }
-
-    return errors
-  }
-}
-
-const pipeline: Pipeline = {
-  name: 'deploy',
-  jobs: [
-    { name: 'build', script: ['pnpm build'] },
-    { name: 'deploy', needs: ['build'], script: ['pnpm deploy:prod'] },
-  ],
-}
-
-const validator = new PipelineValidator()
-console.log('Validation errors:', validator.validate(pipeline))`,
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7`,
         explanation:
-          'Validator memastikan tidak ada job yang bergantung pada dirinya sendiri atau merujuk job yang tidak ada. Validasi semacam ini mencegah pipeline gagal karena kesalahan konfigurasi.',
+          'Cache dependencies mempercepat pipeline berulang. upload-artifact menyimpan hasil build sebagai artefak yang dapat dipakai job deploy berikutnya.',
       },
     },
     {
@@ -225,53 +198,73 @@ Setiap commit menghasilkan artefak yang tidak diubah setelah dibuat. Container i
 - Scan dependencies dan image untuk vulnerability.`,
     },
     {
-      id: 'sec-02-go-example',
+      id: 'sec-02-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-02-go',
-        filename: 'artifact-checksum.go',
-        language: 'go',
-        title: 'Go: Verifikasi Checksum Artefak',
-        code: `package main
+        id: 'code-02-advanced',
+        filename: 'ci.yml',
+        language: 'yaml',
+        title: 'GitHub Actions: Pipeline CI/CD dengan Verifikasi Artefak',
+        code: `name: CI/CD Pipeline
 
-import (
-	"crypto/sha256"
-	"encoding/hex"
-	"fmt"
-	"io"
-	"os"
-)
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
-func checksumFile(path string) (string, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return "", err
-	}
-	defer file.Close()
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-	h := sha256.New()
-	if _, err := io.Copy(h, file); err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(h.Sum(nil)), nil
-}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-func main() {
-	expected := "a3f5b2..."
-	actual, err := checksumFile("dist/app.tar.gz")
-	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
-	}
+      - name: Install dependencies
+        run: npm ci
 
-	if actual != expected {
-		fmt.Printf("Checksum tidak cocok\\nexpected: %s\\nactual:   %s\\n", expected, actual)
-		os.Exit(1)
-	}
-	fmt.Println("Artefak terverifikasi:", actual)
-}`,
+      - name: Run tests
+        run: npm test
+
+      - name: Build artefak
+        run: npm run build
+
+      - name: Generate checksum
+        run: |
+          sha256sum dist/app.tar.gz > dist/app.tar.gz.sha256
+          cat dist/app.tar.gz.sha256
+
+      - name: Upload immutable artefak
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-\${{ github.sha }}
+          path: |
+            dist/app.tar.gz
+            dist/app.tar.gz.sha256
+          retention-days: 30
+
+  deploy-staging:
+    needs: build-and-verify
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-\${{ github.sha }}
+
+      - name: Verifikasi checksum sebelum deploy
+        run: sha256sum -c app.tar.gz.sha256
+
+      - name: Deploy ke staging
+        run: echo "Deploying \${{ github.sha }} ke staging..."`,
         explanation:
-          'Verifikasi checksum memastikan artefak yang dipromosikan antar environment tidak berubah. Ini adalah bagian dari immutable artifact dan supply chain security.',
+          'Workflow GitHub Actions ini membangun artefak immutable dengan tag commit SHA, menghasilkan checksum SHA-256, dan memverifikasi integritas sebelum deploy. Pola ini memastikan artefak yang dipromosikan antar environment tidak berubah.',
       },
     },
     {

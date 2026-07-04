@@ -220,53 +220,62 @@ Shadow DOM membuat subtree terenkapsulasi dengan scope style dan DOM tersendiri.
 Framework seperti React tidak memanipulasi DOM secara langsung. React membuat representasi virtual tree, menghitung diff dengan tree sebelumnya, dan menerapkan perubahan minimal. Hal ini mengurangi reflow dan menjaga konsistensi UI.`,
     },
     {
-      id: 'sec-01-go-example',
+      id: 'sec-01-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-01-go',
-        filename: 'event_driven.go',
-        language: 'go',
-        title: 'Go: Perbandingan Arsitektur Event-Driven',
-        code: `package main
+        id: 'code-01-advanced',
+        filename: 'dynamic-list-observer.ts',
+        language: 'typescript',
+        title: 'TypeScript: Event Delegation, MutationObserver, dan Aksesibilitas',
+        code: `// HTML: <ul id="feed" aria-live="polite"></ul>
 
-import (
-	"fmt"
-	"sync"
-)
+const feed = document.getElementById('feed') as HTMLUListElement;
 
-// Di browser, event loop dispatch event ke listener.
-// Di Go, kita bisa memodelkan event-driven dengan channel dan goroutine.
-
-type Event struct {
-	Type string
-	Data string
+function announce(message: string) {
+  const status = document.getElementById('status');
+  if (status) status.textContent = message;
 }
 
-func main() {
-	events := make(chan Event, 10)
-	var wg sync.WaitGroup
+function createItem(text: string): HTMLLIElement {
+  const li = document.createElement('li');
+  li.innerHTML = \`<span>\${text}</span> <button type="button" class="delete" aria-label="Hapus item">\${text}</button>\`;
+  return li;
+}
 
-	// Dispatcher: satu goroutine menangani banyak event seperti event delegation
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		for e := range events {
-			switch e.Type {
-			case "click":
-				fmt.Println("handled click:", e.Data)
-			case "input":
-				fmt.Println("handled input:", e.Data)
-			}
-		}
-	}()
+// Event delegation: satu listener menangani semua tombol, termasuk yang ditambah nanti
+feed.addEventListener('click', (event: MouseEvent) => {
+  const target = event.target as HTMLElement;
+  const deleteBtn = target.closest<HTMLButtonElement>('.delete');
+  if (!deleteBtn) return;
 
-	events <- Event{Type: "click", Data: "button-1"}
-	events <- Event{Type: "input", Data: "search-box"}
-	close(events)
-	wg.Wait()
-}`,
+  const item = deleteBtn.closest('li');
+  item?.remove();
+  announce('Item dihapus');
+});
+
+// MutationObserver: reaksi terhadap perubahan DOM tanpa polling
+const observer = new MutationObserver((mutations) => {
+  for (const mutation of mutations) {
+    mutation.addedNodes.forEach((node) => {
+      if (node instanceof HTMLLIElement) {
+        announce(\`Item baru ditambahkan: \${node.textContent?.trim() ?? ''}\`);
+      }
+    });
+  }
+});
+
+observer.observe(feed, { childList: true });
+
+// Custom event untuk komunikasi antar modul tanpa coupling langsung
+window.addEventListener('feed:refresh', ((event: CustomEvent<{ items: string[] }>) => {
+  feed.replaceChildren(...event.detail.items.map(createItem));
+}) as EventListener);
+
+window.dispatchEvent(
+  new CustomEvent('feed:refresh', { detail: { items: ['Belajar DOM', 'Praktik TypeScript'] } })
+);`,
         explanation:
-          'Go tidak memiliki DOM karena tidak berjalan di browser, tetapi pola event-driven bisa diimplementasikan dengan channel. Channel mirip dengan event queue: satu goroutine dispatcher menangani banyak pesan secara concurrent-safe.',
+          'Event delegation memungkinkan satu listener menangani elemen dinamis tanpa re-bind. MutationObserver memantau perubahan DOM secara asynchronous via microtask, cocok untuk sinkronisasi dengan screen reader melalui aria-live. Custom event memisahkan modul yang memicu refresh dari modul yang merender daftar.',
       },
     },
     {

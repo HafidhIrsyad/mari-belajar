@@ -10,10 +10,12 @@ import { CodeBlock } from '@/components/lesson/code-block'
 import { PrevNextNav } from '@/components/lesson/prev-next-nav'
 import { QuizPanel } from '@/components/quiz/quiz-panel'
 import { ReferenceList } from '@/components/lesson/reference-list'
+import { VisualizationRenderer } from '@/components/visualization/visualization-renderer'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { loadChapterBySlug, loadCourseBySlug } from '@/content'
 import type { Chapter, Course, LessonSection } from '@/content/types'
+import { prepareLessonSections } from '@/lib/lesson-sections'
 import { useProgressStore } from '@/stores/progressStore'
 
 export function LessonPage() {
@@ -66,6 +68,10 @@ export function LessonPage() {
   }
 
   const hasNextChapter = course.chapters.some((c) => c.order === chapter.order + 1)
+  const lessonSections = prepareLessonSections(
+    chapter.lesson.sections,
+    course.slug
+  )
 
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)]">
@@ -87,7 +93,7 @@ export function LessonPage() {
           <LessonHeader chapter={chapter} courseTitle={course.title} />
 
           <article className="prose-lesson">
-            {chapter.lesson.sections.map((section) => (
+            {lessonSections.map((section) => (
               <LessonSectionRenderer key={section.id} section={section} />
             ))}
           </article>
@@ -188,6 +194,10 @@ function LessonSectionRenderer({ section }: { section: LessonSection }) {
         ))}
       </ul>
     )
+  }
+
+  if (section.type === 'visualization') {
+    return <VisualizationRenderer config={section.visualization} />
   }
 
   return null

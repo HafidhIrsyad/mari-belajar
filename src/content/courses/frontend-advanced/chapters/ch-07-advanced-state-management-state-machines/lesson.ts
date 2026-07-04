@@ -216,67 +216,41 @@ Atomic state adalah pendekatan memecah state menjadi unit kecil yang independen.
 Time-travel debugging menjadi lebih mudah dengan state machine karena setiap transisi terekam secara eksplisit.`,
     },
     {
-      id: 'sec-07-go-example',
+      id: 'sec-07-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-07-go',
-        filename: 'state_machine.go',
-        language: 'go',
-        title: 'Go: State Machine Sederhana dengan Interface',
-        code: `package main
+        id: 'code-07-advanced',
+        filename: 'submitMachine.ts',
+        language: 'typescript',
+        title: 'XState: State Machine untuk Async Form Submission',
+        code: `import { createMachine } from 'xstate'
 
-import "fmt"
+export const submitMachine = createMachine({
+  id: 'submit',
+  initial: 'idle',
+  states: {
+    idle: {
+      on: { SUBMIT: 'loading' },
+    },
+    loading: {
+      on: {
+        SUCCESS: 'success',
+        ERROR: 'error',
+      },
+    },
+    success: {
+      on: { RESET: 'idle' },
+    },
+    error: {
+      on: { RESET: 'idle' },
+    },
+  },
+})
 
-type State string
-
-const (
-	Idle     State = "idle"
-	Loading  State = "loading"
-	Success  State = "success"
-	Error    State = "error"
-)
-
-type Event string
-
-const (
-	Submit Event = "submit"
-	Succeed Event = "succeed"
-	Fail    Event = "fail"
-	Reset   Event = "reset"
-)
-
-type Machine struct {
-	state State
-}
-
-func (m *Machine) Transition(e Event) {
-	switch m.state {
-	case Idle:
-		if e == Submit {
-			m.state = Loading
-		}
-	case Loading:
-		switch e {
-		case Succeed:
-			m.state = Success
-		case Fail:
-			m.state = Error
-		}
-	case Success, Error:
-		if e == Reset {
-			m.state = Idle
-		}
-	}
-}
-
-func main() {
-	m := &Machine{state: Idle}
-	m.Transition(Submit)
-	m.Transition(Succeed)
-	fmt.Println("State:", m.state)
-}`,
+// Transisi eksplisit mencegah state invalid seperti
+// loading → idle tanpa event RESET yang didefinisikan.`,
         explanation:
-          'State machine di Go menunjukkan bagaimana transisi antar state dikontrol secara eksplisit oleh event, mirip dengan konsep statecharts di frontend.',
+          'XState memodelkan alur async sebagai state machine dengan transisi yang eksplisit. Setiap event hanya valid dari state tertentu, sehingga edge case seperti double-submit atau transisi illegal dapat dicegah di level definisi, bukan dengan if-else defensif.',
       },
     },
     {

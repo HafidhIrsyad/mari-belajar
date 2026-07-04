@@ -1,14 +1,20 @@
 import { BookOpen, Layers, Trophy } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { PageContainer } from '@/components/layout/page-container'
+import { TrackCard } from '@/components/course/track-card'
 import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { courseMetas } from '@/content'
+import { courseMetas, courseTracks } from '@/content'
+
+const totalChapters = courseMetas.reduce(
+  (sum, course) => sum + course.chaptersCount,
+  0
+)
 
 export function HomePage() {
   const firstCourse = courseMetas[0]
@@ -16,96 +22,96 @@ export function HomePage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="px-6 py-20 lg:px-16 lg:py-24">
-        <div className="max-w-[55ch]">
-          <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
-            ✦ Belajar software engineering dari nol
-          </span>
-          <h1 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tight text-foreground lg:text-5xl">
-            Belajar ilmu komputer dari dasar, secara bertahap.
-          </h1>
-          <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            Fondasi computer science dalam Bahasa Indonesia. Dari bit hingga
-            arsitektur sistem, dengan contoh kode JavaScript, TypeScript, dan
-            Go.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Button asChild size="lg">
-              <Link to="/courses">Mulai Belajar</Link>
-            </Button>
-            {firstCourse && (
-              <Button asChild size="lg" variant="outline">
-                <Link to={`/courses/${firstCourse.slug}/${firstCourse.firstChapterSlug}`}>
-                  Langsung ke Bab 1
-                </Link>
+      <section className="py-20 lg:py-24">
+        <PageContainer>
+          <div className="max-w-[55ch]">
+            <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
+              ✦ Belajar software engineering dari nol
+            </span>
+            <h1 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tight text-foreground lg:text-5xl">
+              Belajar ilmu komputer dari dasar, secara bertahap.
+            </h1>
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+              Kurikulum lengkap dalam Bahasa Indonesia — dari fondasi computer
+              science hingga frontend, backend, database, dan DevOps. Track
+              Computer Science memakai contoh Go; track lainnya JavaScript,
+              TypeScript, dan Go.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Button asChild size="lg">
+                <Link to="/courses">Mulai Belajar</Link>
               </Button>
-            )}
+              {firstCourse && (
+                <Button asChild size="lg" variant="outline">
+                  <Link
+                    to={`/courses/${firstCourse.slug}/${firstCourse.firstChapterSlug}`}
+                  >
+                    Langsung ke Bab 1
+                  </Link>
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
+        </PageContainer>
       </section>
 
       {/* Value Proposition */}
-      <section className="px-6 py-16 lg:px-16 lg:py-24">
-        <div className="mb-12 max-w-[55ch]">
-          <h2 className="text-3xl font-bold tracking-tight">
-            Belajar Secara Bertahap
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            Setiap bab disusun dari konsep dasar hingga penerapan lanjut.
-          </p>
-        </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <ValueCard
-            icon={BookOpen}
-            title="Basic"
-            description="Konsep intuitif tanpa asumsi teknis berat. Cocok untuk pemula yang baru mengenal ilmu komputer."
-          />
-          <ValueCard
-            icon={Layers}
-            title="Intermediate"
-            description="Penerapan konsep dengan representasi data nyata, endianness, ASCII, Unicode, dan perbedaan compiler."
-          />
-          <ValueCard
-            icon={Trophy}
-            title="Advanced"
-            description="Siklus CPU, layout memori, pointer, dan assembly untuk memahami cara program benar-benar berjalan."
-          />
-        </div>
+      <section className="border-t border-border py-16 lg:py-24">
+        <PageContainer>
+          <div className="mb-12 max-w-[55ch]">
+            <h2 className="text-3xl font-bold tracking-tight">
+              Belajar Secara Bertahap
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Setiap bab di semua course mengikuti pola yang sama: konsep dasar,
+              penerapan menengah, lalu deep dive lanjut — disertai contoh kode
+              dan quiz 8 soal.
+            </p>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <ValueCard
+              icon={BookOpen}
+              title="Basic"
+              description="Konsep inti dijelaskan dari nol dengan analogi dan contoh JavaScript yang bisa langsung dicoba. Cocok untuk pemula tanpa asumsi latar belakang teknis."
+            />
+            <ValueCard
+              icon={Layers}
+              title="Intermediate"
+              description="Edge cases, best practices, dan implementasi TypeScript dengan tipe eksplisit. Fokus pada pola yang sering dipakai di proyek nyata."
+            />
+            <ValueCard
+              icon={Trophy}
+              title="Advanced"
+              description="Internals, performance, trade-offs, dan perbandingan arsitektur dengan Go. Memahami cara kerja di balik layar, bukan hanya sintaks."
+            />
+          </div>
+        </PageContainer>
       </section>
 
       {/* Course Preview */}
-      <section className="px-6 py-16 lg:px-16 lg:py-24">
-        <div className="mb-12 max-w-[55ch]">
-          <h2 className="text-3xl font-bold tracking-tight">
-            Course yang Tersedia
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            Milestone 1 menyediakan fondasi Computer Science / Informatics.
-          </p>
-        </div>
-        {firstCourse && (
-          <Card className="max-w-2xl transition-colors hover:border-[#D0C8B8]">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold">
-                {firstCourse.title}
-              </CardTitle>
-              <CardDescription className="text-[0.9375rem] leading-relaxed text-muted-foreground">
-                {firstCourse.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  {firstCourse.chaptersCount} bab •{' '}
-                  {firstCourse.estimatedHours ?? '-'} jam estimasi
-                </span>
-                <Button asChild>
-                  <Link to={`/courses/${firstCourse.slug}`}>Lihat Course</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+      <section className="border-t border-border py-16 lg:py-24">
+        <PageContainer>
+          <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-[55ch]">
+              <h2 className="text-3xl font-bold tracking-tight">
+                Course yang Tersedia
+              </h2>
+              <p className="mt-4 text-muted-foreground">
+                {courseMetas.length} course dalam {courseTracks.length} learning
+                track, total {totalChapters} bab — dari Computer Science hingga
+                DevOps.
+              </p>
+            </div>
+            <Button asChild variant="outline" className="shrink-0">
+              <Link to="/courses">Lihat Semua Course</Link>
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {courseTracks.map((track) => (
+              <TrackCard key={track.id} track={track} />
+            ))}
+          </div>
+        </PageContainer>
       </section>
     </div>
   )
@@ -121,7 +127,7 @@ function ValueCard({
   description: string
 }) {
   return (
-    <Card className="transition-colors hover:border-[#D0C8B8]">
+    <Card className="flex h-full flex-col transition-colors hover:border-[#D0C8B8]">
       <CardHeader>
         <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
           <Icon className="h-5 w-5" />

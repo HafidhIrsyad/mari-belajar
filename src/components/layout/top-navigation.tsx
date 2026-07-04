@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { BookOpen, Home, Menu, Moon, Sun } from 'lucide-react'
+import { PageContainer } from '@/components/layout/page-container'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useTheme } from '@/components/theme-provider'
@@ -15,7 +16,7 @@ export function TopNavigation() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-16 items-center justify-between px-6 lg:px-16">
+      <PageContainer className="flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2 text-xl font-bold text-primary tracking-tight">
           Mari Belajar
         </Link>
@@ -81,7 +82,7 @@ export function TopNavigation() {
             </nav>
           </SheetContent>
         </Sheet>
-      </div>
+      </PageContainer>
     </header>
   )
 }

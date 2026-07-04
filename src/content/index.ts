@@ -1,48 +1,10 @@
 import type { Chapter, Course, CourseMeta } from './types'
-import { backendAdvancedMeta } from './courses/backend-advanced/meta'
-import { backendBasicMeta } from './courses/backend-basic/meta'
-import { backendIntermediateMeta } from './courses/backend-intermediate/meta'
-import { csFundamentalsMeta } from './courses/cs-fundamentals/meta'
-import { databaseAdvancedMeta } from './courses/database-advanced/meta'
-import { databaseBasicMeta } from './courses/database-basic/meta'
-import { databaseIntermediateMeta } from './courses/database-intermediate/meta'
-import { devopsBasicMeta } from './courses/devops-basic/meta'
-import { devopsIntermediateMeta } from './courses/devops-intermediate/meta'
-import { devopsAdvancedMeta } from './courses/devops-advanced/meta'
-import { frontendAdvancedMeta } from './courses/frontend-advanced/meta'
-import { frontendBasicMeta } from './courses/frontend-basic/meta'
-import { frontendIntermediateMeta } from './courses/frontend-intermediate/meta'
-import { goAdvancedMeta } from './courses/go-advanced/meta'
-import { goFundamentalMeta } from './courses/go-fundamental/meta'
-import { goIntermediateMeta } from './courses/go-intermediate/meta'
-import { jsTsFundamentalMeta } from './courses/js-ts-fundamental/meta'
-import { jsTsIntermediateMeta } from './courses/js-ts-intermediate/meta'
-import { jsTsAdvancedMeta } from './courses/js-ts-advanced/meta'
+import { courseMetas, courseTracks } from './course-catalog'
 
 export type { Chapter, Course, CourseMeta }
+export type { CourseTrack } from './course-catalog'
+export { courseMetas, courseTracks }
 export * from './types'
-
-export const courseMetas: CourseMeta[] = [
-  csFundamentalsMeta,
-  databaseAdvancedMeta,
-  databaseBasicMeta,
-  databaseIntermediateMeta,
-  devopsBasicMeta,
-  devopsIntermediateMeta,
-  devopsAdvancedMeta,
-  frontendAdvancedMeta,
-  frontendBasicMeta,
-  frontendIntermediateMeta,
-  goAdvancedMeta,
-  goFundamentalMeta,
-  goIntermediateMeta,
-  jsTsFundamentalMeta,
-  jsTsIntermediateMeta,
-  jsTsAdvancedMeta,
-  backendAdvancedMeta,
-  backendBasicMeta,
-  backendIntermediateMeta,
-]
 
 export function getCourseMetaBySlug(slug: string): CourseMeta | undefined {
   return courseMetas.find((course) => course.slug === slug)
@@ -61,6 +23,8 @@ const courseLoaders: Record<string, () => Promise<Record<string, Course>>> = {
   'backend-basic': () => import('./courses/backend-basic'),
   'backend-intermediate': () => import('./courses/backend-intermediate'),
   'cs-fundamentals': () => import('./courses/cs-fundamentals'),
+  'cs-intermediate': () => import('./courses/cs-intermediate'),
+  'cs-advanced': () => import('./courses/cs-advanced'),
   'database-advanced': () => import('./courses/database-advanced'),
   'database-basic': () => import('./courses/database-basic'),
   'database-intermediate': () => import('./courses/database-intermediate'),

@@ -60,25 +60,31 @@ Misalnya, algoritma menghitung luas persegi panjang:
 - Output: luas.`,
     },
     {
-      id: 'sec-03-js-linear-search',
+      id: 'sec-03-go-basic',
       type: 'code-example',
       codeExample: {
-        id: 'code-03-js-linear',
-        filename: 'linear-search.js',
-        language: 'javascript',
-        title: 'JavaScript: Pencarian Linear',
-        code: `function linearSearch(arr, target) {
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] === target) {
-      return i; // ditemukan pada indeks ke-i
-    }
-  }
-  return -1; // tidak ditemukan
+        id: 'code-03-go-basic',
+        filename: 'linear-search.go',
+        language: 'go',
+        title: 'Go: Pencarian Linear',
+        code: `package main
+
+import "fmt"
+
+func linearSearch(arr []int, target int) int {
+	for i, v := range arr {
+		if v == target {
+			return i // ditemukan pada indeks ke-i
+		}
+	}
+	return -1 // tidak ditemukan
 }
 
-const numbers = [12, 5, 8, 21, 7, 15];
-console.log(linearSearch(numbers, 21)); // 3
-console.log(linearSearch(numbers, 99)); // -1`,
+func main() {
+	numbers := []int{12, 5, 8, 21, 7, 15}
+	fmt.Println(linearSearch(numbers, 21)) // 3
+	fmt.Println(linearSearch(numbers, 99)) // -1
+}`,
         explanation:
           'Pencarian linear memeriksa setiap elemen satu per satu dari awal sampai akhir. Sederhana, tetapi menjadi lambat saat data sangat besar.',
       },
@@ -144,75 +150,39 @@ Tidak ada algoritma terbaik untuk semua situasi. Pilihlah berdasarkan:
 - Apakah urutan elemen yang sama perlu dipertahankan (*stability*)?`,
     },
     {
-      id: 'sec-03-js-bubble-sort',
+      id: 'sec-03-go-intermediate',
       type: 'code-example',
       codeExample: {
-        id: 'code-03-js-bubble',
-        filename: 'bubble-sort.js',
-        language: 'javascript',
-        title: 'JavaScript: Bubble Sort',
-        code: `function bubbleSort(arr) {
-  const result = [...arr];
+        id: 'code-03-go-intermediate',
+        filename: 'bubble-sort.go',
+        language: 'go',
+        title: 'Go: Bubble Sort',
+        code: `package main
 
-  for (let i = 0; i < result.length; i++) {
-    for (let j = 0; j < result.length - i - 1; j++) {
-      if (result[j] > result[j + 1]) {
-        // Tukar elemen yang bersebelahan
-        [result[j], result[j + 1]] = [result[j + 1], result[j]];
-      }
-    }
-  }
+import "fmt"
 
-  return result;
+func bubbleSort(arr []int) []int {
+	result := make([]int, len(arr))
+	copy(result, arr)
+
+	for i := 0; i < len(result); i++ {
+		for j := 0; j < len(result)-i-1; j++ {
+			if result[j] > result[j+1] {
+				// Tukar elemen yang bersebelahan
+				result[j], result[j+1] = result[j+1], result[j]
+			}
+		}
+	}
+
+	return result
 }
 
-const unsorted = [64, 25, 12, 22, 11];
-console.log(bubbleSort(unsorted)); // [11, 12, 22, 25, 64]`,
+func main() {
+	unsorted := []int{64, 25, 12, 22, 11}
+	fmt.Println(bubbleSort(unsorted)) // [11 12 22 25 64]
+}`,
         explanation:
-          'Bubble sort bekerja dengan menyusuri array berulang kali dan menukar elemen yang tidak berurutan. Mudah dipahami, tetapi tidak efisien untuk data besar.',
-      },
-    },
-    {
-      id: 'sec-03-ts-binary-search',
-      type: 'code-example',
-      codeExample: {
-        id: 'code-03-ts-binary',
-        filename: 'binary-search.ts',
-        language: 'typescript',
-        title: 'TypeScript: Binary Search Generik',
-        code: `function binarySearch<T>(
-  arr: T[],
-  target: T,
-  compare: (a: T, b: T) => number
-): number {
-  let left = 0;
-  let right = arr.length - 1;
-
-  while (left <= right) {
-    const mid = Math.floor((left + right) / 2);
-    const comparison = compare(arr[mid], target);
-
-    if (comparison === 0) {
-      return mid; // ditemukan
-    } else if (comparison < 0) {
-      left = mid + 1; // cari di kanan
-    } else {
-      right = mid - 1; // cari di kiri
-    }
-  }
-
-  return -1; // tidak ditemukan
-}
-
-const scores = [10, 25, 37, 42, 58, 71, 89];
-const index = binarySearch(scores, 42, (a, b) => a - b);
-console.log(index); // 3
-
-const words = ['apel', 'jeruk', 'mangga', 'pisang'];
-const wordIndex = binarySearch(words, 'mangga', (a, b) => a.localeCompare(b));
-console.log(wordIndex); // 2`,
-        explanation:
-          'Fungsi generik menerima tipe T dan fungsi pembanding, sehingga bisa digunakan untuk angka, string, atau tipe data lain yang memiliki urutan.',
+          'Bubble sort bekerja dengan menyusuri slice berulang kali dan menukar elemen yang tidak berurutan. Mudah dipahami, tetapi tidak efisien untuk data besar.',
       },
     },
     {
@@ -261,11 +231,11 @@ faktorial(n):
 Tanpa memoization, kompleksitas Fibonacci rekursif adalah O(2^n). Dengan memoization, kompleksitasnya turun menjadi O(n).`,
     },
     {
-      id: 'sec-03-go-fibonacci',
+      id: 'sec-03-go-advanced',
       type: 'code-example',
       codeExample: {
-        id: 'code-03-go-fib',
-        filename: 'main.go',
+        id: 'code-03-go-advanced',
+        filename: 'fibonacci-memo.go',
         language: 'go',
         title: 'Go: Fibonacci Rekursif dengan Memoization',
         code: `package main

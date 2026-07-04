@@ -43,55 +43,39 @@ HTML5 menyediakan banyak tipe input yang memengaruhi keyboard virtual, validasi,
 Setiap input harus memiliki \`<label>\` yang terhubung melalui atribut \`for\` yang sama dengan \`id\` input. Ini sangat penting bagi pengguna screen reader.`,
     },
     {
-      id: 'sec-04-js-example',
+      id: 'sec-04-html-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-04-js',
-        filename: 'form-validation.js',
-        language: 'javascript',
-        title: 'JavaScript: Constraint Validation API',
-        code: `const form = document.getElementById('registration-form')
-const email = document.getElementById('email')
-const phone = document.getElementById('phone')
-
-function showError(input, message) {
-  input.setCustomValidity(message)
-  const errorId = input.id + '-error'
-  let errorEl = document.getElementById(errorId)
-  if (!errorEl) {
-    errorEl = document.createElement('span')
-    errorEl.id = errorId
-    input.insertAdjacentElement('afterend', errorEl)
-  }
-  errorEl.textContent = message
-  input.setAttribute('aria-describedby', errorId)
-}
-
-function clearError(input) {
-  input.setCustomValidity('')
-  input.removeAttribute('aria-describedby')
-  const errorEl = document.getElementById(input.id + '-error')
-  if (errorEl) errorEl.textContent = ''
-}
-
-email.addEventListener('input', () => {
-  if (email.validity.typeMismatch) {
-    showError(email, 'Masukkan alamat email yang valid.')
-  } else if (email.validity.valueMissing) {
-    showError(email, 'Email wajib diisi.')
-  } else {
-    clearError(email)
-  }
-})
-
-form.addEventListener('submit', (event) => {
-  if (!form.checkValidity()) {
-    event.preventDefault()
-    form.reportValidity()
-  }
-})`,
+        id: 'code-04-html',
+        filename: 'registration-form.html',
+        language: 'html',
+        title: 'HTML: Form dengan Validasi Bawaan Browser',
+        code: `<form id="registration-form" action="/api/register" method="POST">
+  <div>
+    <label for="email">Email</label>
+    <input
+      id="email"
+      name="email"
+      type="email"
+      required
+      autocomplete="email"
+    />
+  </div>
+  <div>
+    <label for="phone">Telepon</label>
+    <input
+      id="phone"
+      name="phone"
+      type="tel"
+      pattern="[0-9]{10,13}"
+      title="Masukkan 10–13 digit angka"
+      required
+    />
+  </div>
+  <button type="submit">Daftar</button>
+</form>`,
         explanation:
-          'Constraint Validation API menyediakan properti seperti validity, setCustomValidity, dan checkValidity. Menggabungkannya dengan aria-describedby memastikan pesan error terhubung dengan input yang bersangkutan.',
+          'Atribut required, type, dan pattern memberikan validasi HTML5 tanpa JavaScript. Browser menampilkan pesan error bawaan saat form tidak valid.',
       },
     },
     {
@@ -131,77 +115,46 @@ Validasi real-time saat pengguna mengetik bisa membantu, tetapi terlalu agresif 
 Selalu uji navigasi form hanya dengan keyboard untuk memastikan urutan fokus logis.`,
     },
     {
-      id: 'sec-04-ts-example',
+      id: 'sec-04-html-a11y-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-04-ts',
-        filename: 'ContactForm.tsx',
-        language: 'typescript',
-        title: 'TypeScript: Formulir Terkontrol dengan Tipe Eksplisit',
-        code: `import { useState, type FormEvent, type ChangeEvent } from 'react'
+        id: 'code-04-html-a11y',
+        filename: 'accessible-form.html',
+        language: 'html',
+        title: 'HTML: Form dengan Feedback Aksesibel',
+        code: `<form action="/api/contact" method="POST">
+  <div aria-live="polite" id="form-status"></div>
 
-interface FormData {
-  email: string
-  message: string
-}
+  <div>
+    <label for="username">Username</label>
+    <input
+      id="username"
+      name="username"
+      type="text"
+      required
+      minlength="3"
+      aria-describedby="username-hint username-error"
+    />
+    <div id="username-hint">Minimal 3 karakter, huruf kecil dan angka.</div>
+    <div id="username-error" role="alert"></div>
+  </div>
 
-type FormErrors = Partial<Record<keyof FormData, string>>
+  <div>
+    <label for="message">Pesan</label>
+    <textarea
+      id="message"
+      name="message"
+      required
+      minlength="10"
+      aria-describedby="message-error"
+    ></textarea>
+    <div id="message-error" role="alert"></div>
+  </div>
 
-export function ContactForm() {
-  const [values, setValues] = useState<FormData>({ email: '', message: '' })
-  const [errors, setErrors] = useState<FormErrors>({})
-
-  function validate(data: FormData): FormErrors {
-    const next: FormErrors = {}
-    if (!data.email.includes('@')) next.email = 'Email tidak valid'
-    if (data.message.length < 10) next.message = 'Pesan minimal 10 karakter'
-    return next
-  }
-
-  function handleChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const { name, value } = event.target
-    setValues((prev) => ({ ...prev, [name]: value }))
-    setErrors((prev) => ({ ...prev, [name]: undefined }))
-  }
-
-  function handleSubmit(event: FormEvent) {
-    event.preventDefault()
-    const nextErrors = validate(values)
-    setErrors(nextErrors)
-    if (Object.keys(nextErrors).length === 0) {
-      console.log('Kirim:', values)
-    }
-  }
-
-  return (
-    <form onSubmit={handleSubmit} noValidate>
-      <label htmlFor="email">Email</label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        value={values.email}
-        onChange={handleChange}
-        aria-describedby="email-error"
-      />
-      {errors.email && <span id="email-error" role="alert">{errors.email}</span>}
-
-      <label htmlFor="message">Pesan</label>
-      <textarea
-        id="message"
-        name="message"
-        value={values.message}
-        onChange={handleChange}
-        aria-describedby="message-error"
-      />
-      {errors.message && <span id="message-error" role="alert">{errors.message}</span>}
-
-      <button type="submit">Kirim</button>
-    </form>
-  )
-}`,
+  <button type="submit">Kirim</button>
+</form>`,
         explanation:
-          'Dengan TypeScript, state form dan error memiliki tipe yang jelas. Menggunakan role="alert" pada pesan error membantu screen reader mengumumkan error secara otomatis.',
+          'aria-describedby menghubungkan input dengan petunjuk dan pesan error. aria-live dan role="alert" membantu screen reader mengumumkan perubahan status form.',
       },
     },
     {
@@ -249,54 +202,42 @@ form.addEventListener('submit', async (event) => {
 FormData juga mendukung file upload melalui metode \`append\` dan dapat dikirim langsung sebagai body fetch tanpa JSON.stringify jika server menerima multipart/form-data.`,
     },
     {
-      id: 'sec-04-go-example',
+      id: 'sec-04-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-04-go',
-        filename: 'form.go',
-        language: 'go',
-        title: 'Go: Parse dan Validasi Form di Server',
-        code: `package main
-
-import (
-	"fmt"
-	"net/http"
-	"strings"
-)
-
-func contactHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	if err := r.ParseForm(); err != nil {
-		http.Error(w, "Bad request", http.StatusBadRequest)
-		return
-	}
-
-	email := strings.TrimSpace(r.FormValue("email"))
-	message := strings.TrimSpace(r.FormValue("message"))
-
-	if email == "" || !strings.Contains(email, "@") {
-		http.Error(w, "Email tidak valid", http.StatusBadRequest)
-		return
-	}
-
-	if len(message) < 10 {
-		http.Error(w, "Pesan terlalu pendek", http.StatusBadRequest)
-		return
-	}
-
-	fmt.Fprintf(w, "Terima kasih, %s! Pesan telah diterima.", email)
-}
-
-func main() {
-	http.HandleFunc("/api/contact", contactHandler)
-	_ = http.ListenAndServe(":8080", nil)
-}`,
+        id: 'code-04-advanced',
+        filename: 'progressive-form.html',
+        language: 'html',
+        title: 'HTML: Progressive Enhancement dengan Form Native',
+        code: `<form action="/api/contact" method="POST" enctype="multipart/form-data">
+  <div>
+    <label for="email">Email</label>
+    <input
+      id="email"
+      name="email"
+      type="email"
+      required
+      autocomplete="email"
+    />
+  </div>
+  <div>
+    <label for="message">Pesan</label>
+    <textarea
+      id="message"
+      name="message"
+      required
+      minlength="10"
+      rows="4"
+    ></textarea>
+  </div>
+  <div>
+    <label for="attachment">Lampiran (opsional)</label>
+    <input id="attachment" name="attachment" type="file" accept=".pdf,.png" />
+  </div>
+  <button type="submit">Kirim</button>
+</form>`,
         explanation:
-          'Go selalu memvalidasi ulang data dari klien. ParseForm membaca form data, lalu server memeriksa keberadaan, format, dan panjang sebelum diproses lebih lanjut.',
+          'Form dengan action dan method native tetap berfungsi tanpa JavaScript. enctype multipart/form-data mendukung upload file — progressive enhancement menambahkan UX JavaScript di atas fondasi HTML ini.',
       },
     },
     {

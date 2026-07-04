@@ -250,46 +250,45 @@ const isLoading = navigation.state === 'loading'
 Setelah action berhasil, React Router secara default akan revalidasi loader yang aktif. Ini memastikan UI menampilkan data terbaru tanpa perlu mengatur state manual.`,
     },
     {
-      id: 'sec-04-go-example',
+      id: 'sec-04-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-04-go',
-        filename: 'router.go',
-        language: 'go',
-        title: 'Go: Router Sederhana dengan Middleware Autentikasi',
-        code: `package main
+        id: 'code-04-advanced',
+        filename: 'routes.tsx',
+        language: 'typescript',
+        title: 'React Router: Protected Route dan Loader Pattern',
+        code: `import { redirect, LoaderFunctionArgs } from 'react-router-dom'
 
-import (
-	"fmt"
-	"net/http"
-	"strings"
-)
-
-func authMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cookie, err := r.Cookie("session")
-		if err != nil || cookie.Value == "" {
-			http.Redirect(w, r, "/login", http.StatusFound)
-			return
-		}
-		next.ServeHTTP(w, r)
-	})
+async function adminLoader({ params }: LoaderFunctionArgs) {
+  const session = localStorage.getItem('session')
+  if (!session) {
+    throw redirect('/login')
+  }
+  const response = await fetch(\`/api/admin/\${params.id}\`)
+  if (!response.ok) throw new Response('Not Found', { status: 404 })
+  return response.json()
 }
 
-func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "Home")
-	})
-	mux.HandleFunc("/admin/", func(w http.ResponseWriter, r *http.Request) {
-		id := strings.TrimPrefix(r.URL.Path, "/admin/")
-		fmt.Fprintf(w, "Admin panel for %s\\n", id)
-	})
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const session = localStorage.getItem('session')
+  if (!session) return <Navigate to="/login" replace />
+  return <>{children}</>
+}
 
-	http.ListenAndServe(":8080", authMiddleware(mux))
-}`,
+const router = createBrowserRouter([
+  { path: '/', element: <HomePage /> },
+  {
+    path: '/admin/:id',
+    element: (
+      <ProtectedRoute>
+        <AdminPanel />
+      </ProtectedRoute>
+    ),
+    loader: adminLoader,
+  },
+])`,
         explanation:
-          'Meskipun routing frontend berbeda dengan backend, konsep protected route dan middleware autentikasi serupa. Go menyaring request sebelum mencapai handler, mirip dengan ProtectedRoute yang mengganti element.',
+          'ProtectedRoute mengecek autentikasi sebelum merender halaman, mirip middleware backend. Loader memuat data sebelum navigasi selesai sehingga komponen dapat langsung menggunakan data via useLoaderData tanpa useEffect manual.',
       },
     },
     {

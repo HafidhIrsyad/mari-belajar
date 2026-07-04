@@ -212,61 +212,39 @@ Keuntungan atomic stores:
 - Mengurangi re-render tidak perlu pada komponen yang tidak terkait.`,
     },
     {
-      id: 'sec-03-go-example',
+      id: 'sec-03-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-03-go',
-        filename: 'store.go',
-        language: 'go',
-        title: 'Go: Implementasi Store Berbasis Subscription',
-        code: `package main
+        id: 'code-03-advanced',
+        filename: 'counterStore.ts',
+        language: 'typescript',
+        title: 'TypeScript: Zustand Store dengan Type Safety',
+        code: `import { create } from 'zustand'
 
-import "fmt"
-
-type Store[T any] struct {
-	state       T
-	subscribers []func(T)
+type CounterState = {
+  count: number
+  increment: () => void
+  reset: () => void
 }
 
-func NewStore[T any](initial T) *Store[T] {
-	return &Store[T]{state: initial}
-}
+export const useCounterStore = create<CounterState>((set) => ({
+  count: 0,
+  increment: () => set((state) => ({ count: state.count + 1 })),
+  reset: () => set({ count: 0 }),
+}))
 
-func (s *Store[T]) Get() T {
-	return s.state
-}
+function Counter() {
+  const count = useCounterStore((state) => state.count)
+  const increment = useCounterStore((state) => state.increment)
 
-func (s *Store[T]) Set(updater func(T) T) {
-	s.state = updater(s.state)
-	for _, cb := range s.subscribers {
-		cb(s.state)
-	}
-}
-
-func (s *Store[T]) Subscribe(cb func(T)) func() {
-	s.subscribers = append(s.subscribers, cb)
-	return func() {
-		// simplifikasi: tidak menghapus callback
-		fmt.Println("unsubscribed")
-	}
-}
-
-type CounterState struct {
-	Count int
-}
-
-func main() {
-	store := NewStore(CounterState{Count: 0})
-	store.Subscribe(func(s CounterState) {
-		fmt.Printf("listener: count=%d\\n", s.Count)
-	})
-	store.Set(func(s CounterState) CounterState {
-		s.Count++
-		return s
-	})
+  return (
+    <button type="button" onClick={increment}>
+      Hitung: {count}
+    </button>
+  )
 }`,
         explanation:
-          'Implementasi store sederhana ini meniru pola Zustand: state tersentralisasi, setter mengupdate state, dan subscriber diberitahu untuk re-render.',
+          'Zustand menyediakan store tersentralisasi dengan API minimal. Selector di useCounterStore memastikan komponen hanya re-render saat slice state yang dipilih berubah, mirip pola subscription pada store manual.',
       },
     },
     {

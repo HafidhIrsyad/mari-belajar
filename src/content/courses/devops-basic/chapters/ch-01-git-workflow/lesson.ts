@@ -225,43 +225,45 @@ Git mendukung beberapa strategi merge:
 Perintah seperti \`git commit\` dan \`git log\` disebut porcelain (antarmuka tingkat tinggi). Perintah seperti \`git cat-file\`, \`git hash-object\`, \`git update-ref\`, dan \`git write-tree\` disebut plumbing (primitif object database). Memahami plumbing membantu troubleshooting history yang rusak.`,
     },
     {
-      id: 'sec-01-go-example',
+      id: 'sec-01-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-01-go',
-        filename: 'git-hash.go',
-        language: 'go',
-        title: 'Go: Menghitung Git-Style SHA-1 Object Hash',
-        code: `package main
+        id: 'code-01-advanced',
+        filename: 'pre-commit',
+        language: 'bash',
+        title: 'Bash: Git Hook Pre-Commit untuk Workflow Tim',
+        code: `#!/usr/bin/env bash
+# .git/hooks/pre-commit — validasi sebelum commit masuk ke history
 
-import (
-	"crypto/sha1"
-	"fmt"
-	"io"
-)
+set -euo pipefail
 
-func gitHashObject(objectType string, content []byte) string {
-	header := fmt.Sprintf("%s %d\\x00", objectType, len(content))
-	h := sha1.New()
-	io.WriteString(h, header)
-	h.Write(content)
-	return fmt.Sprintf("%x", h.Sum(nil))
-}
+echo "Menjalankan pre-commit checks..."
 
-func main() {
-	blobContent := []byte("hello devops\\n")
-	blobHash := gitHashObject("blob", blobContent)
-	fmt.Println("blob hash:", blobHash)
+# 1. Cegah commit ke branch protected
+BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "")
+if [[ "$BRANCH" == "main" || "$BRANCH" == "master" ]]; then
+  echo "Error: commit langsung ke $BRANCH tidak diizinkan."
+  echo "Buat feature branch terlebih dahulu."
+  exit 1
+fi
 
-	commitContent := []byte("tree 4b825dc642cb6eb9a060e54bf8d69288fbee4904\\n" +
-		"author Dev <dev@example.com> 1710000000 +0700\\n" +
-		"committer Dev <dev@example.com> 1710000000 +0700\\n\\n" +
-		"initial commit\\n")
-	commitHash := gitHashObject("commit", commitContent)
-	fmt.Println("commit hash:", commitHash)
-}`,
+# 2. Lint file yang di-stage (contoh: shellcheck untuk script bash)
+STAGED_SH=$(git diff --cached --name-only --diff-filter=ACM | grep '\\.sh$' || true)
+if [[ -n "$STAGED_SH" ]]; then
+  echo "$STAGED_SH" | xargs shellcheck
+fi
+
+# 3. Cegah commit file sensitif
+FORBIDDEN=$(git diff --cached --name-only | grep -E '\\.(env|pem|key)$' || true)
+if [[ -n "$FORBIDDEN" ]]; then
+  echo "Error: file sensitif terdeteksi:"
+  echo "$FORBIDDEN"
+  exit 1
+fi
+
+echo "Pre-commit checks lulus."`,
         explanation:
-          'Git tidak menghitung hash dari konten file saja, melainkan dari header "tipe ukuran\\0" diikuti konten. Program Go ini mereplika perhitungan SHA-1 yang sama dengan perintah git hash-object.',
+          'Git hooks mengotomatisasi aturan workflow tim sebelum commit masuk ke history. Hook pre-commit ini mencegah commit ke branch protected, menjalankan lint pada script, dan memblokir file sensitif — pola yang umum di pipeline DevOps berbasis Git.',
       },
     },
     {

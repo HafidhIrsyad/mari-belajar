@@ -71,43 +71,48 @@ Operasi utama queue:
 - **front**: melihat elemen paling depan tanpa mengeluarkannya.`,
     },
     {
-      id: 'sec-04-js-example',
+      id: 'sec-04-go-basic',
       type: 'code-example',
       codeExample: {
-        id: 'code-04-js',
-        filename: 'stack-and-queue.js',
-        language: 'javascript',
-        title: 'JavaScript: Stack dan Queue Menggunakan Array',
-        code: `// Stack: LIFO (Last In, First Out)
-const stack = [];
+        id: 'code-04-go-basic',
+        filename: 'stack-and-queue.go',
+        language: 'go',
+        title: 'Go: Stack dan Queue Menggunakan Slice',
+        code: `package main
 
-stack.push("A");
-stack.push("B");
-stack.push("C");
+import "fmt"
 
-console.log(stack.pop()); // "C"
-console.log(stack.pop()); // "B"
-console.log(stack);       // ["A"]
+func main() {
+	// Stack: LIFO (Last In, First Out)
+	stack := []string{}
 
-// Queue: FIFO (First In, First Out)
-const queue = [];
+	stack = append(stack, "A")
+	stack = append(stack, "B")
+	stack = append(stack, "C")
 
-queue.push("pertama");
-queue.push("kedua");
-queue.push("ketiga");
+	top, stack := stack[len(stack)-1], stack[:len(stack)-1]
+	fmt.Println(top)   // "C"
+	top, stack = stack[len(stack)-1], stack[:len(stack)-1]
+	fmt.Println(top)   // "B"
+	fmt.Println(stack) // ["A"]
 
-console.log(queue.shift()); // "pertama"
-console.log(queue.shift()); // "kedua"
-console.log(queue);         // ["ketiga"]
+	// Queue: FIFO (First In, First Out)
+	queue := []string{}
 
-// Fungsi pembantu untuk memeriksa tumpukan kosong
-function isEmpty(collection) {
-  return collection.length === 0;
-}
+	queue = append(queue, "pertama")
+	queue = append(queue, "kedua")
+	queue = append(queue, "ketiga")
 
-console.log(isEmpty(stack)); // false, masih ada "A"`,
+	front, queue := queue[0], queue[1:]
+	fmt.Println(front) // "pertama"
+	front, queue = queue[0], queue[1:]
+	fmt.Println(front) // "kedua"
+	fmt.Println(queue) // ["ketiga"]
+
+	fmt.Println(len(stack) == 0) // false, masih ada "A"
+}`,
         explanation:
-          'Array JavaScript bisa berfungsi sebagai stack dengan push/pop, dan sebagai queue dengan push untuk enqueue dan shift untuk dequeue. Method shift mengeluarkan elemen pertama array.',
+          'Slice Go bisa berfungsi sebagai stack dengan append untuk push dan slicing untuk pop. Queue diimplementasikan dengan append untuk enqueue dan slicing dari depan untuk dequeue.',
       },
     },
     {
@@ -169,51 +174,66 @@ Tidak ada struktur data terbaik untuk semua situasi. Berikut panduan singkat:
 | Hubungan antar entitas | Graph |`,
     },
     {
-      id: 'sec-04-ts-example',
+      id: 'sec-04-go-intermediate',
       type: 'code-example',
       codeExample: {
-        id: 'code-04-ts',
-        filename: 'generic-stack.ts',
-        language: 'typescript',
-        title: 'TypeScript: Kelas Stack Generik',
-        code: `class Stack<T> {
-  private items: T[] = [];
+        id: 'code-04-go-intermediate',
+        filename: 'generic-stack.go',
+        language: 'go',
+        title: 'Go: Stack Generik',
+        code: `package main
 
-  push(item: T): void {
-    this.items.push(item);
-  }
+import "fmt"
 
-  pop(): T | undefined {
-    return this.items.pop();
-  }
-
-  peek(): T | undefined {
-    return this.items.at(-1);
-  }
-
-  isEmpty(): boolean {
-    return this.items.length === 0;
-  }
-
-  size(): number {
-    return this.items.length;
-  }
+type Stack[T any] struct {
+	items []T
 }
 
-// Menggunakan stack untuk angka
-const numberStack = new Stack<number>();
-numberStack.push(10);
-numberStack.push(20);
-console.log(numberStack.pop()); // 20
-console.log(numberStack.peek()); // 10
+func (s *Stack[T]) Push(item T) {
+	s.items = append(s.items, item)
+}
 
-// Menggunakan stack untuk string
-const history = new Stack<string>();
-history.push("/home");
-history.push("/home/docs");
-console.log(history.pop()); // "/home/docs"`,
+func (s *Stack[T]) Pop() (T, bool) {
+	if len(s.items) == 0 {
+		var zero T
+		return zero, false
+	}
+	top := s.items[len(s.items)-1]
+	s.items = s.items[:len(s.items)-1]
+	return top, true
+}
+
+func (s *Stack[T]) Peek() (T, bool) {
+	if len(s.items) == 0 {
+		var zero T
+		return zero, false
+	}
+	return s.items[len(s.items)-1], true
+}
+
+func (s *Stack[T]) IsEmpty() bool {
+	return len(s.items) == 0
+}
+
+func main() {
+	// Menggunakan stack untuk angka
+	numberStack := &Stack[int]{}
+	numberStack.Push(10)
+	numberStack.Push(20)
+	val, _ := numberStack.Pop()
+	fmt.Println(val) // 20
+	peek, _ := numberStack.Peek()
+	fmt.Println(peek) // 10
+
+	// Menggunakan stack untuk string
+	history := &Stack[string]{}
+	history.Push("/home")
+	history.Push("/home/docs")
+	path, _ := history.Pop()
+	fmt.Println(path) // "/home/docs"
+}`,
         explanation:
-          'Kelas generik Stack<T> memungkinkan stack digunakan untuk berbagai tipe data. Method peek melihat elemen teratas tanpa menghapusnya, sedangkan pop mengeluarkan elemen teratas.',
+          'Struct generik Stack[T] memungkinkan stack digunakan untuk berbagai tipe data. Method Peek melihat elemen teratas tanpa menghapusnya, sedangkan Pop mengeluarkan elemen teratas.',
       },
     },
     {
@@ -281,11 +301,11 @@ DFS bisa diimplementasikan dengan **rekursi** atau **stack**.
 BFS biasanya diimplementasikan dengan **queue**.`,
     },
     {
-      id: 'sec-04-go-example',
+      id: 'sec-04-go-advanced',
       type: 'code-example',
       codeExample: {
-        id: 'code-04-go',
-        filename: 'main.go',
+        id: 'code-04-go-advanced',
+        filename: 'map-and-linked-list.go',
         language: 'go',
         title: 'Go: Map sebagai Hash Table dan Struct Node Linked List',
         code: `package main

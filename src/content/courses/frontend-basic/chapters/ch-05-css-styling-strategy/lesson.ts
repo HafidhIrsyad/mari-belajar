@@ -62,36 +62,44 @@ Custom properties atau CSS variables menyimpan nilai yang dapat digunakan ulang 
 \`\`\``,
     },
     {
-      id: 'sec-05-js-example',
+      id: 'sec-05-css-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-05-js',
-        filename: 'bem-builder.js',
-        language: 'javascript',
-        title: 'JavaScript: Membangun Class BEM Secara Dinamis',
-        code: `function bem(block, element, modifiers) {
-  let className = block
-  if (element) className += \`__\${element}\`
-  if (modifiers) {
-    for (const [key, active] of Object.entries(modifiers)) {
-      if (active) className += \` --\${block}__\${element || ''}--\${key}\`.replace('__--', '--')
-    }
-  }
-  return className
+        id: 'code-05-css',
+        filename: 'specificity-tokens.css',
+        language: 'css',
+        title: 'CSS: Specificity, Inheritance, dan Custom Properties',
+        code: `:root {
+  --color-primary: #2563eb;
+  --space-md: 1rem;
 }
 
-function bemClean(block, element, modifiers) {
-  const base = element ? \`\${block}__\${element}\` : block
-  const mods = Object.entries(modifiers || {})
-    .filter(([, active]) => active)
-    .map(([key]) => \`\${base}--\${key}\`)
-  return [base, ...mods].join(' ')
+body {
+  color: #1f2937;
+  font-family: system-ui, sans-serif;
 }
 
-console.log(bemClean('button', 'icon', { primary: true, large: false }))
-// button__icon button__icon--primary`,
+#header {
+  color: red;
+}
+
+.header {
+  color: blue;
+}
+
+header .header {
+  color: green;
+}
+
+.button {
+  background-color: var(--color-primary);
+  padding: var(--space-md);
+  border: none;
+  border-radius: 0.375rem;
+  color: white;
+}`,
         explanation:
-          'BEM memberikan konvensi nama class yang jelas: Block__Element--Modifier. Helper ini membantu menghindari typo dan memastikan konsistensi namespace.',
+          'Contoh specificity: #header (0-1-0) mengalahkan .header (0-0-1). Custom properties di :root membuat nilai desain dapat digunakan ulang di seluruh stylesheet.',
       },
     },
     {
@@ -142,61 +150,43 @@ Keuntungannya adalah kecepatan development dan konsistensi desain. Tantangannya 
 - **Utility-first**: proyek yang ingin iterasi cepat dengan sistem desain terbatas.`,
     },
     {
-      id: 'sec-05-ts-example',
+      id: 'sec-05-bem-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-05-ts',
-        filename: 'designTokens.ts',
-        language: 'typescript',
-        title: 'TypeScript: Design Tokens dan Dark Mode Type-Safe',
-        code: `const tokens = {
-  color: {
-    background: 'var(--color-background)',
-    surface: 'var(--color-surface)',
-    text: 'var(--color-text)',
-    primary: 'var(--color-primary)',
-  },
-  space: {
-    sm: '0.5rem',
-    md: '1rem',
-    lg: '2rem',
-  },
-  radius: {
-    sm: '0.25rem',
-    md: '0.5rem',
-  },
-} as const
-
-type TokenCategory = keyof typeof tokens
-type ColorToken = keyof typeof tokens.color
-
-function colorToken(name: ColorToken): string {
-  return tokens.color[name]
+        id: 'code-05-bem',
+        filename: 'button-bem.css',
+        language: 'css',
+        title: 'CSS: Metodologi BEM',
+        code: `.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
 }
 
-// CSS yang mengikuti preferensi sistem
-const darkModeStyles = \`
-:root {
-  --color-background: #ffffff;
-  --color-surface: #f3f4f6;
-  --color-text: #111827;
-  --color-primary: #2563eb;
+.button__icon {
+  width: 1rem;
+  height: 1rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #0f172a;
-    --color-surface: #1e293b;
-    --color-text: #f8fafc;
-    --color-primary: #60a5fa;
-  }
+.button--primary {
+  background-color: #2563eb;
+  color: #ffffff;
 }
-\`
 
-console.log(colorToken('primary'))
-console.log(darkModeStyles)`,
+.button--primary:hover {
+  background-color: #1d4ed8;
+}
+
+.button--large {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+}`,
         explanation:
-          'Design tokens menjadikan nilai desain dapat diprogram dan divalidasi oleh TypeScript. Dark mode diatur melalui media query prefers-color-scheme sehingga mengikuti preferensi sistem pengguna.',
+          'BEM menggunakan konvensi Block__Element--Modifier. Setiap class hanya satu tingkat specificity sehingga konflik cascade lebih mudah dikontrol.',
       },
     },
     {
@@ -256,43 +246,46 @@ Di proyek besar, specificity yang tidak terkontrol bisa membuat perubahan sulit.
 - Dokumentasikan layer arsitektur: reset, base, components, utilities, overrides.`,
     },
     {
-      id: 'sec-05-conceptual-example',
+      id: 'sec-05-tokens-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-05-conceptual',
-        filename: 'strategy-comparison.js',
-        language: 'javascript',
-        title: 'Perbandingan Runtime: BEM vs CSS Modules vs Utility-First',
-        code: `const strategies = {
-  bem: {
-    selector: '.button__icon.button__icon--primary',
-    scope: 'global namespace',
-    runtimeCost: 'rendah, CSS murni',
-    tradeOff: 'Markup lebih panjang, konvensi harus disiplin',
-  },
-  cssModules: {
-    selector: '.button_primary__a3f1',
-    scope: 'local to file via build tool',
-    runtimeCost: 'rendah, class dihash saat build',
-    tradeOff: 'Memerlukan bundler, nama class tidak human-readable',
-  },
-  utilityFirst: {
-    selector: '.bg-blue-600.text-white.px-4.py-2.rounded',
-    scope: 'global utility classes',
-    runtimeCost: 'rendah setelah purge unused styles',
-    tradeOff: 'HTML bisa bloat, ketergantungan pada toolchain',
-  },
+        id: 'code-05-tokens',
+        filename: 'design-tokens.css',
+        language: 'css',
+        title: 'CSS: Design Tokens dan Dark Mode',
+        code: `:root {
+  --color-background: #ffffff;
+  --color-surface: #f3f4f6;
+  --color-text: #111827;
+  --color-primary: #2563eb;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --radius-md: 0.5rem;
 }
 
-function recommend(strategy, teamSize, speedPriority) {
-  if (teamSize > 10 && !speedPriority) return strategies.cssModules
-  if (speedPriority) return strategies.utilityFirst
-  return strategies.bem
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #0f172a;
+    --color-surface: #1e293b;
+    --color-text: #f8fafc;
+    --color-primary: #60a5fa;
+  }
 }
 
-console.log(recommend('any', 12, false))`,
+html.dark {
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
+  --color-text: #f8fafc;
+}
+
+.card {
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+}`,
         explanation:
-          'Setiap strategi styling memiliki scope, runtime cost, dan trade-off yang berbeda. Pemilihan bergantung pada ukuran tim, kecepatan iterasi, dan ketersediaan tooling.',
+          'Design tokens sebagai CSS custom properties menjadi sumber kebenaran tunggal. Dark mode dapat mengikuti prefers-color-scheme atau class manual pada html.',
       },
     },
     {

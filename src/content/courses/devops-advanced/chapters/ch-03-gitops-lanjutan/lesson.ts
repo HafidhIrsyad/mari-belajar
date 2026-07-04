@@ -50,15 +50,46 @@ export const ch03GitopsLanjutanLesson: Lesson = {
       content: '## Multi-Cluster GitOps\n- Management cluster menjalankan ArgoCD dan mengelola remote clusters.\n- Cluster secrets menyimpan kubeconfig setiap target cluster.\n- ApplicationSet memudahkan propagasi aplikasi ke banyak cluster.\n\n## Disaster Recovery\nKarena state cluster didokumentasikan di Git, pemulihan cluster baru dapat dilakukan dengan menginstal GitOps tool dan menunjuk ke repository. RTO/RPO menjadi lebih dapat diprediksi.\n\n## Policy Enforcement\nIntegrasikan OPA/Gatekeeper atau Kyverno untuk memvalidasi manifest sebelum deployment. Kebijakan dapat melarang image tag `:latest`, memaksa label, atau membatasi resource limits.',
     },
     {
-      id: 'sec-03-go',
+      id: 'sec-03-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-03-go',
-        filename: 'manifest-generator.go',
-        language: 'go',
-        title: 'Go: Generator Manifest Kubernetes',
-        code: 'package main\n\nimport (\n\t"fmt"\n)\n\ntype Manifest struct {\n\tAPIVersion string\n\tKind       string\n\tMetadata   map[string]string\n\tSpec       map[string]interface{}\n}\n\nfunc (m Manifest) String() string {\n\treturn fmt.Sprintf("apiVersion: %s\\nkind: %s\\nmetadata:\\n  name: %s", m.APIVersion, m.Kind, m.Metadata["name"])\n}\n\nfunc main() {\n\tdeploy := Manifest{\n\t\tAPIVersion: "apps/v1",\n\t\tKind:       "Deployment",\n\t\tMetadata:   map[string]string{"name": "api"},\n\t\tSpec: map[string]interface{}{\n\t\t\t"replicas": 3,\n\t\t},\n\t}\n\tfmt.Println(deploy)\n}',
-        explanation: 'Generator manifest ini meniru proses template yang menghasilkan YAML untuk GitOps repository.',
+        id: 'code-03-advanced',
+        filename: 'applicationset.yaml',
+        language: 'yaml',
+        title: 'ArgoCD ApplicationSet: Multi-Cluster Deployment',
+        code: `apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: guestbook-multi-cluster
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: prod-us
+            url: https://prod-us.k8s.example.com
+          - cluster: prod-eu
+            url: https://prod-eu.k8s.example.com
+  template:
+    metadata:
+      name: '{{cluster}}-guestbook'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/org/apps.git
+        targetRevision: HEAD
+        path: guestbook/overlays/{{cluster}}
+      destination:
+        server: '{{url}}'
+        namespace: guestbook
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true`,
+        explanation:
+          'ApplicationSet menghasilkan banyak Application ArgoCD dari satu template menggunakan generator list. Pola ini memungkinkan propagasi aplikasi ke banyak cluster tanpa menduplikasi manifest per cluster.',
       },
     },
     {

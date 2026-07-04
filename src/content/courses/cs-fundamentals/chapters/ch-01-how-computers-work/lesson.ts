@@ -47,26 +47,32 @@ Byte \`01000001\` dihitung sebagai:
 Nilai 65 dalam ASCII adalah huruf \`A\`. Jadi, byte \`01000001\` bisa berarti angka 65, atau huruf \`A\`, tergantung bagaimana program membacanya.`,
     },
     {
-      id: 'sec-01-js-example',
+      id: 'sec-01-go-basic',
       type: 'code-example',
       codeExample: {
-        id: 'code-01-js',
-        filename: 'decimal-to-binary.js',
-        language: 'javascript',
-        title: 'JavaScript: Mengonversi Desimal ke Biner',
-        code: `// Mengonversi desimal ke biner
-const decimal = 65;
-const binary = decimal.toString(2).padStart(8, "0");
+        id: 'code-01-go-basic',
+        filename: 'decimal-to-binary.go',
+        language: 'go',
+        title: 'Go: Mengonversi Desimal ke Biner',
+        code: `package main
 
-console.log(binary); // "01000001"
+import "fmt"
 
-// Operasi bitwise AND untuk memeriksa bit tertentu
-const mask = 0b00001000; // bit ke-3 (nilai 8)
-const hasBit = (decimal & mask) !== 0;
+func main() {
+	var decimal uint8 = 65
 
-console.log(hasBit); // false, karena 65 tidak memiliki bit ke-3`,
+	// Format %08b mencetak biner dengan padding 8 digit
+	binary := fmt.Sprintf("%08b", decimal)
+	fmt.Println(binary) // "01000001"
+
+	// Operasi bitwise AND untuk memeriksa bit tertentu
+	mask := uint8(0b00001000) // bit ke-3 (nilai 8)
+	hasBit := decimal&mask != 0
+
+	fmt.Println(hasBit) // false, karena 65 tidak memiliki bit ke-3
+}`,
         explanation:
-          'Method `.toString(2)` mengubah angka desimal menjadi string biner, sedangkan `padStart(8, "0")` memastikan hasilnya selalu 8 digit.',
+          'Format verb `%08b` mencetak representasi biner dengan padding nol hingga 8 digit. Operator `&` memeriksa apakah bit tertentu aktif.',
       },
     },
     {
@@ -106,38 +112,60 @@ Sebelum program bisa berjalan, kode yang ditulis programmer harus diubah menjadi
 - **Transpiler**: menerjemahkan kode dari satu bahasa tingkat tinggi ke bahasa tingkat tinggi lain. Contoh: TypeScript → JavaScript.`,
     },
     {
-      id: 'sec-01-ts-example',
+      id: 'sec-01-go-intermediate',
       type: 'code-example',
       codeExample: {
-        id: 'code-01-ts',
-        filename: 'base-converter.ts',
-        language: 'typescript',
-        title: 'TypeScript: Konverter Basis Bilangan Type-Safe',
-        code: `type Base = 2 | 8 | 10 | 16;
+        id: 'code-01-go-intermediate',
+        filename: 'base-converter.go',
+        language: 'go',
+        title: 'Go: Konverter Basis Bilangan Type-Safe',
+        code: `package main
 
-function convertNumber(
-  value: number,
-  targetBase: Base,
-  padTo: number = 8
-): string {
-  if (value < 0 || !Number.isInteger(value)) {
-    throw new Error("Hanya mendukung bilangan bulat positif");
-  }
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
-  const digits = value.toString(targetBase);
+type Base int
 
-  if (targetBase === 2 || targetBase === 8 || targetBase === 16) {
-    return digits.padStart(padTo, "0").toUpperCase();
-  }
+const (
+	Base2  Base = 2
+	Base8  Base = 8
+	Base10 Base = 10
+	Base16 Base = 16
+)
 
-  return digits;
+func convertNumber(value int, targetBase Base, padTo int) (string, error) {
+	if value < 0 {
+		return "", fmt.Errorf("hanya mendukung bilangan bulat positif")
+	}
+
+	digits := strconv.FormatInt(int64(value), int(targetBase))
+
+	switch targetBase {
+	case Base2, Base8, Base16:
+		if len(digits) < padTo {
+			digits = strings.Repeat("0", padTo-len(digits)) + digits
+		}
+		return strings.ToUpper(digits), nil
+	default:
+		return digits, nil
+	}
 }
 
-console.log(convertNumber(65, 2));   // "01000001"
-console.log(convertNumber(255, 16)); // "000000FF"
-console.log(convertNumber(77, 8));   // "00000115"`,
+func main() {
+	bin, _ := convertNumber(65, Base2, 8)
+	fmt.Println(bin) // "01000001"
+
+	hex, _ := convertNumber(255, Base16, 8)
+	fmt.Println(hex) // "000000FF"
+
+	oct, _ := convertNumber(77, Base8, 8)
+	fmt.Println(oct) // "00000115"
+}`,
         explanation:
-          'Tipe `Base` membatasi input hanya ke basis yang valid, sehingga kesalahan penggunaan fungsi bisa tertangkap saat compile time.',
+          'Tipe kustom `Base` dengan konstanta membatasi input hanya ke basis yang valid, sehingga kesalahan penggunaan fungsi bisa tertangkap saat compile time.',
       },
     },
     {
@@ -178,11 +206,11 @@ Pointer sangat penting di bahasa seperti C, C++, dan Go. Pointer memungkinkan pr
 **Assembly** adalah bahasa pemrograman tingkat rendah yang sangat dekat dengan instruksi mesin. Setiap instruksi assembly biasanya berkorespondensi satu-ke-satu dengan instruksi CPU. Programmer jarang menulis assembly langsung, tetapi memahami konsepnya membantu saat membaca *crash dump* atau mengoptimalkan kode performa kritis.`,
     },
     {
-      id: 'sec-01-go-example',
+      id: 'sec-01-go-advanced',
       type: 'code-example',
       codeExample: {
-        id: 'code-01-go',
-        filename: 'main.go',
+        id: 'code-01-go-advanced',
+        filename: 'bit-manipulation.go',
         language: 'go',
         title: 'Go: Bit Manipulation dan Representasi Data',
         code: `package main

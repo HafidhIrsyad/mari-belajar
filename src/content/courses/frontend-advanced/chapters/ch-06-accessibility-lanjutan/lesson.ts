@@ -250,51 +250,33 @@ Inclusive design adalah pendekatan yang memastikan produk dapat digunakan oleh o
 - Pertimbangkan preferensi seperti reduced motion dan color scheme.`,
     },
     {
-      id: 'sec-06-go-example',
+      id: 'sec-06-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-06-go',
-        filename: 'a11y_report.go',
-        language: 'go',
-        title: 'Go: Simulasi Report Aksesibilitas dengan Struct',
-        code: `package main
+        id: 'code-06-advanced',
+        filename: 'SearchForm.a11y.test.tsx',
+        language: 'typescript',
+        title: 'Vitest: Automated A11y Testing dengan jest-axe',
+        code: `import { render } from '@testing-library/react'
+import { axe, toHaveNoViolations } from 'jest-axe'
+import { expect, test } from 'vitest'
+import { SearchForm } from './SearchForm'
 
-import (
-	"encoding/json"
-	"fmt"
-)
+expect.extend(toHaveNoViolations)
 
-type A11yIssue struct {
-	Rule       string \`json:"rule"\`
-	Severity   string \`json:"severity"\`
-	Element    string \`json:"element"\`
-	Message    string \`json:"message"\`
-	WCAGLevel  string \`json:"wcagLevel"\`
-}
+test('SearchForm tidak memiliki pelanggaran aksesibilitas', async () => {
+  const { container } = render(<SearchForm />)
+  const results = await axe(container)
 
-func main() {
-	issues := []A11yIssue{
-		{
-			Rule:      "color-contrast",
-			Severity:  "serious",
-			Element:   "button.primary",
-			Message:   "Rasio kontras 2.9:1 di bawah minimum 4.5:1",
-			WCAGLevel: "AA",
-		},
-		{
-			Rule:      "label",
-			Severity:  "critical",
-			Element:   "input#search",
-			Message:   "Input tidak memiliki label yang terasosiasi",
-			WCAGLevel: "A",
-		},
-	}
+  expect(results).toHaveNoViolations()
+})
 
-	out, _ := json.MarshalIndent(issues, "", "  ")
-	fmt.Println(string(out))
-}`,
+// jest-axe mendeteksi masalah seperti:
+// - color-contrast (rasio kontras di bawah 4.5:1)
+// - label (input tanpa label terasosiasi)
+// - button-name (tombol tanpa accessible name)`,
         explanation:
-          'Backend dapat menyimpan dan mengelompokkan hasil audit aksesibilitas berdasarkan severity dan WCAG level untuk pelaporan dan prioritas perbaikan.',
+          'jest-axe mengintegrasikan axe-core ke test runner frontend sehingga pelanggaran WCAG terdeteksi otomatis di CI. Test ini menjadi safety net, tetapi tetap perlu dilengkapi manual testing dengan keyboard dan screen reader.',
       },
     },
     {

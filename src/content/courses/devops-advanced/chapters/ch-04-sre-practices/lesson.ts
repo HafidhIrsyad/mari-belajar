@@ -50,15 +50,50 @@ export const ch04SrePracticesLesson: Lesson = {
       content: '## Error Budget Policy Lanjutan\nKebijakan dapat memasukkan multi-tier SLO, graceful degradation, dan freeze release saat budget habis. Tujuannya bukan menghindari kegagalan, melainkan mengelola risiko kegagalan secara eksplisit.\n\n## Capacity Planning\nProyeksikan pertumbuhan traffic, resource usage, dan bottleneck. Gunakan load test dan historical data. Capacity planning terkait dengan reliability: kekurangan kapasitas menyebabkan SLO violation.\n\n## Reliability Roadmap\nPrioritaskan pekerjaan berdasarkan risiko kegagalan, frekuensi toil, ketergantungan antar sistem, dan hasil postmortem.',
     },
     {
-      id: 'sec-04-go',
+      id: 'sec-04-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-04-go',
-        filename: 'availability.go',
-        language: 'go',
-        title: 'Go: Perhitungan Availability',
-        code: 'package main\n\nimport (\n\t"fmt"\n\t"time"\n)\n\nfunc availability(uptime, total time.Duration) float64 {\n\treturn 100.0 * float64(uptime) / float64(total)\n}\n\nfunc main() {\n\tmonth := 30 * 24 * time.Hour\n\tdowntime := 43 * time.Minute\n\tuptime := month - downtime\n\tfmt.Printf("Availability: %.3f%%\\n", availability(uptime, month))\n}',
-        explanation: 'Menghitung availability bulanan dari total uptime.',
+        id: 'code-04-advanced',
+        filename: 'slo-error-budget.yaml',
+        language: 'yaml',
+        title: 'Konfigurasi SLO dan Error Budget Policy',
+        code: `# slo-config.yaml — definisi SLO dan kebijakan error budget
+
+service: checkout-api
+slo:
+  target: 99.9
+  window: 30d
+  indicators:
+    - name: availability
+      good_events: http_requests_total{status!~"5.."}
+      total_events: http_requests_total
+    - name: latency
+      good_events: http_request_duration_seconds_bucket{le="0.5"}
+      total_events: http_request_duration_seconds_count
+
+error_budget:
+  # 99.9% SLO = 0.1% error budget = ~43 menit downtime/bulan
+  total_minutes: 43
+  burn_rate_alerts:
+    - severity: page
+      multiplier: 14.4
+      window: 1h
+    - severity: page
+      multiplier: 6
+      window: 6h
+    - severity: ticket
+      multiplier: 2
+      window: 3d
+
+policy:
+  budget_remaining_above_50pct:
+    action: deploy_as_usual
+  budget_remaining_below_25pct:
+    action: freeze_non_critical_deploys
+  budget_exhausted:
+    action: halt_all_deploys_until_recovery`,
+        explanation:
+          'Konfigurasi SLO dan error budget policy mendefinisikan target reliability, alert burn rate, dan tindakan saat budget habis. Kebijakan eksplisit membantu tim menyeimbangkan velocity deploy dengan risiko kegagalan.',
       },
     },
     {

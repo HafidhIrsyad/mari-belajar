@@ -53,47 +53,41 @@ Heading \`<h1>\` sampai \`<h6>\` membentuk outline dokumen. Aturan praktisnya:
 Hierarki yang rapi membantu screen reader dan mesin pencari memahami struktur informasi.`,
     },
     {
-      id: 'sec-01-js-example',
+      id: 'sec-01-html-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-01-js',
-        filename: 'semantic-builder.js',
-        language: 'javascript',
-        title: 'JavaScript: Membangun Struktur Semantik dengan DOM',
-        code: `function buildSemanticPage(container) {
-  const header = document.createElement('header')
-  const nav = document.createElement('nav')
-  nav.innerHTML = '<a href="/">Beranda</a> <a href="/tentang">Tentang</a>'
-  header.appendChild(nav)
-
-  const main = document.createElement('main')
-
-  const article = document.createElement('article')
-  const h1 = document.createElement('h1')
-  h1.textContent = 'Panduan HTML Semantik'
-  article.appendChild(h1)
-
-  const section = document.createElement('section')
-  const h2 = document.createElement('h2')
-  h2.textContent = 'Mengapa Semantik Penting'
-  section.appendChild(h2)
-  section.appendChild(document.createTextNode('Tag yang tepat membantu aksesibilitas dan SEO.'))
-  article.appendChild(section)
-
-  main.appendChild(article)
-
-  const footer = document.createElement('footer')
-  footer.textContent = '© 2026 Mari Belajar'
-
-  container.appendChild(header)
-  container.appendChild(main)
-  container.appendChild(footer)
-}
-
-const app = document.getElementById('app')
-if (app) buildSemanticPage(app)`,
+        id: 'code-01-html',
+        filename: 'landing-page.html',
+        language: 'html',
+        title: 'HTML: Struktur Halaman Semantik',
+        code: `<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panduan HTML Semantik</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/">Beranda</a>
+        <a href="/tentang">Tentang</a>
+      </nav>
+    </header>
+    <main>
+      <article>
+        <h1>Panduan HTML Semantik</h1>
+        <section>
+          <h2>Mengapa Semantik Penting</h2>
+          <p>Tag yang tepat membantu aksesibilitas dan SEO.</p>
+        </section>
+      </article>
+    </main>
+    <footer>&copy; 2026 Mari Belajar</footer>
+  </body>
+</html>`,
         explanation:
-          'Kode ini membangun struktur semantik murni melalui DOM API. Browser akan menghasilkan accessibility tree yang mencerminkan landmark header, nav, main, article, dan footer.',
+          'Struktur HTML semantik langsung membentuk accessibility tree: landmark header, nav, main, article, dan footer dikenali browser tanpa JavaScript.',
       },
     },
     {
@@ -132,53 +126,49 @@ Elemen \`<time datetime="2026-06-27">27 Juni 2026</time>\` memberikan makna mesi
 Atribut \`alt\` pada gambar harus menjelaskan fungsi gambar, bukan sekadar \`"gambar"\`. Jika gambar hanya dekoratif, gunakan \`alt=""\` agar screen reader melewatinya.`,
     },
     {
-      id: 'sec-01-ts-example',
+      id: 'sec-01-html-seo-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-01-ts',
-        filename: 'SemanticPage.tsx',
-        language: 'typescript',
-        title: 'TypeScript: Komponen Halaman Semantik dengan TSX',
-        code: `import type { ReactNode } from 'react'
-
-interface SemanticPageProps {
-  title: string
-  publishDate: string
-  children: ReactNode
-}
-
-export function SemanticPage({ title, publishDate, children }: SemanticPageProps) {
-  return (
-    <>
-      <header>
-        <nav aria-label="Navigasi utama">
-          <a href="/">Beranda</a>
-          <a href="/kursus">Kursus</a>
-        </nav>
-      </header>
-      <main>
-        <article>
-          <h1>{title}</h1>
-          <p>
-            Dipublikasikan pada{' '}
-            <time dateTime={publishDate}>
-              {new Date(publishDate).toLocaleDateString('id-ID')}
-            </time>
-          </p>
-          {children}
-        </article>
-      </main>
-      <footer>
-        <address>
-          Hubungi kami di{' '}
-          <a href="mailto:halo@maribelajar.id">halo@maribelajar.id</a>
-        </address>
-      </footer>
-    </>
-  )
-}`,
+        id: 'code-01-html-seo',
+        filename: 'article-page.html',
+        language: 'html',
+        title: 'HTML: Meta Tags, Figure, dan Time',
+        code: `<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Belajar HTML Semantik | Mari Belajar</title>
+    <meta name="description" content="Panduan tag semantik HTML untuk aksesibilitas dan SEO." />
+    <meta property="og:title" content="Belajar HTML Semantik" />
+    <meta property="og:description" content="Panduan tag semantik HTML." />
+    <meta property="og:image" content="/images/og-cover.jpg" />
+  </head>
+  <body>
+    <main>
+      <article>
+        <h1>Belajar HTML Semantik</h1>
+        <p>
+          Dipublikasikan pada
+          <time datetime="2026-06-27">27 Juni 2026</time>
+        </p>
+        <figure>
+          <picture>
+            <source srcset="hero-large.webp" media="(min-width: 800px)" />
+            <img src="hero-small.webp" alt="Tim developer sedang berdiskusi" />
+          </picture>
+          <figcaption>Tim Frontend saat sesi review kode.</figcaption>
+        </figure>
+      </article>
+    </main>
+    <footer>
+      <address>
+        Hubungi kami di <a href="mailto:halo@maribelajar.id">halo@maribelajar.id</a>
+      </address>
+    </footer>
+  </body>
+</html>`,
         explanation:
-          'TSX memungkinkan kita menulis struktur semantik dengan tipe yang eksplisit. aria-label pada nav membantu screen reader membedakan beberapa blok navigasi.',
+          'Meta Open Graph dan elemen figure, picture, time, serta address memberi makna eksplisit kepada mesin pencari dan teknologi assistif.',
       },
     },
     {
@@ -216,50 +206,41 @@ Landmark adalah area besar halaman yang dapat dijelajahi oleh screen reader. Lan
 Tanpa landmark, pengguna screen reader harus membaca seluruh dokumen dari atas ke bawah untuk menemukan bagian yang relevan.`,
     },
     {
-      id: 'sec-01-go-example',
+      id: 'sec-01-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-01-go',
-        filename: 'main.go',
-        language: 'go',
-        title: 'Go: Generator HTML Statis dengan html/template',
-        code: `package main
-
-import (
-	"html/template"
-	"os"
-)
-
-type Page struct {
-	Title   string
-	Content string
-}
-
-const tmpl = \`<!DOCTYPE html>
+        id: 'code-01-advanced',
+        filename: 'landmarks.html',
+        language: 'html',
+        title: 'HTML: Landmark Regions dan Document Outline',
+        code: `<!DOCTYPE html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <title>{{.Title}}</title>
-</head>
-<body>
-  <header><nav><a href="/">Beranda</a></nav></header>
-  <main>
-    <article>
-      <h1>{{.Title}}</h1>
-      <p>{{.Content}}</p>
-    </article>
-  </main>
-  <footer>&copy; 2026 Mari Belajar</footer>
-</body>
-</html>\`
-
-func main() {
-	t := template.Must(template.New("page").Parse(tmpl))
-	page := Page{Title: "HTML Semantik", Content: "Mari belajar struktur dokumen."}
-	_ = t.Execute(os.Stdout, page)
-}`,
+  <body>
+    <header>
+      <nav aria-label="Navigasi utama">
+        <a href="/">Beranda</a>
+      </nav>
+    </header>
+    <main>
+      <article>
+        <h1>HTML Semantik</h1>
+        <section aria-labelledby="outline-heading">
+          <h2 id="outline-heading">Document Outline</h2>
+          <p>Heading hierarchy membentuk outline yang dapat dipindai screen reader.</p>
+        </section>
+        <aside aria-label="Tautan terkait">
+          <h2>Sumber tambahan</h2>
+          <ul>
+            <li><a href="/mdn">MDN HTML</a></li>
+          </ul>
+        </aside>
+      </article>
+    </main>
+    <footer>&copy; 2026 Mari Belajar</footer>
+  </body>
+</html>`,
         explanation:
-          'Go menyediakan package html/template yang secara otomatis meng-escape output untuk mencegah XSS, sekaligus menghasilkan HTML semantik yang valid.',
+          'Landmark bawaan (header, nav, main, aside, footer) dan section dengan aria-labelledby membentuk accessibility tree yang jelas tanpa ARIA berlebihan.',
       },
     },
     {

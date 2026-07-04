@@ -176,43 +176,41 @@ render(
 Gunakan \`jest-axe\` atau \`vitest-axe\` untuk memeriksa pelanggaran aksesibilitas secara otomatis.`,
     },
     {
-      id: 'sec-08-go-example',
+      id: 'sec-08-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-08-go',
-        filename: 'calculator_test.go',
-        language: 'go',
-        title: 'Go: Unit Test dengan Table-Driven Pattern',
-        code: `package main
+        id: 'code-08-advanced',
+        filename: 'Counter.test.tsx',
+        language: 'typescript',
+        title: 'Vitest + React Testing Library: Test Komponen Interaktif',
+        code: `import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { describe, it, expect } from 'vitest'
+import { Counter } from './Counter'
 
-import "testing"
+describe('Counter', () => {
+  it.each([
+    { clicks: 1, expected: '1' },
+    { clicks: 3, expected: '3' },
+  ])('menampilkan $expected setelah $clicks klik', async ({ clicks, expected }) => {
+    const user = userEvent.setup()
+    render(<Counter initialCount={0} />)
 
-func Add(a, b int) int {
-	return a + b
-}
+    const button = screen.getByRole('button', { name: /tambah/i })
+    for (let i = 0; i < clicks; i++) {
+      await user.click(button)
+    }
 
-func TestAdd(t *testing.T) {
-	tests := []struct {
-		name string
-		a, b int
-		want int
-	}{
-		{"positive", 2, 3, 5},
-		{"zero", 0, 5, 5},
-		{"negative", -2, 3, 1},
-	}
+    expect(screen.getByText(expected)).toBeInTheDocument()
+  })
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := Add(tt.a, tt.b)
-			if got != tt.want {
-				t.Errorf("Add(%d, %d) = %d, want %d", tt.a, tt.b, got, tt.want)
-			}
-		})
-	}
-}`,
+  it('menampilkan nilai awal', () => {
+    render(<Counter initialCount={5} />)
+    expect(screen.getByText('5')).toBeInTheDocument()
+  })
+})`,
         explanation:
-          'Table-driven test adalah pola populer untuk unit test. Satu test function dapat menjalankan banyak case, mirip dengan parameterized test di Vitest.',
+          'React Testing Library menguji komponen dari perspektif pengguna melalui query aksesibel seperti getByRole. it.each memungkinkan parameterized test — pola serupa dengan table-driven test, tetapi fokus pada perilaku UI bukan implementasi internal.',
       },
     },
     {

@@ -258,68 +258,53 @@ Design system adalah produk yang berkembang. Praktik terbaik:
 - Komunikasikan deprecation dengan siklus yang jelas sebelum menghapus API.`,
     },
     {
-      id: 'sec-03-go-example',
+      id: 'sec-03-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-03-go',
-        filename: 'tokens.go',
-        language: 'go',
-        title: 'Go: Representasi Design Tokens untuk Multi-Platform',
-        code: `package main
-
-import (
-	"encoding/json"
-	"fmt"
-)
-
-type TokenValue struct {
-	Value string \`json:"value"\`
-}
-
-type ColorScale struct {
-	50  TokenValue \`json:"50"\`
-	500 TokenValue \`json:"500"\`
-	900 TokenValue \`json:"900"\`
-}
-
-type Tokens struct {
-	Color struct {
-		Primary ColorScale \`json:"primary"\`
-	} \`json:"color"\`
-	Spacing struct {
-		Sm TokenValue \`json:"sm"\`
-		Md TokenValue \`json:"md"\`
-		Lg TokenValue \`json:"lg"\`
-	} \`json:"spacing"\`
-}
-
-func main() {
-	source := []byte(\`
-{
-  "color": {
-    "primary": {
-      "50": {"value": "#eff6ff"},
-      "500": {"value": "#3b82f6"},
-      "900": {"value": "#1e3a8a"}
-    }
+        id: 'code-03-advanced',
+        filename: 'tokens.ts',
+        language: 'typescript',
+        title: 'Design Tokens: Objek Typed + CSS Custom Properties',
+        code: `// tokens.ts — single source of truth dengan type safety
+export const tokens = {
+  color: {
+    primary: {
+      50: '#eff6ff',
+      500: '#3b82f6',
+      900: '#1e3a8a',
+    },
   },
-  "spacing": {
-    "sm": {"value": "0.5rem"},
-    "md": {"value": "1rem"},
-    "lg": {"value": "1.5rem"}
-  }
-}\`)
+  spacing: {
+    sm: '0.5rem',
+    md: '1rem',
+    lg: '1.5rem',
+  },
+} as const
 
-	var tokens Tokens
-	if err := json.Unmarshal(source, &tokens); err != nil {
-		panic(err)
-	}
+export type DesignTokens = typeof tokens
 
-	fmt.Printf("Primary 500: %s\n", tokens.Color.Primary[500].Value)
-	fmt.Printf("Spacing MD: %s\n", tokens.Spacing.Md.Value)
-}`,
+export function applyTokens(root: HTMLElement = document.documentElement) {
+  Object.entries(tokens.color.primary).forEach(([shade, value]) => {
+    root.style.setProperty(\`--color-primary-\${shade}\`, value)
+  })
+  Object.entries(tokens.spacing).forEach(([key, value]) => {
+    root.style.setProperty(\`--spacing-\${key}\`, value)
+  })
+}
+
+/* tokens.css — alternatif deklaratif di :root
+:root {
+  --color-primary-500: #3b82f6;
+  --spacing-md: 1rem;
+}
+
+.button-primary {
+  background: var(--color-primary-500);
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+*/`,
         explanation:
-          'Design tokens disimpan dalam JSON netral sehingga dapat dikonsumsi oleh web, mobile, maupun backend. Go dapat mem-parsenya untuk generate platform-specific output seperti CSS atau Swift.',
+          'Design tokens didefinisikan sebagai objek TypeScript typed sehingga autocomplete dan compile-time check tersedia. Nilai yang sama diekspor ke CSS custom properties untuk konsistensi visual di seluruh komponen tanpa hardcode.',
       },
     },
     {

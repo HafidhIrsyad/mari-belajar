@@ -226,58 +226,42 @@ Algoritma diffing React mengasumsikan bahwa:
 Ketika key berubah, React menganggap elemen lama telah dihapus dan elemen baru dibuat. Itulah sebabnya key harus stabil dan tidak boleh dibuat dari indeks array atau nilai acak.`,
     },
     {
-      id: 'sec-01-go-example',
+      id: 'sec-01-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-01-go',
-        filename: 'vdom_diff.go',
-        language: 'go',
-        title: 'Go: Simulasi Diffing pada Virtual DOM Tree',
-        code: `package main
+        id: 'code-01-advanced',
+        filename: 'TodoList.tsx',
+        language: 'typescript',
+        title: 'React: Key Stabil dan Reconciliation pada Daftar',
+        code: `type Todo = { id: string; label: string }
 
-import "fmt"
-
-type VNode struct {
-	Type     string
-	Key      string
-	Props    map[string]string
-	Children []VNode
+function TodoItem({ todo }: { todo: Todo }) {
+  const [done, setDone] = useState(false)
+  return (
+    <li>
+      <label>
+        <input type="checkbox" checked={done} onChange={() => setDone(!done)} />
+        {todo.label}
+      </label>
+    </li>
+  )
 }
 
-func diffChildren(oldNodes, newNodes []VNode) {
-	oldByKey := make(map[string]VNode)
-	for _, n := range oldNodes {
-		oldByKey[n.Key] = n
-	}
-
-	for i, newNode := range newNodes {
-		oldNode, exists := oldByKey[newNode.Key]
-		if !exists {
-			fmt.Printf("INSERT: %s at index %d\\n", newNode.Type, i)
-			continue
-		}
-		if oldNode.Type != newNode.Type {
-			fmt.Printf("REPLACE: %s -> %s at index %d\\n", oldNode.Type, newNode.Type, i)
-		} else {
-			fmt.Printf("UPDATE: %s key=%s at index %d\\n", newNode.Type, newNode.Key, i)
-		}
-	}
+function TodoList({ todos }: { todos: Todo[] }) {
+  return (
+    <ul>
+      {todos.map((todo) => (
+        <TodoItem key={todo.id} todo={todo} />
+      ))}
+    </ul>
+  )
 }
 
-func main() {
-	oldList := []VNode{
-		{Type: "li", Key: "a", Props: map[string]string{"text": "Belajar"}},
-		{Type: "li", Key: "b", Props: map[string]string{"text": "Makan"}},
-	}
-	newList := []VNode{
-		{Type: "li", Key: "b", Props: map[string]string{"text": "Makan"}},
-		{Type: "li", Key: "a", Props: map[string]string{"text": "Belajar React"}},
-	}
-
-	diffChildren(oldList, newList)
-}`,
+// Key stabil (todo.id) mempertahankan state checkbox saat urutan berubah.
+// Tanpa key atau key dari index, React bisa salah mengasosiasikan fiber
+// dan state TodoItem tertukar antar item.`,
         explanation:
-          'Kode Go ini mensimulasikan diffing sederhana pada virtual DOM. Dengan key yang stabil, React dapat mendeteksi perpindahan dan pembaruan properti tanpa menghancurkan seluruh tree.',
+          'Contoh ini menunjukkan mengapa key harus stabil dan unik. React reconciler menggunakan key untuk mencocokkan elemen lama dengan elemen baru; key dari index atau nilai acak dapat menyebabkan state komponen anak tertukar atau hilang.',
       },
     },
     {

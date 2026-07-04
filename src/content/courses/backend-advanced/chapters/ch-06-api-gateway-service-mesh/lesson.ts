@@ -194,49 +194,43 @@ Proxy sidecar dapat menghasilkan metrik, log, dan trace untuk semua traffic yang
 Pada Kubernetes, service mesh mengubah definisi pod untuk menambahkan container proxy. Container aplikasi tetap berbicara ke \`localhost\` pada port yang sama, tetapi traffic sebenarnya melewati proxy. Teknik ini disebut **transparent interception** menggunakan iptables/eBPF. Sidecar memutuskan ke mana meneruskan traffic, menerapkan TLS, dan mengumpulkan telemetry.`,
     },
     {
-      id: 'sec-06-go-example',
+      id: 'sec-06-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-06-go',
-        filename: 'main.go',
-        language: 'go',
-        title: 'Go: Reverse Proxy Gateway dengan Routing',
-        code: `package main
+        id: 'code-06-advanced',
+        filename: 'gateway.ts',
+        language: 'typescript',
+        title: 'TypeScript: API Gateway dengan NestJS Proxy',
+        code: `@Controller('api')
+export class GatewayController {
+  constructor(private readonly http: HttpService) {}
 
-import (
-	"log"
-	"net/http"
-	"net/http/httputil"
-	"net/url"
-)
+  @All('orders/*')
+  @UseGuards(AuthGuard)
+  async proxyOrders(@Req() req: Request) {
+    const path = req.url.replace('/api/orders', '')
+    return this.http.axiosRef.request({
+      method: req.method,
+      url: \`http://orders.local:3001\${path}\`,
+      headers: { authorization: req.headers.authorization },
+      data: req.body,
+    })
+  }
 
-func newProxy(target string) *httputil.ReverseProxy {
-	url, _ := url.Parse(target)
-	return httputil.NewSingleHostReverseProxy(url)
-}
-
-func main() {
-	orderProxy := newProxy("http://orders.local:3001")
-	paymentProxy := newProxy("http://payments.local:3002")
-
-	mux := http.NewServeMux()
-	mux.Handle("/api/orders/", http.StripPrefix("/api/orders", orderProxy))
-	mux.Handle("/api/payments/", http.StripPrefix("/api/payments", paymentProxy))
-
-	gateway := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Auth termination placeholder
-		if r.Header.Get("Authorization") == "" {
-			http.Error(w, "unauthorized", http.StatusUnauthorized)
-			return
-		}
-		mux.ServeHTTP(w, r)
-	})
-
-	log.Println("gateway listening on :8080")
-	log.Fatal(http.ListenAndServe(":8080", gateway))
+  @All('payments/*')
+  @UseGuards(AuthGuard)
+  async proxyPayments(@Req() req: Request) {
+    const path = req.url.replace('/api/payments', '')
+    return this.http.axiosRef.request({
+      method: req.method,
+      url: \`http://payments.local:3002\${path}\`,
+      headers: { authorization: req.headers.authorization },
+      data: req.body,
+    })
+  }
 }`,
         explanation:
-          'Gateway Go mengarahkan path ke upstream berbeda dan dapat memvalidasi auth sebelum meneruskan request.',
+          'Gateway NestJS menerapkan auth termination dan routing path ke upstream berbeda — fokus konsep gateway tanpa implementasi sidecar mesh.',
       },
     },
     {

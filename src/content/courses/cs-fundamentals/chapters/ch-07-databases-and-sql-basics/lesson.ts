@@ -50,52 +50,58 @@ Beberapa tipe data yang sering ditemui:
 Memilih tipe data yang tepat menghemat penyimpanan dan mempercepat query.`,
     },
     {
-      id: 'sec-07-js-example',
+      id: 'sec-07-go-basic',
       type: 'code-example',
       codeExample: {
-        id: 'code-07-js',
-        filename: 'sql-queries.js',
-        language: 'javascript',
-        title: 'JavaScript: String Query SQL',
-        code: `// Contoh string query SQL untuk memahami sintaks
-// (tanpa koneksi database sungguhan)
+        id: 'code-07-go-basic',
+        filename: 'sql-queries.go',
+        language: 'go',
+        title: 'Go: String Query SQL',
+        code: `package main
 
-const createUsersTable = \`
+import "fmt"
+
+func main() {
+	// Contoh string query SQL untuk memahami sintaks
+	// (tanpa koneksi database sungguhan)
+
+	createUsersTable := \`
 CREATE TABLE pengguna (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   nama TEXT NOT NULL,
   email TEXT UNIQUE NOT NULL,
   aktif BOOLEAN DEFAULT 1
 );
-\`;
+\`
 
-const insertUser = \`
+	insertUser := \`
 INSERT INTO pengguna (nama, email, aktif)
 VALUES ('Andi', 'andi@email.com', 1);
-\`;
+\`
 
-const selectActiveUsers = \`
+	selectActiveUsers := \`
 SELECT id, nama, email
 FROM pengguna
 WHERE aktif = 1
 ORDER BY nama ASC;
-\`;
+\`
 
-const updateEmail = \`
+	updateEmail := \`
 UPDATE pengguna
 SET email = 'baru@email.com'
 WHERE id = 1;
-\`;
+\`
 
-const deleteUser = \`
+	deleteUser := \`
 DELETE FROM pengguna
 WHERE id = 1;
-\`;
+\`
 
-console.log(createUsersTable);
-console.log(selectActiveUsers);`,
+	fmt.Println(createUsersTable)
+	fmt.Println(selectActiveUsers)
+}`,
         explanation:
-          'String template JavaScript digunakan untuk menulis query SQL agar mudah dibaca. Di aplikasi nyata, gunakan parameterized query untuk mencegah SQL injection.',
+          'Raw string literal Go (backtick) digunakan untuk menulis query SQL agar mudah dibaca. Di aplikasi nyata, gunakan parameterized query untuk mencegah SQL injection.',
       },
     },
     {
@@ -163,56 +169,57 @@ CREATE INDEX idx_pengguna_email ON pengguna(email);
 Kelemahan index: menulis data menjadi sedikit lebih lambat karena index juga harus diperbarui. Oleh karena itu, jangan membuat index di setiap kolom.`,
     },
     {
-      id: 'sec-07-ts-example',
+      id: 'sec-07-go-intermediate',
       type: 'code-example',
       codeExample: {
-        id: 'code-07-ts',
-        filename: 'table-types.ts',
-        language: 'typescript',
-        title: 'TypeScript: Definisi Tipe untuk Tabel dan Query Result',
-        code: `// Definisi tipe untuk tabel pengguna dan pesanan
+        id: 'code-07-go-intermediate',
+        filename: 'table-types.go',
+        language: 'go',
+        title: 'Go: Definisi Struct untuk Tabel dan Query Result',
+        code: `package main
 
-type Pengguna = {
-  id: number;
-  nama: string;
-  email: string;
-  aktif: boolean;
-  createdAt: Date;
-};
+import (
+	"fmt"
+	"strings"
+	"time"
+)
 
-type Pesanan = {
-  id: number;
-  penggunaId: number;
-  total: number;
-  status: 'pending' | 'dibayar' | 'dikirim';
-  createdAt: Date;
-};
+// Definisi struct untuk tabel pengguna dan pesanan
 
-// Tipe untuk hasil query JOIN
-type PenggunaDenganTotalBelanja = {
-  nama: string;
-  totalBelanja: number | null;
-};
-
-// Fungsi type-safe untuk membangun query SELECT sederhana
-function buildSelectQuery<T extends Record<string, unknown>>(
-  table: string,
-  columns: (keyof T)[]
-): string {
-  const cols = columns.map((col) => String(col)).join(', ');
-  return \`SELECT \${cols} FROM \${table}\`;
+type Pengguna struct {
+	ID        int
+	Nama      string
+	Email     string
+	Aktif     bool
+	CreatedAt time.Time
 }
 
-const queryPengguna = buildSelectQuery<Pengguna>('pengguna', [
-  'id',
-  'nama',
-  'email',
-]);
+type Pesanan struct {
+	ID         int
+	PenggunaID int
+	Total      float64
+	Status     string // "pending", "dibayar", "dikirim"
+	CreatedAt  time.Time
+}
 
-console.log(queryPengguna);
-// Output: SELECT id, nama, email FROM pengguna`,
+// Struct untuk hasil query JOIN
+type PenggunaDenganTotalBelanja struct {
+	Nama         string
+	TotalBelanja *float64 // pointer untuk menangani NULL
+}
+
+// Fungsi type-safe untuk membangun query SELECT sederhana
+func buildSelectQuery(table string, columns []string) string {
+	return fmt.Sprintf("SELECT %s FROM %s", strings.Join(columns, ", "), table)
+}
+
+func main() {
+	queryPengguna := buildSelectQuery("pengguna", []string{"id", "nama", "email"})
+	fmt.Println(queryPengguna)
+	// Output: SELECT id, nama, email FROM pengguna
+}`,
         explanation:
-          'Tipe TypeScript membantu menjaga konsistensi antara skema database dan kode aplikasi. Fungsi generik buildSelectQuery memastikan hanya kolom yang ada di tipe yang bisa dipilih.',
+          'Struct Go membantu menjaga konsistensi antara skema database dan kode aplikasi. Fungsi buildSelectQuery memastikan hanya kolom yang didefinisikan yang bisa dipilih.',
       },
     },
     {
@@ -258,11 +265,11 @@ Empat sifat transaksi yang andal disebut **ACID**:
 - **Durability**: hasil transaksi yang berhasil tersimpan meski sistem crash.`,
     },
     {
-      id: 'sec-07-go-example',
+      id: 'sec-07-go-advanced',
       type: 'code-example',
       codeExample: {
-        id: 'code-07-go',
-        filename: 'main.go',
+        id: 'code-07-go-advanced',
+        filename: 'database-sql.go',
         language: 'go',
         title: 'Go: Query Sederhana dengan database/sql',
         code: `package main

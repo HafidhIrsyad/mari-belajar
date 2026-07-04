@@ -7,6 +7,7 @@ import {
   PlayCircle,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { PageContainer } from '@/components/layout/page-container'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
@@ -60,8 +61,8 @@ export function CourseDetailPage() {
       ?.completedChapterIds.length ?? 0
 
   return (
-    <div className="px-6 py-12 lg:px-16 lg:py-20">
-      <div className="mx-auto max-w-7xl">
+    <div className="py-12 lg:py-20">
+      <PageContainer>
         <h1 className="text-3xl font-bold tracking-tight text-foreground lg:text-4xl">
           {course.title}
         </h1>
@@ -90,7 +91,7 @@ export function CourseDetailPage() {
             />
           ))}
         </div>
-      </div>
+      </PageContainer>
     </div>
   )
 }
@@ -103,8 +104,8 @@ interface ChapterListItemProps {
 
 function CourseDetailSkeleton() {
   return (
-    <div className="px-6 py-12 lg:px-16 lg:py-20">
-      <div className="mx-auto max-w-7xl animate-pulse">
+    <div className="py-12 lg:py-20">
+      <PageContainer className="animate-pulse">
         <div className="h-10 w-2/3 rounded bg-muted lg:h-12" />
         <div className="mt-4 h-6 w-full max-w-3xl rounded bg-muted" />
         <div className="mt-2 h-6 w-5/6 max-w-3xl rounded bg-muted" />
@@ -136,7 +137,7 @@ function CourseDetailSkeleton() {
             </Card>
           ))}
         </div>
-      </div>
+      </PageContainer>
     </div>
   )
 }

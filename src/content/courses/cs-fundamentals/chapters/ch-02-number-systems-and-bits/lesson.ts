@@ -45,33 +45,42 @@ Untuk mengubah desimal ke basis lain, bagi berulang kali dan ambil sisa pembagia
 Membaca heksadesimal seperti membaca singkatan: lebih pendek, lebih cepat dipahami, tetapi tetap merepresentasikan data biner yang sama.`,
     },
     {
-      id: 'sec-02-js-example',
+      id: 'sec-02-go-basic',
       type: 'code-example',
       codeExample: {
-        id: 'code-02-js',
-        filename: 'number-systems.js',
-        language: 'javascript',
-        title: 'JavaScript: Konversi dan Bit Mask',
-        code: `// Konversi dari string heksadesimal ke desimal
-const decimal = parseInt("FF", 16);
-console.log(decimal); // 255
+        id: 'code-02-go-basic',
+        filename: 'number-systems.go',
+        language: 'go',
+        title: 'Go: Konversi dan Bit Mask',
+        code: `package main
 
-// Konversi desimal ke string heksadesimal
-const hex = (255).toString(16).toUpperCase();
-console.log(hex); // "FF"
+import (
+	"fmt"
+	"strconv"
+)
 
-// Bit mask: periksa apakah bit ke-2 (nilai 4) aktif
-const flags = 0b00001101; // 13
-const mask = 0b00000100;  // bit ke-2
+func main() {
+	// Konversi dari string heksadesimal ke desimal
+	decimal, _ := strconv.ParseInt("FF", 16, 64)
+	fmt.Println(decimal) // 255
 
-const isBitSet = (flags & mask) !== 0;
-console.log(isBitSet); // true
+	// Konversi desimal ke string heksadesimal
+	hex := fmt.Sprintf("%X", 255)
+	fmt.Println(hex) // "FF"
 
-// Menyalakan bit ke-1 (nilai 2)
-const newFlags = flags | 0b00000010;
-console.log(newFlags.toString(2).padStart(8, "0")); // "00001111"`,
+	// Bit mask: periksa apakah bit ke-2 (nilai 4) aktif
+	flags := uint8(0b00001101) // 13
+	mask := uint8(0b00000100)  // bit ke-2
+
+	isBitSet := flags&mask != 0
+	fmt.Println(isBitSet) // true
+
+	// Menyalakan bit ke-1 (nilai 2)
+	newFlags := flags | 0b00000010
+	fmt.Printf("%08b\n", newFlags) // "00001111"
+}`,
         explanation:
-          'Method parseInt menerima basis sebagai argumen kedua, sedangkan Number.prototype.toString menerima basis target. Operator bitwise AND (&) dan OR (|) memanipulasi bit secara langsung.',
+          'strconv.ParseInt menerima basis sebagai argumen kedua, sedangkan fmt.Sprintf dengan verb %X mencetak heksadesimal. Operator bitwise AND (&) dan OR (|) memanipulasi bit secara langsung.',
       },
     },
     {
@@ -123,57 +132,69 @@ bit 3 = 0b00001000 = 8   -> fitur D aktif
 Keuntungannya hemat memori dan operasi bitwise sangat cepat di CPU.`,
     },
     {
-      id: 'sec-02-ts-example',
+      id: 'sec-02-go-intermediate',
       type: 'code-example',
       codeExample: {
-        id: 'code-02-ts',
-        filename: 'base-converter.ts',
-        language: 'typescript',
-        title: 'TypeScript: Konverter Basis Generik dengan Validasi',
-        code: `type NumericBase = 2 | 8 | 10 | 16;
+        id: 'code-02-go-intermediate',
+        filename: 'base-converter.go',
+        language: 'go',
+        title: 'Go: Konverter Basis dengan Validasi',
+        code: `package main
 
-type BasePrefix<B extends NumericBase> = B extends 2
-  ? "0b"
-  : B extends 8
-    ? "0o"
-    : B extends 16
-      ? "0x"
-      : "";
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
-function convertBase<
-  B extends NumericBase,
-  P extends BasePrefix<B> = BasePrefix<B>
->(
-  value: number,
-  targetBase: B,
-  options: { padTo?: number; withPrefix?: boolean } = {}
-): string {
-  const { padTo = 0, withPrefix = false } = options;
-
-  if (!Number.isInteger(value) || value < 0) {
-    throw new Error("Hanya mendukung bilangan bulat positif");
-  }
-
-  if (![2, 8, 10, 16].includes(targetBase)) {
-    throw new Error("Basis harus 2, 8, 10, atau 16");
-  }
-
-  const digits = value.toString(targetBase).toUpperCase();
-  const padded = padTo > 0 ? digits.padStart(padTo, "0") : digits;
-  const prefix: P = (withPrefix ? "0" + (
-    targetBase === 2 ? "b" :
-    targetBase === 8 ? "o" :
-    targetBase === 16 ? "x" : ""
-  ) : "") as P;
-
-  return prefix + padded;
+type ConvertOptions struct {
+	PadTo      int
+	WithPrefix bool
 }
 
-console.log(convertBase(26, 16));              // "1A"
-console.log(convertBase(26, 2, { padTo: 8 })); // "00011010"
-console.log(convertBase(26, 16, { withPrefix: true })); // "0x1A"`,
+func convertBase(value int, targetBase int, opts ConvertOptions) (string, error) {
+	if value < 0 {
+		return "", fmt.Errorf("hanya mendukung bilangan bulat positif")
+	}
+
+	switch targetBase {
+	case 2, 8, 10, 16:
+	default:
+		return "", fmt.Errorf("basis harus 2, 8, 10, atau 16")
+	}
+
+	digits := strings.ToUpper(strconv.FormatInt(int64(value), targetBase))
+
+	if opts.PadTo > 0 && len(digits) < opts.PadTo {
+		digits = strings.Repeat("0", opts.PadTo-len(digits)) + digits
+	}
+
+	if opts.WithPrefix {
+		switch targetBase {
+		case 2:
+			digits = "0b" + digits
+		case 8:
+			digits = "0o" + digits
+		case 16:
+			digits = "0x" + digits
+		}
+	}
+
+	return digits, nil
+}
+
+func main() {
+	hex, _ := convertBase(26, 16, ConvertOptions{})
+	fmt.Println(hex) // "1A"
+
+	bin, _ := convertBase(26, 2, ConvertOptions{PadTo: 8})
+	fmt.Println(bin) // "00011010"
+
+	prefixed, _ := convertBase(26, 16, ConvertOptions{WithPrefix: true})
+	fmt.Println(prefixed) // "0x1A"
+}`,
         explanation:
-          'Tipe generik NumericBase membatasi basis yang valid dan memastkan kesalahan pemanggilan fungsi tertangkap saat compile time. Validasi runtime menambah lapisan keamanan untuk input dinamis.',
+          'Struct ConvertOptions mengelompokkan parameter opsional. Validasi basis di switch memastikan hanya nilai yang valid diterima, dan error dikembalikan untuk input yang tidak sah.',
       },
     },
     {
@@ -223,11 +244,11 @@ Format \`float32\` menggunakan 32 bit, sedangkan \`float64\` (default di JavaScr
 Programmer sistem, *game engine*, dan pengembang *embedded* sering menghadapi masalah ini. Memilih tipe data yang cukup besar dan memeriksa batas nilai sebelum operasi adalah langkah pencegahan yang baik.`,
     },
     {
-      id: 'sec-02-go-example',
+      id: 'sec-02-go-advanced',
       type: 'code-example',
       codeExample: {
-        id: 'code-02-go',
-        filename: 'main.go',
+        id: 'code-02-go-advanced',
+        filename: 'bit-flags.go',
         language: 'go',
         title: 'Go: Bit Flags dengan iota dan Bitmask',
         code: `package main

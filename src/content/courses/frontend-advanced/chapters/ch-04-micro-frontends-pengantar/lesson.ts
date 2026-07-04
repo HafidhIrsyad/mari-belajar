@@ -207,63 +207,45 @@ Independent deployment memerlukan:
 Mirip dengan microservices di backend, micro-frontends memiliki bounded context. Komunikasi antar boundary harus melalui interface yang stabil, bukan langsung memanipulasi internal satu sama lain.`,
     },
     {
-      id: 'sec-04-go-example',
+      id: 'sec-04-advanced-example',
       type: 'code-example',
       codeExample: {
-        id: 'code-04-go',
-        filename: 'service_boundary.go',
-        language: 'go',
-        title: 'Go: Service Boundary dan Contract antara Domain',
-        code: `package main
+        id: 'code-04-advanced',
+        filename: 'vite.config.ts',
+        language: 'typescript',
+        title: 'Module Federation: Shell App dan Remote Boundaries',
+        code: `import { defineConfig, federation } from '@module-federation/vite'
 
-import (
-	"encoding/json"
-	"fmt"
-	"net/http"
-)
+export default defineConfig({
+  plugins: [
+    federation({
+      name: 'shell',
+      remotes: {
+        // Setiap remote adalah bounded context terpisah
+        catalog: 'catalog@https://catalog.example.com/remoteEntry.js',
+        checkout: 'checkout@https://checkout.example.com/remoteEntry.js',
+      },
+      shared: {
+        react: { singleton: true, requiredVersion: '^19.0.0' },
+        'react-dom': { singleton: true, requiredVersion: '^19.0.0' },
+      },
+    }),
+  ],
+})
 
-// Catalog service contract
-type Product struct {
-	ID    string  \`json:"id"\`
-	Name  string  \`json:"name"\`
-	Price float64 \`json:"price"\`
-}
+/*
+Arsitektur micro-frontend:
 
-func catalogHandler(w http.ResponseWriter, r *http.Request) {
-	products := []Product{
-		{ID: "p1", Name: "Kaos", Price: 150000},
-		{ID: "p2", Name: "Tas", Price: 250000},
-	}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(products)
-}
-
-// Checkout service consumes catalog contract
-func checkoutHandler(w http.ResponseWriter, r *http.Request) {
-	res, err := http.Get("http://catalog.service/products")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	defer res.Body.Close()
-
-	var products []Product
-	if err := json.NewDecoder(res.Body).Decode(&products); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	fmt.Fprintf(w, "Checkout %d products", len(products))
-}
-
-func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/products", catalogHandler)
-	mux.HandleFunc("/checkout", checkoutHandler)
-	http.ListenAndServe(":8080", mux)
-}`,
+  ┌─────────────┐
+  │  Shell App  │  ← routing, layout, shared deps
+  └──────┬──────┘
+         │ load remoteEntry.js
+    ┌────┴────┐
+    ▼         ▼
+ Catalog   Checkout   ← deploy independen per tim
+*/`,
         explanation:
-          'Micro-frontends dapat dianalogikan dengan microservices: setiap domain memiliki contract dan tidak boleh langsung memanipulasi internal domain lain.',
+          'Module Federation memungkinkan shell app memuat micro-frontend secara runtime tanpa rebuild. Shared dependencies mencegah duplikasi React, sementara setiap remote dapat di-deploy independen selama contract remoteEntry.js stabil.',
       },
     },
     {
